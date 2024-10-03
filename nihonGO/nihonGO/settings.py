@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',
+    'tailwind',
+    'theme',  
 ]
 
 MIDDLEWARE = [
@@ -69,6 +71,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'nihonGO.wsgi.application'
+
+TAILWIND_APP_NAME = 'theme'
+
 
 
 # Database
