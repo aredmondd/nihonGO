@@ -42,7 +42,28 @@ module.exports = {
         // '../../**/*.py'
     ],
     theme: {
-        extend: {},
+        extend: {
+            colors: {
+                'black': '#181113',
+                'white': '#F6F3F4',
+                'crimson': '#BD002C',
+                'peach': '#F1CD9D',
+                'orange': '#E28140',
+            },
+            fontFamily : {
+                outfit: ['Outfit', 'sans-serif'],
+                DMSans: ['DM Sans', 'sans-serif'],
+            },
+            fontSize: {
+                'title': '100px',
+                'heading': '50px',
+                'body': '20px',
+                'sm': '15px',
+            },
+            screens: {
+                '3xl': '1900px',
+            },
+        },
     },
     plugins: [
         /**
