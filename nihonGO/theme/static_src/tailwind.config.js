@@ -53,6 +53,7 @@ module.exports = {
             fontFamily : {
                 outfit: ['Outfit', 'sans-serif'],
                 DMSans: ['DM Sans', 'sans-serif'],
+                japanese: ['Noto Sans Japanese', 'sans-serif'],
             },
             fontSize: {
                 'title': '100px',
