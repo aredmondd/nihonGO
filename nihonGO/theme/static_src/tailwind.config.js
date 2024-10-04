@@ -49,6 +49,7 @@ module.exports = {
                 'crimson': '#BD002C',
                 'peach': '#F1CD9D',
                 'orange': '#E28140',
+                'transparent': 'transparent',
             },
             fontFamily : {
                 outfit: ['Outfit', 'sans-serif'],
