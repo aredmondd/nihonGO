@@ -59,8 +59,9 @@ module.exports = {
             fontSize: {
                 'title': '100px',
                 'heading': '50px',
+                'md': '32px',
                 'body': '20px',
-                'sm': '15px',
+                'sm': '14px',
             },
             screens: {
                 '3xl': '1900px',
