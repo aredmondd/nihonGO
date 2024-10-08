@@ -1,0 +1,6 @@
+<h2>Create a New Deck</h2>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create Deck</button>
+</form>
