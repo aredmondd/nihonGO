@@ -4,38 +4,38 @@
     <div class="h-full flex flex-col justify-between px-3 py-4 overflow-y-auto bg-peach">
         <ul class="space-y-2 font-medium mt-6">
             <li>
-                <a href="/nihongo">
+                <a href="{% url 'index' %}">
                     <h1 class="ml-3 text-md text-black font-japanese font-bold">日本<span class="text-crimson font-outfit">GO!</span></h1>
                 </a>
             </li>
 
             <li>
-                <a href="/nihongo/dashboard" class="flex items-center p-2 text-black rounded-lg group">
+                <a href="{% url 'dashboard' %}" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'dashboard' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
                 <span class="ms-3">Dashboard</span>
                 </a>
             </li>
 
             <li>
-                <a href="/nihongo/my-profile" class="flex items-center p-2 text-black rounded-lg group">
+                <a href="{% url 'my-profile' %}" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'profile' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
                 <span class="ms-3">My Profile</span>
                 </a>
             </li>
 
             <li>
-                <a href="/nihongo/decks" class="flex items-center p-2 text-black rounded-lg group">
+                <a href="{% url 'decks' %}" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'decks' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
                 <span class="ms-3 flex-1 whitespace-nowrap">My Decks</span>
                 </a>
             </li>
 
             <li>
-                <a href="/nihongo/messages" class="flex items-center p-2 text-black rounded-lg group">
+                <a href="{% url 'messages' %}" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'messages' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
                 <span class="flex-1 ms-3 whitespace-nowrap">Messages</span>
                 <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-white bg-crimson rounded-full">3</span>
                 </a>
             </li>
 
             <li>
-                <a href="/nihongo/forum" class="flex items-center p-2 text-black rounded-lg group">
+                <a href="{% url 'forum' %}" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'forum' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
                 <span class="ms-3">Forum</span>
                 </a>
             </li>
