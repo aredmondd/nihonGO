@@ -1,0 +1,44 @@
+{% extends 'components/wrapper.html' %}
+
+{% block content %}
+
+<h1 class="ml-10 text-title text-black font-japanese font-bold">勉強しませんか？</span></h1>
+
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">My Decks</h1>
+
+    <!-- Decks Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        
+        <!-- Example Deck 1 -->
+        <div class="border-2 border-black rounded-3xl bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center items-center hover:bg-gray-100 transition duration-300">
+            <h2 class="text-xl font-semibold mb-4">Japanese Basics</h2>
+            <p class="text-gray-500 mb-4">50 Cards</p>
+            <a href="/nihongo/deck/1" class="text-orange hover:text-crimson">Study Deck</a>
+        </div>
+
+        <!-- Example Deck 2 -->
+        <div class="border-2 border-black rounded-3xl shadow-md rounded-lg p-6 text-center flex flex-col justify-center items-center hover:bg-gray-100 transition duration-300">
+            <h2 class="text-xl font-semibold mb-4">Kanji Basics</h2>
+            <p class="text-gray-500 mb-4">40 Cards</p>
+            <a href="/nihongo/deck/2" class="text-orange hover:text-crimson">Study Deck</a>
+        </div>
+
+        <!-- Example Deck 3 -->
+        <div class="border-2 border-black rounded-3xl bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center items-center hover:bg-gray-100 transition duration-300">
+            <h2 class="text-xl font-semibold mb-4">Phrases for Travel</h2>
+            <p class="text-gray-500 mb-4">30 Cards</p>
+            <a href="/nihongo/deck/3" class="text-orange hover:text-crimson">Study Deck</a>
+        </div>
+
+        <!-- Add Deck Button -->
+        <a href="{% url 'add_deck' %}" class="block">
+            <div class="border-2 border-black rounded-3xl bg-orange shadow-md rounded-lg p-6 text-center flex flex-col justify-center items-center hover:bg-crimson transition duration-300 cursor-pointer">
+                <h2 class="text-xl font-semibold mb-4 text-white">Add Deck</h2>
+                <span class="text-white hover:text-gray-200 text-4xl">+</span>
+            </div>
+
+    </div>
+</div>
+{% endblock %}
+

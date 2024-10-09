@@ -20,5 +20,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('myapp.urls')),
+    path('nihongo/', include('theme.urls')),
     path('flashcards/', include('flashcards.urls')),
+    path("__reload__/", include("django_browser_reload.urls")),
 ]
