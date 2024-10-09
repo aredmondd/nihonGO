@@ -1,0 +1,39 @@
+<!-- wrapper.html -->
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en" class="bg-peach">
+<head>
+    <title>nihonGO!</title>
+    <link rel="icon" href="{% static 'favicon.png' %}" type="image/png">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Noto+Sans+JP:wght@100..900&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    {% tailwind_css %}
+</head>
+
+<body class="bg-white">
+    <!-- Side Navigation -->
+    {% include 'side-nav.html' %}
+
+    <!-- Main Content -->
+    <div class="p-4 sm:ml-64 bg-peach mt-6">
+        <div class="p-4 border-2 border-black rounded-3xl bg-white">
+            {% block content %}
+            <!-- Default content can go here -->
+            {% endblock %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="p-4 sm:ml-64 bg-peach">
+        {% include 'footer.html' %}
+    </div>
+</body>
+</html>
