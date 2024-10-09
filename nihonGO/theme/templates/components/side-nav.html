@@ -5,9 +5,11 @@
         <ul class="space-y-2 font-medium mt-6">
             <li>
                 <a href="{% url 'index' %}">
-                    <h1 class="ml-3 text-md text-black font-japanese font-bold">日本<span class="text-crimson font-outfit">GO!</span></h1>
+                    <h1 class="ml-4 text-md text-black font-outfit font-bold">nihon<span class="text-crimson">GO!</span></h1>
                 </a>
             </li>
+
+            <div class="mt-12"></div>
 
             <li>
                 <a href="{% url 'dashboard' %}" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'dashboard' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
@@ -41,6 +43,6 @@
             </li>
         </ul>
 
-        <img src="{% static 'redmond.jpg' %}" alt="" class="w-16 h-16 rounded-full">
+        <a href="{% url 'my-profile' %}"><img src="{% static 'redmond.jpg' %}" alt="" class="w-16 h-16 rounded-full border border-2 border-black"></a>
     </div>
 </aside>
