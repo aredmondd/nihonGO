@@ -1,0 +1,33 @@
+<!-- add_deck.html -->
+{% extends 'components/wrapper.html' %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6">Add New Deck</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ deck_form.as_p }}  <!-- Deck Name Field -->
+
+    <h2 class="text-xl font-semibold mb-4">Add Flashcards</h2>
+    
+    <!-- Dynamically add flashcard forms -->
+    {% for flashcard_form in flashcard_forms %}
+        <div class="flex items-center mb-4">
+            <div class="flex-1">
+                {{ flashcard_form.question.label }} 
+                {{ flashcard_form.question }} <!-- Question Field -->
+            </div>
+            <div class="flex-1 ml-2">
+                {{ flashcard_form.answer.label }} 
+                {{ flashcard_form.answer }} <!-- Answer Field -->
+            </div>
+            <div class="flex-1 ml-2">
+                {{ flashcard_form.part_of_speech.label }} 
+                {{ flashcard_form.part_of_speech }} <!-- Part of Speech Dropdown -->
+            </div>
+        </div>
+    {% endfor %}
+
+    <button type="submit" class="border-2 border-black rounded-3xl bg-orange shadow-md rounded-lg p-6 text-center flex flex-col justify-center items-center hover:bg-crimson">Create Deck</button>
+</form>
+{% endblock %}

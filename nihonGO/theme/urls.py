@@ -10,5 +10,6 @@ urlpatterns = [
     path('forum/', views.forum, name="forum"),
     path('my-profile/', views.profile, name="my-profile"),
     path('messages/', views.messages, name="messages"),
-    path('decks/', views.decks, name="decks"),
+    path('mydecks/', views.decks, name="mydecks"),
+    path('mydecks/add/', views.add_deck, name='add_deck'),
 ]

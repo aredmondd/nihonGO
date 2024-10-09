@@ -1,9 +1,8 @@
 #this program parses the 500 most commonly used words in japanese into a python dictionary'
-#this dictionary is what will be used to create the users starter deck in NihonGO!
-
+#this dictionary is what will be used to create the users starter deck in NihonGO
 import csv 
 japaneseDict = {}
-with open('/Users/laurenrichardson/Desktop/commonWords.csv', 'r') as file:
+with open('commonWords.csv', 'r') as file:
     # Create a CSV reader object
     reader = csv.reader(file)
     
@@ -41,5 +40,6 @@ with open('/Users/laurenrichardson/Desktop/commonWords.csv', 'r') as file:
             'example_sentence_kana': example_sentence_kana,
             'example_sentence_english': example_sentence_english
         }
+        count += 1
 
 print(japaneseDict)

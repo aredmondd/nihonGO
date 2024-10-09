@@ -21,11 +21,24 @@
                 </a>
             </li>
 
-            <li>
-                <a href="{% url 'decks' %}" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'decks' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
-                <span class="ms-3 flex-1 whitespace-nowrap">My Decks</span>
-                </a>
-            </li>
+           <!-- Decks with dropdown -->
+           <li class="relative group">
+            <a href="#" class="flex items-center p-2 text-black rounded-lg hover:underline underline-offset-2 decoration-crimson">
+                <span class="ms-3 flex-1 whitespace-nowrap">Decks</span>
+                <svg class="w-4 h-4 ms-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+            </a>
+            <!-- Dropdown Menu -->
+            <ul class="hidden space-y-1 mt-2 pl-4 group-hover:block">
+                <li>
+                    <a href="/nihongo/mydecks" class="block px-4 py-2 text-sm text-gray-700 hover:text-crimson">My Decks</a>
+                </li>
+                <li>
+                    <a href="/nihongo/create-deck" class="block px-4 py-2 text-sm text-gray-700 hover:text-crimson">Create New Deck</a>
+                </li>
+            </ul>
+        </li>
 
             <li>
                 <a href="{% url 'messages' %}" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'messages' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
