@@ -8,16 +8,6 @@ class DeckForm(forms.ModelForm):
         fields = ['name']
 
 class FlashcardForm(forms.ModelForm):
-    PART_OF_SPEECH_CHOICES = [
-        ('noun', 'Noun'),
-        ('verb', 'Verb'),
-        ('い adjective', 'い Adjective'),
-        ('な adjective', 'な Adjective'),
-        ('n/a', 'n/a'),
-    ]
-    
-    part_of_speech = forms.ChoiceField(choices=PART_OF_SPEECH_CHOICES)
-
     class Meta:
         model = Card
-        fields = ['question', 'answer', 'part_of_speech']
+        fields = ['vocab_word', 'kana', 'english_translation', 'part_of_speech', 'example_sentence', 'example_sentence_kana', 'example_sentence_english']

@@ -19,6 +19,7 @@
                 <a href="{% url 'my-profile' %}" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'profile' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
                 <span class="ms-3">My Profile</span>
                 </a>
+            
             </li>
 
            <!-- Decks with dropdown -->
@@ -32,10 +33,10 @@
             <!-- Dropdown Menu -->
             <ul class="hidden space-y-1 mt-2 pl-4 group-hover:block">
                 <li>
-                    <a href="/nihongo/mydecks" class="block px-4 py-2 text-sm text-gray-700 hover:text-crimson">My Decks</a>
+                    <a href="{% url 'my_decks' %}" class="block px-4 py-2 text-sm text-gray-700 hover:text-crimson">My Decks</a>
                 </li>
                 <li>
-                    <a href="/nihongo/create-deck" class="block px-4 py-2 text-sm text-gray-700 hover:text-crimson">Create New Deck</a>
+                    <a href="{% url 'add_deck' %}" class="block px-4 py-2 text-sm text-gray-700 hover:text-crimson">Create New Deck</a>
                 </li>
             </ul>
         </li>

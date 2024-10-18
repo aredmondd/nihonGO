@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+import json
+from .models import Deck, Card
 
 # Create your views here.
 def index (request):
@@ -26,12 +28,30 @@ def profile (request):
 def messages (request):
     return render(request, 'messages.html')
 
-def decks (request):
-    return render(request, 'mydecks.html')
-
 
 from .models import Deck
 from .forms import DeckForm, FlashcardForm
+with open('/Users/laurenrichardson/Desktop/nihonGO!/nihonGO/nihonGO/theme/templates/flashcards/japanesebasics.json', 'r') as file:
+    japaneseDict = json.load(file)
+
+def my_decks(request):
+    if not request.user.is_authenticated:
+        # For non-authenticated users, show a default "Japanese Basics" deck.
+        decks = [
+            {'id': 1, 'name': 'Japanese Basics', 'cards': load_japanese_dict()},
+            {'id': 2, 'name': 'Example Deck 2', 'cards': {}},  # No cards
+            {'id': 3, 'name': 'Example Deck 3', 'cards': {}},  # No cards
+        ]
+    else:
+        # Check if the default deck exists for authenticated users; if not, create it.
+        user = request.user
+        if not Deck.objects.filter(user=user, is_default=True).exists():
+            create_default_deck(user)  # Create the deck for the user.
+        
+        # Fetch the user's decks including the default deck
+        decks = Deck.objects.filter(user=user)
+    
+    return render(request, 'flashcards/mydecks.html', {'decks': decks})
 
 def add_deck(request):
     if request.method == "POST":
@@ -40,25 +60,56 @@ def add_deck(request):
 
         if deck_form.is_valid() and all(f.is_valid() for f in flashcard_forms):
             new_deck = deck_form.save(commit=False)
-            new_deck.user = request.user  # Associate the deck with the logged-in user
-            new_deck.save()  # Save the deck
+            new_deck.user = request.user
+            new_deck.save()
 
-            # Save flashcards
             for flashcard_form in flashcard_forms:
                 flashcard = flashcard_form.save(commit=False)
-                flashcard.deck = new_deck  # Associate the flashcard with the new deck
+                flashcard.deck = new_deck
                 flashcard.save()
 
-            return redirect('mydecks')  # Redirect to the decks page
+            return redirect('my_decks')
     else:
         deck_form = DeckForm()
-        flashcard_forms = [FlashcardForm() for _ in range(3)]  # Start with 3 empty flashcard forms
+        flashcard_forms = [FlashcardForm() for _ in range(3)]
 
     return render(request, 'flashcards/add_deck.html', {
         'deck_form': deck_form,
         'flashcard_forms': flashcard_forms,
     })
 
-def my_decks(request):
-    decks = Deck.objects.filter(user=request.user)  # Get decks for the logged-in user
-    return render(request, 'flashcards/mydecks.html', {'decks': decks})
+from .models import Card, Deck
+from django.shortcuts import get_object_or_404
+
+
+def study(request, deck_id):
+    deck = get_object_or_404(Deck, id=deck_id)  # This will raise a 404 if the deck doesn't exist
+    flashcards = Card.objects.filter(deck=deck)
+    
+    return render(request, 'flashcards/study.html', {'deck': deck, 'flashcards': flashcards})
+
+
+def load_japanese_dict():
+    with open('/Users/laurenrichardson/Desktop/nihonGO!/nihonGO/nihonGO/theme/templates/flashcards/japanesebasics.json', 'r') as json_file:
+        japaneseDict = json.load(json_file)
+    return japaneseDict
+
+# View to create a default deck for a user
+def create_default_deck(user):
+    if not Deck.objects.filter(name="Japanese Basics").exists():
+        japaneseDict = load_japanese_dict()  # Load the Japanese Dictionary
+        # Create the default deck
+        japanese_basics_deck = Deck.objects.create(name="Japanese Basics", is_default=True)
+
+        # Loop through the dictionary and create flashcards
+        for vocab_word, details in japaneseDict.items():
+            Card.objects.create(
+                deck=japanese_basics_deck,
+                vocab_word=vocab_word,
+                kana=details['kana'],
+                english_translation=details['english_translation'],
+                part_of_speech=details['part_of_speech'],
+                example_sentence=details['example_sentence'],
+                example_sentence_kana=details['example_sentence_kana'],
+                example_sentence_english=details['example_sentence_english']
+            )
