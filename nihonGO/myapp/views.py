@@ -12,7 +12,7 @@ def home (request):
     return render(request, 'myapp/base.html')
 
 def profile_page (request):
-    return render(request, 'myapp/profile-page')
+    return render(request, 'myapp/profile-page.html')
 
 
 def register(request):
@@ -55,7 +55,7 @@ def my_login(request):
 
                 auth.login(request, user)
 
-                return redirect("home")
+                return redirect("profile-page")
             
     
     context = {'loginform':form}
