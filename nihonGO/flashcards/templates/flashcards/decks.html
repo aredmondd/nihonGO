@@ -1,7 +1,0 @@
-<h2>Your Decks</h2>
-<ul>
-    {% for deck in decks %}
-    <li><a href="{% url 'add_flashcard' deck.id %}">{{ deck.name }}</a></li>
-    {% endfor %}
-</ul>
-<a href="{% url 'create_deck' %}">Create New Deck</a>

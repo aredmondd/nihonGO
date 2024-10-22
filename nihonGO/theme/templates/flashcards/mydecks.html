@@ -1,0 +1,31 @@
+{% extends 'components/wrapper.html' %}
+
+{% block content %}
+
+<h1 class="ml-10 text-title text-black font-japanese font-bold">勉強しませんか？</h1>
+
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">My Decks</h1>
+
+    <!-- Decks Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        
+        <!-- Loop through decks dynamically -->
+        {% for deck in decks %}  <!-- Change 'Deck' to 'decks' -->
+        <div class="border-2 border-black rounded-3xl bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center items-center hover:bg-gray-100 transition duration-300">
+            <h2 class="text-xl font-semibold mb-4">{{ deck.name }}</h2>
+            <p class="text-gray-500 mb-4">{{ deck.card_set.count }} Cards</p>  <!-- Assuming 'card_set' is the reverse relation -->
+            <a href="{% url 'study' deck.id %}" class="text-orange hover:text-crimson">Study Deck</a>
+        </div>
+        {% endfor %}
+        
+        <!-- Add Deck Button -->
+        <a href="{% url 'add_deck' %}" class="block">
+            <div class="border-2 border-black rounded-3xl bg-orange shadow-md rounded-lg p-6 text-center flex flex-col justify-center items-center hover:bg-crimson transition duration-300 cursor-pointer">
+                <h2 class="text-xl font-semibold mb-4 text-white">Add Deck</h2>
+                <span class="text-white hover:text-gray-200 text-4xl">+</span>
+            </div>
+        </a>
+    </div>
+</div>
+{% endblock %}

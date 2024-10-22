@@ -1,0 +1,25 @@
+{% extends 'components/wrapper.html' %}
+
+{% block content %}
+<h1 class="ml-10 text-title text-black font-japanese font-bold">{{ deck.name }}</h1>
+
+<div class="container mx-auto px-4 py-8">
+    <h2 class="text-3xl font-bold mb-6">Flashcards</h2>
+
+    <!-- Flashcards List -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        
+        {% for flashcard in flashcards %}
+        <div class="border-2 border-black rounded-3xl bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center items-center hover:bg-gray-100 transition duration-300">
+            <h3 class="text-xl font-semibold mb-4">{{ flashcard.vocab_word }}</h3>
+            <p class="text-gray-500 mb-4">{{ flashcard.english_translation }}</p>
+            <a href="#" class="text-orange hover:text-crimson">View Details</a>
+        </div>
+        {% empty %}
+        <p>No flashcards available in this deck.</p>
+        {% endfor %}
+        
+    </div>
+</div>
+
+{% endblock %}
