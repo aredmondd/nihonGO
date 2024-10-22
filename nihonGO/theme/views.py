@@ -29,9 +29,16 @@ def messages (request):
     return render(request, 'messages.html')
 
 
+from django.conf import settings
+import json
 from .models import Deck
 from .forms import DeckForm, FlashcardForm
-with open('/Users/laurenrichardson/Desktop/nihonGO!/nihonGO/nihonGO/theme/templates/flashcards/japanesebasics.json', 'r') as file:
+
+# Use BASE_DIR to construct the relative path
+file_path = f"{settings.BASE_DIR}/theme/templates/flashcards/japanesebasics.json"
+
+# Open the file using the relative path
+with open(file_path, 'r') as file:
     japaneseDict = json.load(file)
 
 def my_decks(request):
