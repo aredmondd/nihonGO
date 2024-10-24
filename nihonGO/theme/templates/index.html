@@ -1,5 +1,80 @@
 {% extends 'components/wrapper.html' %}
 
 {% block content %}
-    <p class="text-black text-center my-64">content goes here :)</p>
+<div class="flex flex-col min-h-screen"> <!-- min-h-screen makes it full height -->
+    <!-- Header -->
+    <header class="bg-white text-black font-bold py-4 px-6 text-center">
+        <h1 class="text-4xl font-japanese">Japanese Basics</h1>
+    </header>
+
+    <!-- Main Content (Flashcard Section) -->
+    <div class="flex-grow flex justify-center items-center"> <!-- This ensures the flashcard is centered -->
+        <div class="perspective">
+            <div class="flip-card transition-transform duration-500 transform-style preserve-3d" id="flashcard">
+                <!-- Front side of the flashcard -->
+                <div class="flashcard-front absolute w-full h-full backface-hidden flex flex-col justify-center items-center bg-white border-2 border-black rounded-3xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4" id="vocab-word"></h3>
+                </div>
+
+                <!-- Back side of the flashcard -->
+                <div class="flashcard-back absolute w-full h-full backface-hidden flex flex-col justify-center items-center bg-gray-200 border-2 border-black rounded-3xl shadow-md p-6 rotate-y-180">
+                    <p class="text-gray-700 mb-4"><strong>Kana:</strong> <span id="kana"></span></p>
+                    <p class="text-gray-500 mb-4"><strong>English Translation:</strong> <span id="english-translation"></span></p>
+                    <p class="text-gray-500 mb-4"><strong>Part of Speech:</strong> <span id="part-of-speech"></span></p>
+                    <p class="text-gray-500 mb-4"><strong>Example Sentence (Japanese):</strong> <span id="example-sentence"></span></p>
+                    <p class="text-gray-500 mb-4"><strong>Example Sentence (Kana):</strong> <span id="example-sentence-kana"></span></p>
+                    <p class="text-gray-500 mb-4"><strong>Example Sentence (English):</strong> <span id="example-sentence-english"></span></p>
+
+                    <div class="flex space-x-4 mt-4">
+                        <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600" onclick="markCorrect()">Correct</button>
+                        <button class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600" onclick="markIncorrect()">Incorrect</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white text-center py-4 text-gray-600">
+        <p>&copy; 2024 NihonGO! Project | Developed by your team</p>
+    </footer>
+</div>
+
+<script>
+// JavaScript to handle the front-end functionality
+const flashcards = {{ flashcards|safe }};
+let currentCardIndex = 0;
+
+function updateFlashcard() {
+    const card = flashcards[currentCardIndex];
+    document.getElementById("vocab-word").textContent = card.vocab_word;
+    document.getElementById("kana").textContent = card.kana;
+    document.getElementById("english-translation").textContent = card.english_translation;
+    document.getElementById("part-of-speech").textContent = card.part_of_speech;
+    document.getElementById("example-sentence").textContent = card.example_sentence;
+    document.getElementById("example-sentence-kana").textContent = card.example_sentence_kana;
+    document.getElementById("example-sentence-english").textContent = card.example_sentence_english;
+}
+
+function markCorrect() {
+    currentCardIndex++;
+    if (currentCardIndex >= flashcards.length) {
+        alert("You have completed all the flashcards!");
+        currentCardIndex = 0;
+    }
+    updateFlashcard();
+}
+
+function markIncorrect() {
+    currentCardIndex++;
+    if (currentCardIndex >= flashcards.length) {
+        alert("You have completed all the flashcards!");
+        currentCardIndex = 0;
+    }
+    updateFlashcard();
+}
+
+updateFlashcard();
+</script>
+
 {% endblock %}

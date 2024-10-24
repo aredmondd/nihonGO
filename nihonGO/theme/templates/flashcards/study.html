@@ -1,25 +1,79 @@
 {% extends 'components/wrapper.html' %}
+</head>
+    <link rel="stylesheet" href="styles.css">
+</head>
 
 {% block content %}
 <h1 class="ml-10 text-title text-black font-japanese font-bold">{{ deck.name }}</h1>
 
-<div class="container mx-auto px-4 py-8">
-    <h2 class="text-3xl font-bold mb-6">Flashcards</h2>
-
-    <!-- Flashcards List -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        
-        {% for flashcard in flashcards %}
-        <div class="border-2 border-black rounded-3xl bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center items-center hover:bg-gray-100 transition duration-300">
+<div class="flashcards-container">
+    {% for flashcard in flashcards %}
+    <div class="flashcard border-2 border-black rounded-3xl shadow-md cursor-pointer" onclick="flipCard(this)">
+        <!-- Front side of the flashcard -->
+        <div class="flashcard-front">
             <h3 class="text-xl font-semibold mb-4">{{ flashcard.vocab_word }}</h3>
-            <p class="text-gray-500 mb-4">{{ flashcard.english_translation }}</p>
-            <a href="#" class="text-orange hover:text-crimson">View Details</a>
         </div>
-        {% empty %}
-        <p>No flashcards available in this deck.</p>
-        {% endfor %}
-        
+
+        <!-- Back side of the flashcard -->
+        <div class="flashcard-back">
+            <p class="text-gray-700 mb-4"><strong>Kana:</strong> {{ flashcard.kana }}</p>
+            <p class="text-gray-500 mb-4"><strong>English Translation:</strong> {{ flashcard.english_translation }}</p>
+            <p class="text-gray-500 mb-4"><strong>Part of Speech:</strong> {{ flashcard.part_of_speech }}</p>
+            <p class="text-gray-500 mb-4"><strong>Example Sentence (Japanese):</strong> {{ flashcard.example_sentence }}</p>
+            <p class="text-gray-500 mb-4"><strong>Example Sentence (Kana):</strong> {{ flashcard.example_sentence_kana }}</p>
+            <p class="text-gray-500 mb-4"><strong>Example Sentence (English):</strong> {{ flashcard.example_sentence_english }}</p>
+        </div>
+    </div>
+    {% empty %}
+    <p>No flashcards available in this deck.</p>
+    {% endfor %}
+</div>
+
+    <div class="flex justify-center space-x-4 mt-10">
+        <button class="bg-orange text-white px-4 py-2 rounded-md hover:bg-crimson" onclick="markIncorrect()">Incorrect</button>
+        <button class="bg-orange text-white px-4 py-2 rounded-md hover:bg-crimson" onclick="markCorrect()">Correct</button>
     </div>
 </div>
+
+<script>
+let currentCardIndex = 0; // Index of the current card
+const flashcards = document.querySelectorAll('.flashcard'); // Get all flashcards
+
+// Function to show the current flashcard
+function showCurrentCard() {
+    flashcards.forEach((card, index) => {
+        card.classList.toggle('hidden', index !== currentCardIndex); // Show only the current card
+    });
+}
+
+// Function to show the next card
+function showNextCard() {
+    if (currentCardIndex < flashcards.length - 1) {
+        currentCardIndex++;
+    } else {
+        currentCardIndex = 0; // Loop back to the first card
+    }
+    showCurrentCard(); // Update the display
+}
+
+
+function flipCard(card) {
+    // Toggle the 'flipped' class to handle flipping
+    card.classList.toggle('flipped');
+}
+
+// Function to mark a card as correct
+function markCorrect(button) {
+    showNextCard(); // Show the next card automatically
+}
+
+// Function to mark a card as incorrect
+function markIncorrect(button) {
+    showNextCard(); // Show the next card automatically
+}
+
+// Show the first card on page load
+showCurrentCard();
+</script>
 
 {% endblock %}
