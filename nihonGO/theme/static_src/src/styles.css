@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 .flashcard {
-    width: 200px; /* Set a fixed width */
+    width: 600px; /* Set a fixed width */
     height: 300px; /* Set a fixed height */
     position: relative; /* Allow positioning of front and back */
     perspective: 1000px; /* Add perspective for 3D effect */
@@ -24,7 +24,7 @@
 }
 
 .flashcard-back {
-    background-color: lightgray; /* Set back background */
+    background-color: white; /* Set back background */
     transform: rotateY(180deg); /* Rotate back 180 degrees */
 }
 
