@@ -12,7 +12,13 @@
 	<body class="bg-gray-50 font-serif leading-normal tracking-normal">
 		<div class="container mx-auto">
 			<section class="flex items-center justify-center h-screen">
-				<h1 class="text-5xl">Profile Page</h1>
+				{% block title %}Profile Page{% endblock title %}
+				{% block content %}
+					<div class="row my-3 p-3">
+						<h1>This is the profile page for {{user.username}}</h1>
+					</div>
+
+				{% endblock content %}
 
 				<a href="{% url 'user-logout' %}">Logout here</a>
 			</section>
