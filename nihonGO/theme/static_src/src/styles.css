@@ -1,3 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.flashcard {
+    width: 200px; /* Set a fixed width */
+    height: 300px; /* Set a fixed height */
+    position: relative; /* Allow positioning of front and back */
+    perspective: 1000px; /* Add perspective for 3D effect */
+    cursor: pointer; /* Change cursor to indicate clickability */
+}
+
+.flashcard-front,
+.flashcard-back {
+    position: absolute; /* Position elements absolutely to overlap */
+    width: 100%; /* Full width of the parent */
+    height: 100%; /* Full height of the parent */
+    backface-visibility: hidden; /* Hide back face when flipped */
+    transition: transform 0.6s; /* Smooth transition for flip effect */
+}
+
+.flashcard-front {
+    background-color: white; /* Set front background */
+    z-index: 2; /* Front should be on top */
+}
+
+.flashcard-back {
+    background-color: lightgray; /* Set back background */
+    transform: rotateY(180deg); /* Rotate back 180 degrees */
+}
+
+/* Add flipping effect */
+.flipped .flashcard-front {
+    transform: rotateY(180deg); /* Flip the front */
+}
+
+.flipped .flashcard-back {
+    transform: rotateY(0deg); /* Show the back */
+}
