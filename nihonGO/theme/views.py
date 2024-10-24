@@ -15,10 +15,10 @@ def register (request):
 
 def about(request):
     team_members = [
-        {'name': 'Alex Richardson', 'image': 'richardson.jpg', 'description': 'actually knows japanese'},
-        {'name': 'Aiden Redmond', 'image': 'redmond.jpg', 'description': 'made everyone learn tailwind'},
-        {'name': 'Michael Durden', 'image': 'durden.jpg', 'description': 'tbd'},
-        {'name': 'Eunice Ladu', 'image': 'eunice.jpg', 'description': 'tbd'},
+        {'name': 'Alex Richardson', 'image': 'richardson.jpg', 'description': 'actually knows japanese', 'link' : 'https://github.com/lrichardson21'},
+        {'name': 'Aiden Redmond', 'image': 'redmond.jpg', 'description': 'made everyone learn tailwind', 'link' : 'https://github.com/aredmondd'},
+        {'name': 'Michael Durden', 'image': 'durden.jpg', 'description': 'had to nuke his github branch(es)', 'link' : 'https://github.com/masterjedidcfl'},
+        {'name': 'Eunice Ladu', 'image': 'eunice.jpg', 'description': 'tbd', 'link' : 'https://github.com/eunice-rayy'},
     ]
     return render(request, 'about.html', {'team_members': team_members})
 
