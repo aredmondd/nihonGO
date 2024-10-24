@@ -6,7 +6,7 @@
 {% block content %}
 <h1 class="ml-10 text-title text-black font-japanese font-bold">{{ deck.name }}</h1>
 
-<div class="flashcards-container">
+<div class="flashcards-container flex justify-center items-center">
     {% for flashcard in flashcards %}
     <div class="flashcard border-2 border-black shadow-md cursor-pointer hidden" onclick="flipCard(this)">
         <!-- Front side of the flashcard -->
