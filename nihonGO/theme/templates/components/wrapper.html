@@ -22,17 +22,21 @@
     <!-- Side Navigation -->
     {% include 'components/side-nav.html' %}
 
-    <!-- Main Content -->
-    <div class="p-4 sm:ml-64 bg-peach mt-8">
-        <div class="p-4 border-2 border-black rounded-3xl bg-white">
-            {% block content %}
-            {% endblock %}
+    <!-- Page Container -->
+    <div class="flex flex-col min-h-screen bg-peach">
+        <!-- Main Content -->
+        <div class="flex-1 p-4 sm:ml-64 mt-8">
+            <div class="p-4 border-2 border-black rounded-3xl bg-white">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="p-4 sm:ml-64 bg-peach">
+            {% include 'components/footer.html' %}
         </div>
     </div>
 
-    <!-- Footer -->
-    <div class="absolute bottom-0 right-0 left-0 p-4 sm:ml-64 bg-peach">
-        {% include 'components/footer.html' %}
-    </div>
 </body>
 </html>
