@@ -13,8 +13,14 @@ def login (request):
 def register (request):
     return render(request, 'register.html')
 
-def about (request):
-    return render(request, 'about.html')
+def about(request):
+    team_members = [
+        {'name': 'Alex Richardson', 'image': 'richardson.jpg', 'description': 'actually knows japanese'},
+        {'name': 'Aiden Redmond', 'image': 'redmond.jpg', 'description': 'made everyone learn tailwind'},
+        {'name': 'Michael Durden', 'image': 'durden.jpg', 'description': 'tbd'},
+        {'name': 'Eunice Ladu', 'image': 'eunice.jpg', 'description': 'tbd'},
+    ]
+    return render(request, 'about.html', {'team_members': team_members})
 
 def dashboard (request):
     return render(request, 'dashboard.html')

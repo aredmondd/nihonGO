@@ -1,5 +1,23 @@
 {% extends 'components/wrapper.html' %}
+{% load static %}
 
 {% block content %}
-    <h1 class="ml-12 text-title text-black font-japanese font-bold">About</span></h1>
+
+    <h1 class="text-heading text-center text-black font-DMSans font-bold">Learn Japanese, <span class="text-crimson">Your Way</span></h1>
+    <p class="text-body text-center text-black font-DMSans">Interactive tools, customizable flashcards, & real conversations – NihonGO! makes mastering Japanese <span class="underline underline-offset-2 decoration-crimson">easier than ever</span>.</p>
+    
+    <h1 class="text-heading text-center text-black font-DMSans font-bold mt-12">Meet the team:</h1>
+    <p class="text-body text-center text-black font-DMSans mb-6">nihonGO! was made possible by the efforts of the 4 creators below, under the supervision of Dr. Roberson</p>
+    <div class="flex flex-wrap justify-around font-DMSans mb-12">
+        {% for member in team_members %}
+            <div class="flex flex-col justify-center items-center border border-2 border-orange rounded-lg px-10 pb-4 pt-4 mb-6">
+                <img src="{% static member.image %}" class="rounded-full w-48 h-48" alt="{{ member.name }}">
+                <p class="text-black text-center mt-4 text-body font-bold">{{ member.name }}</p>
+                <p class="text-black text-center text-sm">{{ member.description }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% include 'components/C2A.html' %}
+
 {% endblock %}
