@@ -1,0 +1,78 @@
+{% extends 'components/wrapper.html' %}
+</head>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+{% block content %}
+<h1 class="ml-10 text-title text-black font-japanese font-bold">{{ deck.name }}</h1>
+
+<div class="flashcards-container flex justify-center items-center">
+    {% for flashcard in flashcards %}
+    <div class="flashcard border-2 border-black shadow-md cursor-pointer hidden" onclick="flipCard(this)">
+        <!-- Front side of the flashcard -->
+        <div class="flashcard-front flex items-center justify-center h-full">
+            <h3 class="text-7xl text-crimson font-semibold mb-4">{{ flashcard.vocab_word }}</h3>
+        </div>
+
+        <!-- Back side of the flashcard -->
+        <div class="flashcard-back flex flex-col items-center">
+            <p class="text-5xl text-crimson font-semibold mb-4 text-center mt-4"><strong></strong> {{ flashcard.kana }}</p>
+            <p class="text-2xl text-black mb-4 font-semibold text-center"><strong></strong> {{ flashcard.english_translation }}</p>
+            <p class="text-xl text-orange mb-4 text-center"><strong></strong> {{ flashcard.part_of_speech }}</p>
+            <p class="text-xl text-gray-600 mb-4 text-center"><strong></strong> {{ flashcard.example_sentence }}</p>
+            <p class="text-xl text-gray-600 mb-4 text-center"><strong></strong> {{ flashcard.example_sentence_kana }}</p>
+            <p class="text-xl text-gray-600 mb-4 text-center"><strong></strong> {{ flashcard.example_sentence_english }}</p>
+        </div>
+    </div>
+    {% empty %}
+    <p>No flashcards available in this deck.</p>
+    {% endfor %}
+</div>
+
+<div class="flex justify-center space-x-4 mt-10">
+    <button class="bg-orange text-white px-4 py-2 rounded-md hover:bg-crimson" onclick="markIncorrect()">Incorrect</button>
+    <button class="bg-orange text-white px-4 py-2 rounded-md hover:bg-crimson" onclick="markCorrect()">Correct</button>
+</div>
+
+<script>
+let currentCardIndex = 0; // Index of the current card
+const flashcards = document.querySelectorAll('.flashcard'); // Get all flashcards
+
+// Function to show the current flashcard
+function showCurrentCard() {
+    flashcards.forEach((card, index) => {
+        card.classList.toggle('hidden', index !== currentCardIndex); // Show only the current card
+    });
+}
+
+// Function to show the next card
+function showNextCard() {
+    if (currentCardIndex < flashcards.length - 1) {
+        currentCardIndex++;
+    } else {
+        currentCardIndex = 0; // Loop back to the first card
+    }
+    showCurrentCard(); // Update the display
+}
+
+// Function to flip the card
+function flipCard(card) {
+    // Toggle the 'flipped' class to handle flipping
+    card.classList.toggle('flipped');
+}
+
+// Function to mark a card as correct
+function markCorrect() {
+    showNextCard(); // Show the next card automatically
+}
+
+// Function to mark a card as incorrect
+function markIncorrect() {
+    showNextCard(); // Show the next card automatically
+}
+
+// Show the first card on page load
+showCurrentCard();
+</script>
+
+{% endblock %}
