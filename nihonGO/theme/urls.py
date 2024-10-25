@@ -13,4 +13,6 @@ urlpatterns = [
     path('mydecks/', views.my_decks, name="my_decks"),
     path('add/', views.add_deck, name='add_deck'),
     path('study/<int:deck_id>/', views.study, name='study'),
+    path('edit/<int:deck_id>/', views.edit_deck, name='edit_deck'),
+    path('delete/<int:deck_id>/', views.delete_deck, name='delete_deck'),  
 ]

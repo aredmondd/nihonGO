@@ -1,0 +1,38 @@
+{% extends 'components/wrapper.html' %}
+
+{% block content %}
+<h1>Edit Deck: {{ deck.name }}</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ deck_form.as_p }}
+
+    <h2>Flashcards</h2>
+    <ul>
+        {% for flashcard_form in flashcard_forms %}
+        <li>
+            {{ flashcard_form.as_p }}
+            <input type="checkbox" name="delete_cards" value="{{ flashcard_form.instance.id }}"> Delete Card
+        </li>
+        {% empty %}
+        <li>No flashcards available.</li>
+        {% endfor %}
+    </ul>
+
+    <li>
+        {{ flashcard_form.as_p }}
+        <p>Correct: {{ flashcard.usercardprogress_set.filter(correct=True).count }}</p>
+        <p>Incorrect: {{ flashcard.usercardprogress_set.filter(correct=False).count }}</p>
+        <input type="checkbox" name="delete_cards" value="{{ flashcard_form.instance.id }}"> Delete Card
+    </li>
+
+    <button type="submit">Update Deck</button>
+</form>
+
+<form method="POST" action="{% url 'delete_deck' deck.id %}" onsubmit="return confirm('Are you sure you want to delete this deck?');">
+    {% csrf_token %}
+    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Delete Entire Deck</button>
+</form>
+
+
+{% endblock %}

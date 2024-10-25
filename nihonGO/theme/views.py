@@ -172,3 +172,44 @@ def create_default_deck(user):
                 example_sentence_kana=details['example_sentence_kana'],
                 example_sentence_english=details['example_sentence_english']
             )
+
+
+
+def edit_deck(request, deck_id):
+    deck = get_object_or_404(Deck, id=deck_id, user=request.user)
+    flashcards = Card.objects.filter(deck=deck)  # Get the flashcards for the deck
+
+    if request.method == "POST":
+        # Handle deck name and spaced repetition settings
+        deck_form = DeckForm(request.POST, instance=deck)
+        if deck_form.is_valid():
+            deck_form.save()  # Save the updated deck
+
+        # Handle card deletion if specified
+        if 'delete_cards' in request.POST:
+            card_ids_to_delete = request.POST.getlist('delete_cards')  # Get list of card IDs to delete
+            Card.objects.filter(id__in=card_ids_to_delete).delete()
+
+        # Process updates for each flashcard
+        for flashcard in flashcards:
+            flashcard_form = FlashcardForm(request.POST, instance=flashcard)
+            if flashcard_form.is_valid():
+                flashcard_form.save()
+
+        return redirect('my_decks')  # Redirect to the decks page after editing
+
+    else:
+        deck_form = DeckForm(instance=deck)  # Prepopulate the form with existing deck data
+        flashcard_forms = [FlashcardForm(instance=flashcard) for flashcard in flashcards]
+
+    return render(request, 'flashcards/edit_deck.html', {
+        'deck_form': deck_form,
+        'flashcard_forms': flashcard_forms,
+        'deck': deck,
+        'flashcards': flashcards,
+    })
+
+def delete_deck(request, deck_id):
+    deck = get_object_or_404(Deck, id=deck_id, user=request.user)
+    deck.delete()  # Delete the deck along with its associated flashcards
+    return redirect('my_decks')  # Redirect to the decks page after deletion
