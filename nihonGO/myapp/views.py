@@ -12,6 +12,7 @@ from django.urls import reverse_lazy
 
 
 
+
 # Create your views here.
 def home (request):
     return render(request, 'myapp/base.html')
@@ -76,11 +77,11 @@ def user_logout(request):
 
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
 
-    template_name = 'users/change_password.html'
+    template_name = 'myapp/change_password.html'
 
     success_message = "Successfully Changed Your Password"
     
-    success_url = reverse_lazy('users-home')
+    success_url = reverse_lazy('profile-page.html')
 
 @login_required
 def profile(request):
@@ -98,7 +99,7 @@ def profile(request):
 
             messages.success(request, 'Your profile is updated successfully')
 
-            return redirect(to='users-profile')
+            return redirect(to='profile-page.html')
     else:
         user_form = UpdateUserForm(instance=request.user)
 
