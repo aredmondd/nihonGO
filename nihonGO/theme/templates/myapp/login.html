@@ -1,6 +1,5 @@
 {% load static tailwind_tags %}
 {% load static %}
-{% load widget_tweaks %}
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -14,17 +13,6 @@
 
 	<body class="bg-[#F1CD9D] font-serif leading-normal tracking-normal">
 		<div class="container mx-auto">
-			<!-- <h1 class="text-5xl">Login here</h1> -->
-			<!-- <form method="POST" autocomplete="off"> -->
-				<!-- {% csrf_token %} -->
-				<!-- {{loginform.as_p}} -->	
-				<!-- {% render_field loginform.username name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required="" %} -->
-				<!-- {% render_field loginform.password name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="" %} -->
-				<!-- <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login</button> -->
-				<!-- <input type="submit" value="Login"/> -->
-			<!-- </form> -->
-			<!-- <a href="{% url 'register' %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Don't have an account?</a> -->
-
 			<section class="bg-[#F1CD9D] dark:bg-gray-900">
 				<div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
 					<a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
@@ -40,22 +28,22 @@
 							<p>Your username and/or password didn't match. Please try again.</p>
 							{% endif %}
 							<form class="space-y-4 md:space-y-6" action="{% url 'my-login' %}" method="POST">
-								{% csrf_token %}
-								<div>
-									<label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your username</label>
-									{% render_field loginform.username name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Username" required="" %}
-								</div>
-								<div>
-									<label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-									{% render_field loginform.password name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="" %}
-								</div>
-								<input type="hidden" name="next" value="{% url 'profile-page' %}">
-								<button type="submit" name="submit" class="w-full text-blue-500 bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign in</button>
-								<a href="{% url 'password_reset' %}" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
-								<p class="text-sm font-light text-gray-500 dark:text-gray-400">
-									Don’t have an account yet? <a href="{% url 'register' %}" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
-								</p>
-							</form>
+                                {% csrf_token %}
+                                <div>
+                                    <label for="{{ form.username.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your username</label>
+                                    {{ form.username }}
+                                </div>
+                                <div>
+                                    <label for="{{ form.password.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                                    {{ form.password }}
+                                </div>
+                                <input type="hidden" name="next" value="{% url 'profile-page' %}">
+                                <button type="submit" name="submit" class="w-full text-blue-500 bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign in</button>
+                                <a href="{% url 'password_reset' %}" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
+                                <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                                    Don’t have an account yet? <a href="{% url 'register' %}" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
+                                </p>
+                            </form>                            
 						</div>
 					</div>
 				</div>
