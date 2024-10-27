@@ -4,6 +4,7 @@ from . import views
 from .views import profile
 
 urlpatterns = [
+    path('translate/', views.deepl_translate_view, name='deepl_translate'),
     path('', views.home, name="home"),
 
     path('register', views.register, name="register"),

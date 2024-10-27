@@ -1,0 +1,47 @@
+{% extends 'components/wrapper.html' %}
+
+{% block content %}
+    <div class="font-outfit">
+        <h1 class="text-title text-center text-bold font-bold">nihon<span class="text-crimson">GO</span></h1>
+
+        <hr class="border border-black mx-4 border-1 rounded-full">
+
+        <div class="flex justify-between space-x-4 mx-4 mt-24">
+            <div class="flex flex-col">
+                <h1 class="text-heading text-center text-black font-bold">Learn Japanese, <span class="underline underline-offset-2 decoration-crimson">Your Way</span></h1>
+                <p class="mt-3 text-body text-center text-black ">Interactive tools, customizable flashcards, & real conversations... <br> NihonGO makes mastering Japanese <span class="text-crimson font-semibold">engaging and easier than ever</span>.</p>
+                <div class="flex justify-center mt-3">
+                    <div class="flex my-6">
+                        <a href="/nihongo/register"><button class="bg-orange text-white font-semibold py-4 px-6 rounded-full shadow-md hover:bg-crimson transition duration-300">Register</button></a>
+                        <div class="mx-4"> </div>
+                        <a href="/nihongo/login"><button class="bg-orange text-white font-semibold py-4 px-6 rounded-full shadow-md hover:bg-crimson transition duration-300">Login</button></a>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-peach rounded-lg grow flex justify-center items-center">art here :)</div>
+        </div>
+
+
+        <div class="mt-24"></div>
+
+
+        <h1 class="text-heading text-center text-black font-bold">nihon... GO?</h1>
+        <p class="text-black text-center">nihonGO is more than a learning platform – it’s a community for people passionate about mastering Japanese</p>
+        <div class="grid grid-cols-3 gap-12 mx-10 mt-6">
+            <div class="flex flex-col justify-center items-center border border-2 border-orange hover:border-crimson rounded-lg px-4 py-32 mb-6 transition duration-300 ease-in-out">
+                <h1>flashcards art here</h1>
+            </div>
+            <div class="flex flex-col justify-center items-center border border-2 border-orange hover:border-crimson rounded-lg px-4 py-32 mb-6 transition duration-300 ease-in-out">
+                <h1>messaging art here</h1>
+            </div>
+            <div class="flex flex-col justify-center items-center border border-2 border-orange hover:border-crimson rounded-lg px-4 py-32 mb-6 transition duration-300 ease-in-out">
+                <h1>forums art here</h1>
+            </div>
+        </div>
+
+        <div class="mt-24"></div>
+
+        <h1 class="text-heading text-center text-black font-bold">NihonGO is not <span class="underline underline-offset-2 decoration-crimson">just for english speakers</span></h1>
+        <p class="mt-3 text-center text-black ">Native Japanese speakers can practice their english with our built-in live translation feature with messaging.</p>
+    </div>
+{% endblock %}

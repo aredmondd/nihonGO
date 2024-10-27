@@ -44,10 +44,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'myapp',
     'tailwind',
+    'myapp',
     'theme',
     'django_browser_reload',
+    'flashcards',
 ]
 
 MIDDLEWARE = [
@@ -62,9 +63,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'nihonGO.urls'
-
-NPM_BIN_PATH = r'C:\Program Files\nodejs\npm.cmd'
-
 
 TEMPLATES = [
     {

@@ -1,0 +1,30 @@
+{% load static %}
+<!-- Footer -->
+<footer class=" border border-black border-2 rounded-3xl p-4 bg-white">
+    <div class="flex justify-between items-center">
+        <!-- logo and description -->
+        <div>
+            <h1 class="text-md text-black font-outfit font-bold">nihon<span class="text-crimson">GO!</span></h1>
+            <p class="text-black text-sm font-DMSans">nihonGO! is a project developed by Alex, Aiden, Michael, & Eunice <br> under the supervision of Dr. Roberson for Software Engineering Fall '25</p>
+        </div>
+
+        <div class="flex items-center">
+
+            <!-- links -->
+            <div class="flex flex-col mr-24 text-body space-y-1">
+                <a href="{% url 'about' %}" class="text-black font-DMSans hover:underline underline-offset-2 decoration-crimson">About</a>
+                <a href="{% url 'login' %}" class="text-black font-DMSans hover:underline underline-offset-2 decoration-crimson">Login</a>
+                <a href="{% url 'register' %}" class="text-black font-DMSans hover:underline underline-offset-2 decoration-crimson">Register</a>
+                <a href="https://github.com/aredmondd/nihonGO" target="_blank" class="text-black font-DMSans hover:underline underline-offset-2 decoration-crimson">Github</a>
+            </div>
+
+            <!-- photos -->
+            <div class="grid grid-cols-2 gap-2">
+                <img src="{% static 'richardson.jpg' %}" class="rounded-full w-12 h-12" alt="">
+                <img src="{% static 'redmond.jpg' %}" class="rounded-full w-12 h-12" alt="">
+                <img src="{% static 'durden.jpg' %}" class="rounded-full w-12 h-12" alt="">
+                <img src="{% static 'eunice.jpg' %}" class="rounded-full w-12 h-12" alt="">
+            </div>
+        </div>
+    </div>
+</footer>

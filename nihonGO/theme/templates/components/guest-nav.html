@@ -1,0 +1,33 @@
+{% load static %}
+<!-- Side Navbar -->
+<aside id="default-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
+    <div class="h-full flex flex-col justify-between px-3 py-4 overflow-y-auto bg-peach">
+        <ul class="space-y-2 font-medium mt-6">
+            <li>
+                <a href="{% url 'index' %}">
+                    <h1 class="ml-3 text-md text-black font-japanese font-bold">日本<span class="text-crimson font-outfit">GO!</span></h1>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'login' %}" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'login' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
+                <span class="ms-3">Login</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'register' %}" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'register' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
+                <span class="ms-3">Register</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'forum' %}" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'forum' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
+                <span class="ms-3">Forum</span>
+                </a>
+            </li>
+        </ul>
+
+        <a href="{% url 'my-profile' %}"><img src="{% static 'redmond.jpg' %}" alt="" class="ml-2 w-16 h-16 rounded-full border border-2 border-black"></a>
+    </div>
+</aside>
