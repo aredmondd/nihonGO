@@ -174,20 +174,26 @@ def create_default_deck(user):
             )
 
 
+from django.shortcuts import get_object_or_404, redirect, render
+from .models import Deck, Card
 
 def edit_deck(request, deck_id):
-    deck = get_object_or_404(Deck, id=deck_id, user=request.user)
-    flashcards = Card.objects.filter(deck=deck)  # Get the flashcards for the deck
+    # Get the deck without filtering by user, allowing access for logged-out users
+    deck = get_object_or_404(Deck, id=deck_id)
+    flashcards = Card.objects.filter(deck=deck)  # Get all flashcards for the deck
 
-    if request.method == "POST":
-        # Handle deck name and spaced repetition settings
+    # Check if the user is authenticated and is the owner of the deck
+    is_owner = request.user.is_authenticated and deck.user == request.user
+
+    if request.method == "POST" and is_owner:
+        # Handle updates only if the user is the owner
         deck_form = DeckForm(request.POST, instance=deck)
         if deck_form.is_valid():
-            deck_form.save()  # Save the updated deck
+            deck_form.save()  # Save the updated deck information
 
         # Handle card deletion if specified
         if 'delete_cards' in request.POST:
-            card_ids_to_delete = request.POST.getlist('delete_cards')  # Get list of card IDs to delete
+            card_ids_to_delete = request.POST.getlist('delete_cards')  # List of card IDs to delete
             Card.objects.filter(id__in=card_ids_to_delete).delete()
 
         # Process updates for each flashcard
@@ -196,10 +202,11 @@ def edit_deck(request, deck_id):
             if flashcard_form.is_valid():
                 flashcard_form.save()
 
-        return redirect('my_decks')  # Redirect to the decks page after editing
+        return redirect('my_decks')  # Redirect to the decks page after saving changes
 
     else:
-        deck_form = DeckForm(instance=deck)  # Prepopulate the form with existing deck data
+        # Prepopulate the form with existing data
+        deck_form = DeckForm(instance=deck)
         flashcard_forms = [FlashcardForm(instance=flashcard) for flashcard in flashcards]
 
     return render(request, 'flashcards/edit_deck.html', {
@@ -207,7 +214,9 @@ def edit_deck(request, deck_id):
         'flashcard_forms': flashcard_forms,
         'deck': deck,
         'flashcards': flashcards,
+        'is_owner': is_owner,  # Pass ownership status to the template
     })
+
 
 def delete_deck(request, deck_id):
     deck = get_object_or_404(Deck, id=deck_id, user=request.user)
