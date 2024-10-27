@@ -9,56 +9,15 @@
 		{% tailwind_css %}
 	</head>
 
-	<body class="bg-gray-50 font-serif leading-normal tracking-normal">
-		<div class="container mx-auto">
-			<section class="flex items-center justify-center h-screen">
-				{% block title %}Profile Page{% endblock title %}
-				{% block content %}
-					<div>
-						<img class="w-10 h-10 rounded-full account-img" src="{{ user.profile.avatar.url }}" alt="Rounded avatar">
-						<!-- <img class="rounded-circle account-img" src="{{ user.profile.avatar.url }}" style="cursor: pointer;"/> -->
-					</div>
-					{% if user_form.errors %}
-						<div>
-							<div id="form_errors">
-								{% for key, value in user_form.errors.items %}
-									<strong>{{ value }}</strong>
-								{% endfor %}
-							</div>
-							<!-- <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button> -->
-						</div>
-					{% endif %}
-					<div>
-						<form method="POST" enctype="multipart/form-data">
-							{% csrf_token %}
-							<div>
-								<div>
-									<div>
-										<label>Username:</label>
-											{{ user.username }}
-										<label>Email:</label>
-											{{ user.email }}
-									</div>
-									<div>
-										<a href="{% url 'password_change' %}">Change Password</a>
-										<hr>
-										<label>Change Avatar:</label>
-										{{ profile_form.avatar }}
-									</div>
-									<label>Bio:</label> {{ profile_form.bio }}
-								</div>
-							</div>
-							<br><br>
-							<button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Save Changes</button>
-							<button type="reset" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Reset</button>
-						</form>
-					</div>
-				{% endblock content %}
+	<body>
+		{% block title %}Profile Page{% endblock title %}
+		{% block content %}
+			<div class="row my-3 p-3">
+				<h1>This is the profile page for {{user.username}}</h1>
+			</div>
 
-				<a href="{% url 'user-logout' %}">Logout here</a>
-			</section>
-		</div>
+		{% endblock content %}
+
+		<a href="{% url 'user-logout' %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Logout here</a>
 	</body>
 </html>
