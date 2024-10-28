@@ -17,10 +17,15 @@
 			</div>
 			<div class="w-24 h-24">
 				<img class="w-full h-full rounded-full object-cover shadow-lg" src="{{ user.profile.avatar.url }}" alt="User's Profile Picture"/>
-			  </div>
+			</div>
+			<div>
+				<p>Bio: {{ user.profile.bio }}</p>
+			</div>
+
+			  
 			
 		{% endblock content %}
-
+		<a href="{% url 'profile-editor' %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit Profile</a>
 		<a href="{% url 'user-logout' %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Logout here</a>
 	</body>
 </html>
