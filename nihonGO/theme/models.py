@@ -1,6 +1,8 @@
 # models.py
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from datetime import timedelta
 
 class Card(models.Model):
     deck = models.ForeignKey('Deck', related_name='flashcards', on_delete=models.CASCADE)
@@ -44,3 +46,29 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+class UserCardProgress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    card = models.ForeignKey(Card, on_delete=models.CASCADE)
+    last_reviewed = models.DateTimeField(default=timezone.now)
+    next_review_date = models.DateTimeField(default=timezone.now)
+    ease_factor = models.FloatField(default=2.5)  # Controls the learning interval
+    interval = models.IntegerField(default=1)  # Days until the next review
+    repetition_count = models.IntegerField(default=0)
+
+    def update_progress(self, correct):
+        if correct:
+            self.repetition_count += 1
+            self.ease_factor = max(1.3, self.ease_factor + 0.1)  # Increase ease factor slightly for correct answers
+            self.interval = self.interval * self.ease_factor  # Increase interval based on ease factor
+        else:
+            self.repetition_count = 0
+            self.ease_factor = max(1.3, self.ease_factor - 0.2)  # Decrease ease factor for incorrect answers
+            self.interval = 1  # Reset interval on incorrect answer
+
+        self.last_reviewed = timezone.now()
+        self.next_review_date = timezone.now() + timedelta(days=int(self.interval))
+        self.save()
+
+    def __str__(self):
+        return f"{self.user.username} - {self.card.vocab_word}"
