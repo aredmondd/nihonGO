@@ -1,5 +1,20 @@
 {% extends 'components/wrapper.html' %}
 
 {% block content %}
-    <h1 class="ml-12 text-title text-black font-japanese font-bold">Login</span></h1>
+    <h1 class="text-center text-title text-black font-japanese font-bold">おかえり!</h1>
+    <form class="space-y-4 md:space-y-6" action="{% url 'login' %}" method="POST">
+        {% csrf_token %}
+        
+        <div class="flex flex-col space-y-4 justify-center mx-96">
+            {{ form.username }}
+            {{ form.password }}
+        </div>
+
+        <input type="hidden" name="next" value="{% url 'profile-page' %}">
+        <button type="submit" name="submit" class="border border-2 border-black rounded-2xl px-6 py-2">Login</button><br>
+        <a href="{% url 'password_reset' %}" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
+        <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+            Don’t have an account yet? <a href="{% url 'register' %}" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
+        </p>
+    </form> 
 {% endblock %}

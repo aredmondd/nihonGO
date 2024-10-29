@@ -2,4 +2,14 @@
 
 {% block content %}
     <h1 class="ml-12 text-title text-black font-japanese font-bold">Register</span></h1>
+    <form method="POST" class="space-y-4 md:space-y-6">
+        {% csrf_token %}
+        
+        {{ registerform.as_p }}
+        
+        <button type="submit">Register</button>
+        <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+            Already have an account? <a href="{% url 'login' %}" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</a>
+        </p>
+    </form>
 {% endblock %}

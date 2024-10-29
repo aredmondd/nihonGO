@@ -1,12 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-import requests
 from django.shortcuts import render
 from django.http import JsonResponse
-
-# Create your views here.
-def home (request):
-    return HttpResponse('Hello World!')
+from django.contrib.auth.models import auth
+from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 DEEPL_API_KEY = 'your-deepl-api-key'
 DEEPL_API_URL = 'https://api-free.deepl.com/v2/translate'  # Adjust for pro users

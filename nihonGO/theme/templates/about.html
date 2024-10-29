@@ -1,5 +1,36 @@
 {% extends 'components/wrapper.html' %}
+{% load static %}
 
 {% block content %}
-    <h1 class="ml-12 text-title text-black font-japanese font-bold">About</span></h1>
+
+    <h1 class="text-heading text-center text-black font-DMSans font-bold">Learn Japanese, <span class="text-crimson">Your Way</span></h1>
+    <p class="text-body text-center text-black font-DMSans">Interactive tools, customizable flashcards, & real conversations – NihonGO! makes mastering Japanese <span class="underline underline-offset-2 decoration-crimson">easier than ever</span>.</p>
+    
+    <h1 class="text-heading text-center text-black font-DMSans font-bold mt-12">Meet the team:</h1>
+    <p class="text-body text-center text-black font-DMSans mb-6">nihonGO! was made possible by the efforts of the 4 creators below, under the supervision of Dr. Roberson</p>
+    <div class="grid grid-cols-4 gap-6 font-DMSans mb-12 mx-10">
+        {% for member in team_members %}
+            <div class="flex flex-col justify-center items-center border border-2 border-orange hover:border-crimson rounded-lg px-4 pb-4 pt-4 mb-6 transition duration-300 ease-in-out">
+                <img src="{% static member.image %}" class="rounded-full w-48 h-48" alt="{{ member.name }}">
+                <a href="{{ member.link }}" target="_blank" class="text-black text-center mt-4 text-body font-bold underline-offset-2 decoration-crimson hover:underline">{{ member.name }}</a>
+                <p class="text-black text-center text-sm">{{ member.description }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <h1 class="text-heading font-bold text-black font-DMSans text-center">nihon... GO?</h1>
+    <div class="grid grid-cols-3 gap-12 mx-10">
+        <div class="flex flex-col justify-center items-center border border-2 border-orange hover:border-crimson rounded-lg px-4 py-32 mb-6 transition duration-300 ease-in-out">
+            <h1>flashcards</h1>
+        </div>
+        <div class="flex flex-col justify-center items-center border border-2 border-orange hover:border-crimson rounded-lg px-4 py-32 mb-6 transition duration-300 ease-in-out">
+            <h1>messaging</h1>
+        </div>
+        <div class="flex flex-col justify-center items-center border border-2 border-orange hover:border-crimson rounded-lg px-4 py-32 mb-6 transition duration-300 ease-in-out">
+            <h1>forums</h1>
+        </div>
+    </div>
+
+    {% include 'components/C2A.html' %}
+
 {% endblock %}

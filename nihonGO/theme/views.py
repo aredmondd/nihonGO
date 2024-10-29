@@ -2,19 +2,52 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 import json
 from .models import Deck, Card
+from .forms import LoginForm
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.http import JsonResponse
+from . forms import CreateUserForm, LoginForm
+from django.contrib.auth.models import auth
+from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.conf import settings
+import json
+from .models import Deck
+from .forms import DeckForm, FlashcardForm
 
 # Create your views here.
 def index (request):
     return render(request, 'index.html')
 
 def login (request):
-    return render(request, 'login.html')
+    form = LoginForm()
+    return render(request, 'login.html', {'form' : form})
 
 def register (request):
-    return render(request, 'register.html')
+    form = CreateUserForm()
 
-def about (request):
-    return render(request, 'about.html')
+    if request.method == "POST":
+        form = CreateUserForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+
+            return redirect("login")
+        
+    
+    context = {'registerform':form}
+    return render(request, 'register.html', context=context)
+
+def about(request):
+    team_members = [
+        {'name': 'Alex Richardson', 'image': 'richardson.jpg', 'description': 'actually knows japanese', 'link' : 'https://github.com/lrichardson21'},
+        {'name': 'Aiden Redmond', 'image': 'redmond.jpg', 'description': 'made everyone learn tailwind', 'link' : 'https://github.com/aredmondd'},
+        {'name': 'Michael Durden', 'image': 'durden.jpg', 'description': 'had to nuke his github branch(es)', 'link' : 'https://github.com/masterjedidcfl'},
+        {'name': 'Eunice Ladu', 'image': 'eunice.jpg', 'description': 'tbd', 'link' : 'https://github.com/eunice-rayy'},
+    ]
+    return render(request, 'about.html', {'team_members': team_members})
 
 def dashboard (request):
     return render(request, 'dashboard.html')
@@ -28,11 +61,45 @@ def profile (request):
 def messages (request):
     return render(request, 'messages.html')
 
+# Create your views here.
+def home (request):
+    return render(request, 'myapp/base.html')
 
-from django.conf import settings
-import json
-from .models import Deck
-from .forms import DeckForm, FlashcardForm
+def profile_page (request):
+    return render(request, 'myapp/profile-page.html')
+
+
+def my_login(request):
+    form = LoginForm()
+
+    if request.method == 'POST':
+        form = LoginForm(request, data=request.POST)
+
+        if form.is_valid():
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                auth.login(request, user)
+
+                return redirect("profile-page")
+            
+    
+    context = {'loginform':form}
+
+    return render(request, 'myapp/login.html', context=context)
+
+
+def user_logout(request):
+
+    auth.logout(request)
+
+    return redirect("home")
+
+@login_required
+def profile(request):
+    return render(request, 'users/profile.html')
 
 # Use BASE_DIR to construct the relative path
 file_path = f"{settings.BASE_DIR}/theme/templates/flashcards/japanesebasics.json"

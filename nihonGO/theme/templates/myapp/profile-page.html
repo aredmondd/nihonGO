@@ -1,0 +1,23 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <title>Django Tailwind</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{% tailwind_css %}
+	</head>
+
+	<body>
+		{% block title %}Profile Page{% endblock title %}
+		{% block content %}
+			<div class="row my-3 p-3">
+				<h1>This is the profile page for {{user.username}}</h1>
+			</div>
+			
+		{% endblock content %}
+
+		<a href="{% url 'user-logout' %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Logout here</a>
+	</body>
+</html>
