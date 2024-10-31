@@ -21,14 +21,49 @@
         </div>
 
         <!-- Back side of the flashcard -->
-        <div class="flashcard-back flex flex-col items-center">
-            <p class="text-5xl text-crimson font-semibold mb-4 text-center mt-4"><strong></strong> {{ flashcard.kana }}</p>
-            <p class="text-2xl text-black mb-4 font-semibold text-center"><strong></strong> {{ flashcard.english_translation }}</p>
-            <p class="text-xl text-orange mb-4 text-center"><strong></strong> {{ flashcard.part_of_speech}}</p>
-            <p class="text-xl text-gray-600 mb-4 text-center"><strong></strong> {{ flashcard.example_sentence|striptags}}</p>
-            <p class="text-xl text-gray-600 mb-4 text-center"><strong></strong> {{ flashcard.example_sentence_kana|striptags }}</p>
-            <p class="text-xl text-gray-600 mb-4 text-center"><strong></strong> {{ flashcard.example_sentence_english }}</p>
-        </div>
+        <div class="flashcard-back flex flex-col items-center justify-center">
+            {% if flashcard.kana %}
+                <p class="text-5xl text-crimson font-semibold mb-4 text-center">
+                    <strong></strong> 
+                    {% if not flashcard.english_translation and not flashcard.part_of_speech and not flashcard.example_sentence and not flashcard.example_sentence_kana and not flashcard.example_sentence_english %}
+                        '{{ flashcard.kana }}'  <!-- Show kana in quotes if it's the only content -->
+                    {% else %}
+                        {{ flashcard.kana }}  <!-- Show kana normally if there are other contents -->
+                    {% endif %}
+                </p>
+            {% endif %}
+            
+            {% if flashcard.english_translation %}
+                <p class="text-2xl text-black mb-4 font-semibold text-center">
+                    <strong></strong> {{ flashcard.english_translation }}
+                </p>
+            {% endif %}
+            
+            {% if flashcard.part_of_speech %}
+                <p class="text-xl text-orange mb-4 text-center">
+                    <strong></strong> {{ flashcard.part_of_speech }}
+                </p>
+            {% endif %}
+            
+            {% if flashcard.example_sentence %}
+                <p class="text-xl text-gray-600 mb-4 text-center">
+                    <strong></strong> {{ flashcard.example_sentence|striptags }}
+                </p>
+            {% endif %}
+            
+            {% if flashcard.example_sentence_kana %}
+                <p class="text-xl text-gray-600 mb-4 text-center">
+                    <strong></strong> {{ flashcard.example_sentence_kana|striptags }}
+                </p>
+            {% endif %}
+            
+            {% if flashcard.example_sentence_english %}
+                <p class="text-xl text-gray-600 mb-4 text-center">
+                    <strong></strong> {{ flashcard.example_sentence_english }}
+                </p>
+            {% endif %}
+        </div> 
+        
     </div>
     {% empty %}
     <p>No flashcards available in this deck.</p>

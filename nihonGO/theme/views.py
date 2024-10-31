@@ -108,16 +108,19 @@ with open(file_path, 'r') as file:
 def my_decks(request):
     if not request.user.is_authenticated:
         # For non-authenticated users, show a default "Japanese Basics" deck.
+       
         decks = [
             {'id': 1, 'name': 'Japanese Basics', 'cards': load_japanese_dict()},
-            {'id': 2, 'name': 'Hiragana', 'cards': load_hiragana_dict},  # No cards
-            {'id': 3, 'name': 'Katakana', 'cards': load_katakana_dict},  # No cards
+            {'id': 5, 'name': 'Hiragana', 'cards': load_hiragana_dict},  # No cards
+            {'id': 6, 'name': 'Katakana', 'cards': load_katakana_dict},  # No cards
         ]
     else:
         # Check if the default deck exists for authenticated users; if not, create it.
         user = request.user
         if not Deck.objects.filter(user=user, is_default=True).exists():
             create_default_deck(user)  # Create the deck for the user.
+            create_hiragana_deck(user)
+            create_katakana_deck(user)
         
         # Fetch the user's decks including the default deck
         decks = Deck.objects.filter(user=user)
@@ -179,13 +182,13 @@ from django.utils import timezone
 from .models import Deck, Card
 from datetime import timedelta
 
-
+DEFAULT_DECKS = ["Japanese Basics", "Hiragana", "Katakana"]
 def study(request, deck_id):
     # Get the deck object
     deck = get_object_or_404(Deck, id=deck_id)
-    
-    # Allow all users to access the "Japanese Basics" deck without login
-    if deck.is_default and deck.name == "Japanese Basics":
+
+    # Check if the deck is a default deck
+    if deck.is_default and deck.name in DEFAULT_DECKS:
         # If the user is not logged in, do not apply spaced repetition
         if not request.user.is_authenticated:
             # Return all flashcards in the deck without filtering for spaced repetition
@@ -194,7 +197,7 @@ def study(request, deck_id):
                 'flashcards': deck.flashcards.all()
             }
             return render(request, 'flashcards/study.html', context)
-    
+
     # If the user is logged in, apply spaced repetition logic for all decks
     elif request.user.is_authenticated:
         # Ensure user is authorized to access the deck (either it’s default or belongs to them)
@@ -246,6 +249,45 @@ def create_default_deck(user):
         for vocab_word, details in japaneseDict.items():
             Card.objects.create(
                 deck=japanese_basics_deck,
+                vocab_word=vocab_word,
+                kana=details['kana'],
+                english_translation=details['english_translation'],
+                part_of_speech=details['part_of_speech'],
+                example_sentence=details['example_sentence'],
+                example_sentence_kana=details['example_sentence_kana'],
+                example_sentence_english=details['example_sentence_english']
+
+            )
+
+def create_hiragana_deck(user):
+    if not Deck.objects.filter(name="Hiragana", user=user).exists():
+        hiragana_dict = load_hiragana_dict()  # Load Hiragana Dictionary
+        # Create the Hiragana deck
+        hiragana_deck = Deck.objects.create(name="Hiragana", user=user, is_default=True)
+
+        # Loop through the dictionary and create flashcards
+        for vocab_word, details in hiragana_dict.items():
+            Card.objects.create(
+                deck=hiragana_deck,
+                vocab_word=vocab_word,
+                kana=details['kana'],
+                english_translation=details['english_translation'],
+                part_of_speech=details['part_of_speech'],
+                example_sentence=details['example_sentence'],
+                example_sentence_kana=details['example_sentence_kana'],
+                example_sentence_english=details['example_sentence_english']
+            )
+
+def create_katakana_deck(user):
+    if not Deck.objects.filter(name="Katakana", user=user).exists():
+        katakana_dict = load_katakana_dict()  # Load Katakana Dictionary
+        # Create the Katakana deck
+        katakana_deck = Deck.objects.create(name="Katakana", user=user, is_default=True)
+
+        # Loop through the dictionary and create flashcards
+        for vocab_word, details in katakana_dict.items():
+            Card.objects.create(
+                deck=katakana_deck,
                 vocab_word=vocab_word,
                 kana=details['kana'],
                 english_translation=details['english_translation'],
