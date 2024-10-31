@@ -1,6 +1,7 @@
 {% extends 'components/wrapper.html' %}
 </head>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMr7a2I5upY5u5V6B1ar1f8tr9IgIVbq7Cg9M" crossorigin="anonymous">
 </head>
 
 {% block content %}
@@ -9,12 +10,32 @@
     <p class="text-crimson text-center font-semibold">
         You are in standard mode. Log in or create an account to access spaced repetition.
     </p>
+    <i id="shuffleButton" class="fas fa-random shuffle-icon" title="Shuffle Cards"></i>
 {% endif %}
 
+<style>
+    .shuffle-icon {
+        position: absolute;
+        top: 10px; /* Adjust as needed */
+        right: 10px; /* Adjust as needed */
+        font-size: 24px; /* Size of the icon */
+        color: #ff5733; /* Change color as needed */
+        cursor: pointer; /* Change cursor on hover */
+    }
+
+    .shuffle-icon:hover {
+        color: #c0392b; /* Change color on hover */
+    }
+</style>
 
 <div class="flashcards-container flex justify-center items-center">
     {% for flashcard in flashcards %}
-    <div class="flashcard border-2 border-black shadow-md cursor-pointer hidden" onclick="flipCard(this)">
+    <div class="flashcard border-2 border-black shadow-md cursor-pointer hidden relative" onclick="flipCard(this)">
+        <!-- Shuffle Icon (only for unauthenticated users) -->
+        {% if not user.is_authenticated %}
+            <i id="shuffleButton" class="fas fa-random shuffle-icon" title="Shuffle Cards"></i>
+        {% endif %}
+
         <!-- Front side of the flashcard -->
         <div class="flashcard-front flex items-center justify-center h-full">
             <h3 class="text-7xl text-crimson font-semibold mb-4">{{ flashcard.vocab_word }}</h3>
@@ -63,7 +84,6 @@
                 </p>
             {% endif %}
         </div> 
-        
     </div>
     {% empty %}
     <p>No flashcards available in this deck.</p>
@@ -76,44 +96,61 @@
 </div>
 
 <script>
-let currentCardIndex = 0; // Index of the current card
-const flashcards = document.querySelectorAll('.flashcard'); // Get all flashcards
-
-// Function to show the current flashcard
-function showCurrentCard() {
-    flashcards.forEach((card, index) => {
-        card.classList.toggle('hidden', index !== currentCardIndex); // Show only the current card
+    document.querySelectorAll('.shuffle-icon').forEach(icon => {
+        icon.addEventListener('click', function() {
+            const cardList = document.getElementById('cardList');
+            const cards = Array.from(cardList.children);
+            
+            // Shuffle the cards
+            for (let i = cards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cards[i], cards[j]] = [cards[j], cards[i]];
+            }
+            
+            // Clear the list and append shuffled cards
+            cardList.innerHTML = '';
+            cards.forEach(card => cardList.appendChild(card));
+        });
     });
-}
 
-// Function to show the next card
-function showNextCard() {
-    if (currentCardIndex < flashcards.length - 1) {
-        currentCardIndex++;
-    } else {
-        currentCardIndex = 0; // Loop back to the first card
+    let currentCardIndex = 0; // Index of the current card
+    const flashcards = document.querySelectorAll('.flashcard'); // Get all flashcards
+
+    // Function to show the current flashcard
+    function showCurrentCard() {
+        flashcards.forEach((card, index) => {
+            card.classList.toggle('hidden', index !== currentCardIndex); // Show only the current card
+        });
     }
-    showCurrentCard(); // Update the display
-}
 
-// Function to flip the card
-function flipCard(card) {
-    // Toggle the 'flipped' class to handle flipping
-    card.classList.toggle('flipped');
-}
+    // Function to show the next card
+    function showNextCard() {
+        if (currentCardIndex < flashcards.length - 1) {
+            currentCardIndex++;
+        } else {
+            currentCardIndex = 0; // Loop back to the first card
+        }
+        showCurrentCard(); // Update the display
+    }
 
-// Function to mark a card as correct
-function markCorrect() {
-    showNextCard(); // Show the next card automatically
-}
+    // Function to flip the card
+    function flipCard(card) {
+        // Toggle the 'flipped' class to handle flipping
+        card.classList.toggle('flipped');
+    }
 
-// Function to mark a card as incorrect
-function markIncorrect() {
-    showNextCard(); // Show the next card automatically
-}
+    // Function to mark a card as correct
+    function markCorrect() {
+        showNextCard(); // Show the next card automatically
+    }
 
-// Show the first card on page load
-showCurrentCard();
+    // Function to mark a card as incorrect
+    function markIncorrect() {
+        showNextCard(); // Show the next card automatically
+    }
+
+    // Show the first card on page load
+    showCurrentCard();
 </script>
 
 {% endblock %}
