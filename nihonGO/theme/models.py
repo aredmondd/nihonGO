@@ -72,3 +72,22 @@ class UserCardProgress(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.card.vocab_word}"
+    
+#MESSAGES - Alex
+from django.db import models
+from django.contrib.auth.models import User
+class Chat(models.Model):
+    users = models.ManyToManyField(User, related_name='chats')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Chat {self.id} between {", ".join([user.username for user in self.users.all()])}'
+
+class Message(models.Model):
+    sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
+    recipient = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.sender} to {self.recipient}: {self.content}'

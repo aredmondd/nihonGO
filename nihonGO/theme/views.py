@@ -58,16 +58,12 @@ def forum (request):
 def profile (request):
     return render(request, 'my-profile.html')
 
-def messages (request):
-    return render(request, 'messages.html')
-
 # Create your views here.
 def home (request):
     return render(request, 'myapp/base.html')
 
 def profile_page (request):
     return render(request, 'myapp/profile-page.html')
-
 
 def my_login(request):
     form = LoginForm()
@@ -101,7 +97,14 @@ def user_logout(request):
 def profile(request):
     return render(request, 'users/profile.html')
 
-# Use BASE_DIR to construct the relative path
+#DECKS VIEWS
+from .models import Card, Deck
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
+from .models import Deck, Card, UserCardProgress
+from datetime import timedelta
+from django.shortcuts import get_object_or_404, redirect, render
+
 file_path = f"{settings.BASE_DIR}/theme/templates/flashcards/japanesebasics.json"
 
 # Open the file using the relative path
@@ -126,7 +129,6 @@ def my_decks(request):
         decks = Deck.objects.filter(user=user)
     
     return render(request, 'flashcards/mydecks.html', {'decks': decks})
-
 
 def add_deck(request):
     if request.method == "POST":
@@ -164,20 +166,6 @@ def add_deck(request):
         'flashcard_forms': flashcard_forms,
     })
 
-from .models import Card, Deck
-from django.shortcuts import get_object_or_404
-from django.utils import timezone
-from .models import Deck, Card, UserCardProgress
-
-
-# views.py
-
-from django.shortcuts import render, get_object_or_404
-from django.utils import timezone
-from .models import Deck, Card
-from datetime import timedelta
-
-
 def study(request, deck_id):
     # Get the deck object
     deck = get_object_or_404(Deck, id=deck_id)
@@ -212,9 +200,6 @@ def study(request, deck_id):
     # If an anonymous user tries to access a non-default deck, redirect to login
     return redirect('login')
 
-
-
-
 def load_japanese_dict():
     with open('/Users/laurenrichardson/Desktop/nihonGO!/nihonGO/nihonGO/theme/templates/flashcards/japanesebasics.json', 'r') as json_file:
         japaneseDict = json.load(json_file)
@@ -239,10 +224,6 @@ def create_default_deck(user):
                 example_sentence_kana=details['example_sentence_kana'],
                 example_sentence_english=details['example_sentence_english']
             )
-
-
-from django.shortcuts import get_object_or_404, redirect, render
-from .models import Deck, Card
 
 def edit_deck(request, deck_id):
     # Get the deck without filtering by user, allowing access for logged-out users
@@ -289,3 +270,44 @@ def delete_deck(request, deck_id):
     deck = get_object_or_404(Deck, id=deck_id, user=request.user)
     deck.delete()  # Delete the deck along with its associated flashcards
     return redirect('my_decks')  # Redirect to the decks page after deletion
+
+
+#MESSAGES VIEWS
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import Chat  # Assuming you have a Chat model that stores user chats
+
+# theme/views.py
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import Chat  # Assuming you have a Chat model that stores user chats
+
+from django.shortcuts import render
+from .models import Message  # Assume you have a Message model
+
+def chat_view(request, recipient_username=None):
+    # If user is authenticated, load their chats
+    if request.user.is_authenticated:
+        chats = Chat.objects.filter(users=request.user)  # Assuming you want chats of the logged-in user
+        if recipient_username:
+            messages = Message.objects.filter(
+                recipient__username=recipient_username,
+                sender=request.user
+            ).order_by('timestamp')
+        else:
+            messages = []  # or load default messages
+        example_mode = False
+    else:
+        # Provide example data for unauthenticated users
+        chats = [{'recipient': {'username': 'SampleUser1'}}]  # Sample chat data
+        messages = [
+            {"sender": "SampleUser1", "content": "This is an example message."},
+            {"sender": "SampleUser2", "content": "Log in to see your real messages!"},
+        ]
+        example_mode = True
+
+    return render(request, 'chat.html', {'chats': chats, 'messages': messages, 'example_mode': example_mode})

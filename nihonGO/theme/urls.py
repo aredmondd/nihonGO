@@ -2,6 +2,7 @@ from django.urls import path, include
 from . import views
 from .views import profile
 from django.contrib.auth import views as auth_views
+from .views import messages
 
 
 urlpatterns = [
@@ -12,7 +13,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name="dashboard"),
     path('forum/', views.forum, name="forum"),
     path('my-profile/', views.profile, name="my-profile"),
-    path('messages/', views.messages, name="messages"),
+    #path('messages/', views.messages, name="messages"),
     path('mydecks/', views.my_decks, name="my_decks"),
     path('add/', views.add_deck, name='add_deck'),
     path('study/<int:deck_id>/', views.study, name='study'),
@@ -25,4 +26,6 @@ urlpatterns = [
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('edit/<int:deck_id>/', views.edit_deck, name='edit_deck'),
     path('delete/<int:deck_id>/', views.delete_deck, name='delete_deck'),  
+    #path('chat/<str:recipient_username>/', views.chat_view, name='chat'),
+    path('chat/', views.chat_view, name='chat'), 
 ]
