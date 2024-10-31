@@ -1,8 +1,8 @@
 {% extends 'components/wrapper.html' %}
 
 {% block content %}
-    <h1 class="text-center text-title text-black font-japanese font-bold">おかえり!</h1>
-    <form class="space-y-4 md:space-y-6" action="{% url 'login' %}" method="POST">
+    <h1 class="text-center text-title text-black font-outfit font-bold">おかえり!</h1>
+    <form class="space-y-4 md:space-y-6 font-outfit" action="{% url 'login' %}" method="POST">
         {% csrf_token %}
         
         <div class="flex flex-col space-y-4 justify-center mx-96">
@@ -11,10 +11,12 @@
         </div>
 
         <input type="hidden" name="next" value="{% url 'my-profile' %}">
-        <button type="submit" name="submit" class="border border-2 border-black rounded-2xl px-6 py-2">Login</button><br>
-        <a href="{% url 'password_reset' %}" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
-        <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-            Don’t have an account yet? <a href="{% url 'register' %}" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</a>
-        </p>
+        <div class="flex flex-col justify-center items-center">
+            <button type='submit' class="bg-orange text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-crimson transition duration-300">Login</button><br>
+            <a href="{% url 'password_reset' %}" class="text-sm font-medium text-black text-opacity-75 hover:underline mb-3">Forgot password?</a>
+            <p class="text-sm font-light text-black text-opacity-50">
+                Don’t have an account yet? <a href="{% url 'register' %}" class="font-medium text-black text-opacity-50 hover:underline">Sign up</a>
+            </p>
+        </div>
     </form> 
 {% endblock %}
