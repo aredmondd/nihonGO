@@ -124,6 +124,11 @@ def my_decks(request):
     return render(request, 'flashcards/mydecks.html', {'decks': decks})
 
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
+from django.utils import timezone
+
+@login_required(login_url='login')
 def add_deck(request):
     if request.method == "POST":
         deck_form = DeckForm(request.POST)
