@@ -34,20 +34,21 @@ import json
 from .models import Deck
 from .forms import DeckForm, FlashcardForm
 
-# Use BASE_DIR to construct the relative path
+#Use BASE_DIR to construct the relative path
 file_path = f"{settings.BASE_DIR}/theme/templates/flashcards/japanesebasics.json"
 
-# Open the file using the relative path
+#Open Japanese Basics
 with open(file_path, 'r') as file:
     japaneseDict = json.load(file)
+
 
 def my_decks(request):
     if not request.user.is_authenticated:
         # For non-authenticated users, show a default "Japanese Basics" deck.
         decks = [
             {'id': 1, 'name': 'Japanese Basics', 'cards': load_japanese_dict()},
-            {'id': 2, 'name': 'Example Deck 2', 'cards': {}},  # No cards
-            {'id': 3, 'name': 'Example Deck 3', 'cards': {}},  # No cards
+            {'id': 2, 'name': 'Hiragana', 'cards': load_hiragana_dict},  # No cards
+            {'id': 3, 'name': 'Katakana', 'cards': load_katakana_dict},  # No cards
         ]
     else:
         # Check if the default deck exists for authenticated users; if not, create it.
@@ -146,12 +147,25 @@ def study(request, deck_id):
     return redirect('login')
 
 
-
+import os
+import json
+from django.conf import settings
 
 def load_japanese_dict():
-    with open('/Users/laurenrichardson/Desktop/nihonGO!/nihonGO/nihonGO/theme/templates/flashcards/japanesebasics.json', 'r') as json_file:
-        japaneseDict = json.load(json_file)
-    return japaneseDict
+    file_path = os.path.join(settings.BASE_DIR, 'theme', 'templates', 'flashcards', 'japanesebasics.json')
+    with open(file_path, 'r') as json_file:
+        japanese_dict = json.load(json_file)
+    return japanese_dict
+
+def load_hiragana_dict():
+    file_path = os.path.join(settings.BASE_DIR, 'theme', 'templates', 'flashcards', 'hiragana.json')
+    with open(file_path, 'r') as file:
+        return json.load(file)
+
+def load_katakana_dict():
+    file_path = os.path.join(settings.BASE_DIR, 'theme', 'templates', 'flashcards', 'katakana.json')
+    with open(file_path, 'r') as file:
+        return json.load(file)
 
 # View to create a default deck for a user
 def create_default_deck(user):
