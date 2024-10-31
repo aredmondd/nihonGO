@@ -21,10 +21,6 @@ from .forms import DeckForm, FlashcardForm
 def index (request):
     return render(request, 'index.html')
 
-def login (request):
-    form = LoginForm()
-    return render(request, 'login.html', {'form' : form})
-
 def register (request):
     form = CreateUserForm()
 
@@ -88,14 +84,14 @@ def my_login(request):
     
     context = {'loginform':form}
 
-    return render(request, 'myapp/login.html', context=context)
+    return render(request, 'login.html', {'form': form})
 
 
 def user_logout(request):
 
     auth.logout(request)
 
-    return redirect("home")
+    return redirect("index")
 
 @login_required
 def profile(request):
