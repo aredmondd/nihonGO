@@ -1,8 +1,15 @@
 import csv
 import json
+import os
+from django.conf import settings
 
 japaneseDict = {}
-with open("/Users/laurenrichardson/Desktop/nihonGO!/nihonGO/nihonGO/theme/templates/flashcards/commonwords.csv", 'r') as file:
+
+# Dynamically construct the path for the CSV file
+csv_file_path = os.path.join(settings.BASE_DIR, 'theme', 'templates', 'flashcards', 'commonwords.csv')
+
+# Load data from CSV file
+with open(csv_file_path, 'r') as file:
     reader = csv.reader(file)
 
     count = 0
@@ -28,8 +35,11 @@ with open("/Users/laurenrichardson/Desktop/nihonGO!/nihonGO/nihonGO/theme/templa
             }
         count += 1
 
+# Dynamically construct the path for saving the JSON file
+json_file_path = os.path.join(settings.BASE_DIR, 'theme', 'templates', 'flashcards', 'japanesebasics.json')
+
 # Save the dictionary to a JSON file
-with open('/Users/laurenrichardson/Desktop/nihonGO!/nihonGO/nihonGO/theme/templates/flashcards/japanesebasics.json', 'w') as json_file:
+with open(json_file_path, 'w') as json_file:
     json.dump(japaneseDict, json_file)
 
-print("Dictionary saved to japanese_data.json")
+print("Dictionary saved to japanesebasics.json")

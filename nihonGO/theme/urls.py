@@ -2,11 +2,12 @@ from django.urls import path, include
 from . import views
 from .views import profile
 from django.contrib.auth import views as auth_views
-
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path('', views.index, name="index"),
-    path('login/', views.login, name="login"),
+    path('login/', views.my_login, name="login"),
     path('register/', views.register, name="register"),
     path('about/', views.about, name="about"),
     path('dashboard/', views.dashboard, name="dashboard"),
@@ -25,4 +26,5 @@ urlpatterns = [
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('edit/<int:deck_id>/', views.edit_deck, name='edit_deck'),
     path('delete/<int:deck_id>/', views.delete_deck, name='delete_deck'),  
+    path('logout/', LogoutView.as_view(), name='logout'),
 ]

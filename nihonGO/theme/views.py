@@ -21,10 +21,6 @@ from .forms import DeckForm, FlashcardForm
 def index (request):
     return render(request, 'index.html')
 
-def login (request):
-    form = LoginForm()
-    return render(request, 'login.html', {'form' : form})
-
 def register (request):
     form = CreateUserForm()
 
@@ -88,14 +84,14 @@ def my_login(request):
     
     context = {'loginform':form}
 
-    return render(request, 'myapp/login.html', context=context)
+    return render(request, 'login.html', {'form': form})
 
 
 def user_logout(request):
 
     auth.logout(request)
 
-    return redirect("home")
+    return redirect("index")
 
 @login_required
 def profile(request):
@@ -129,6 +125,11 @@ def my_decks(request):
     return render(request, 'flashcards/mydecks.html', {'decks': decks})
 
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
+from django.utils import timezone
+
+@login_required(login_url='login')
 def add_deck(request):
     if request.method == "POST":
         deck_form = DeckForm(request.POST)

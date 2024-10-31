@@ -54,6 +54,8 @@ class CreateUserForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     username = forms.CharField(
         widget=forms.TextInput(attrs={
+            'name': 'username',
+            'id': 'username',
             'class': 'border border-black border-2 text-black rounded-lg text-sm',
             'placeholder': 'Username',
             'required': True
@@ -61,6 +63,8 @@ class LoginForm(AuthenticationForm):
     )
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
+            'name': 'username',
+            'id': 'username',
             'class': 'border border-black border-2 text-black rounded-lg text-sm',
             'placeholder': 'Password',
             'required': True
