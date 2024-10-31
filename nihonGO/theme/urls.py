@@ -17,7 +17,6 @@ urlpatterns = [
     path('mydecks/', views.my_decks, name="my_decks"),
     path('add/', views.add_deck, name='add_deck'),
     path('study/<int:deck_id>/', views.study, name='study'),
-    path('profile-page', views.profile_page, name="profile-page"),
     path('user-logout', views.user_logout, name="user-logout"),
     path('profile/', profile, name='users-profile'),
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),

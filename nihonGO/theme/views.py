@@ -61,9 +61,6 @@ def messages (request):
 def home (request):
     return render(request, 'myapp/base.html')
 
-def profile_page (request):
-    return render(request, 'myapp/profile-page.html')
-
 
 def my_login(request):
     form = LoginForm()
@@ -79,7 +76,7 @@ def my_login(request):
             if user is not None:
                 auth.login(request, user)
 
-                return redirect("profile-page")
+                return redirect("my-profile")
             
     
     context = {'loginform':form}
@@ -95,7 +92,7 @@ def user_logout(request):
 
 @login_required
 def profile(request):
-    return render(request, 'users/profile.html')
+    return render(request, 'my-profile.html')
 
 # Use BASE_DIR to construct the relative path
 file_path = f"{settings.BASE_DIR}/theme/templates/flashcards/japanesebasics.json"

@@ -10,7 +10,7 @@
             {{ form.password }}
         </div>
 
-        <input type="hidden" name="next" value="{% url 'profile-page' %}">
+        <input type="hidden" name="next" value="{% url 'my-profile' %}">
         <button type="submit" name="submit" class="border border-2 border-black rounded-2xl px-6 py-2">Login</button><br>
         <a href="{% url 'password_reset' %}" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
         <p class="text-sm font-light text-gray-500 dark:text-gray-400">
