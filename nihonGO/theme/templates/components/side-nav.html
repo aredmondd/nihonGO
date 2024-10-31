@@ -33,10 +33,10 @@
             <!-- Dropdown Menu -->
             <ul class="hidden space-y-1 mt-2 pl-4 group-hover:block">
                 <li>
-                    <a href="/nihongo/mydecks" class="block px-4 py-2 text-sm text-gray-700 hover:text-crimson">My Decks</a>
+                    <a href="/mydecks" class="block px-4 py-2 text-sm text-gray-700 hover:text-crimson">My Decks</a>
                 </li>
                 <li>
-                    <a href="/nihongo/create-deck" class="block px-4 py-2 text-sm text-gray-700 hover:text-crimson">Create New Deck</a>
+                    <a href="/create-deck" class="block px-4 py-2 text-sm text-gray-700 hover:text-crimson">Create New Deck</a>
                 </li>
             </ul>
         </li>
@@ -55,6 +55,12 @@
             </li>
         </ul>
 
-        <a href="{% url 'my-profile' %}"><img src="{% static 'redmond.jpg' %}" alt="" class="ml-2 w-16 h-16 rounded-full border border-2 border-black"></a>
+        <div>
+            <a href="{% url 'my-profile' %}"><img src="{% static 'redmond.jpg' %}" alt="" class="ml-2 w-16 h-16 rounded-full border border-2 border-black"></a>
+            <form action="{% url 'logout' %}" method="post" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="ml-2 font-medium">Log Out</button>
+            </form>            
+        </div>
     </div>
 </aside>

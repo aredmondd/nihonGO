@@ -212,8 +212,11 @@ def study(request, deck_id):
 
 
 def load_japanese_dict():
-    with open('/Users/laurenrichardson/Desktop/nihonGO!/nihonGO/nihonGO/theme/templates/flashcards/japanesebasics.json', 'r') as json_file:
-        japaneseDict = json.load(json_file)
+    file_path = f"{settings.BASE_DIR}/theme/templates/flashcards/japanesebasics.json"
+
+    # Open the file using the relative path
+    with open(file_path, 'r') as file:
+        japaneseDict = json.load(file)
     return japaneseDict
 
 # View to create a default deck for a user
