@@ -17,7 +17,8 @@
 			</div>
 			
 		{% endblock content %}
-
+		
+		<a href="{% url 'edit-profile' %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit Profile</a>
 		<a href="{% url 'user-logout' %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Logout here</a>
 	</body>
 </html>

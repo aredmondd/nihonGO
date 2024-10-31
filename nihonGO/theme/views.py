@@ -16,6 +16,9 @@ from django.conf import settings
 import json
 from .models import Deck
 from .forms import DeckForm, FlashcardForm
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy
 
 # Create your views here.
 def index (request):
@@ -53,6 +56,9 @@ def forum (request):
 
 def profile (request):
     return render(request, 'my-profile.html')
+
+def edit_profile (request):
+    return render(request, 'myapp/edit_profile.html')
 
 def messages (request):
     return render(request, 'messages.html')
@@ -96,6 +102,12 @@ def user_logout(request):
 @login_required
 def profile(request):
     return render(request, 'users/profile.html')
+
+# Change password view
+class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
+    template_name = 'myapp/change_password.html'
+    success_message = "Successfully Changed Your Password"
+    success_url = reverse_lazy('profile-page')
 
 # Use BASE_DIR to construct the relative path
 file_path = f"{settings.BASE_DIR}/theme/templates/flashcards/japanesebasics.json"
