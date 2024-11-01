@@ -16,9 +16,11 @@ from django.conf import settings
 import json
 from .models import Deck
 from .forms import DeckForm, FlashcardForm
+from django.shortcuts import render, redirect
 
 # Create your views here.
 def index (request):
+    
     return render(request, 'index.html')
 
 def login (request):
@@ -311,3 +313,18 @@ def chat_view(request, recipient_username=None):
         example_mode = True
 
     return render(request, 'chat.html', {'chats': chats, 'messages': messages, 'example_mode': example_mode})
+
+
+def chatPage(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+        return redirect("login-user")
+    context = {}
+    return render(request, "chat/chatPage.html", context)
+
+def room(request, room_name):
+    if not request.user.is_authenticated:
+        return redirect("login-user")
+    context = {
+        'room_name': room_name
+    }
+    return render(request, "chat/room.html", context)
