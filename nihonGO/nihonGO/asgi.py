@@ -1,19 +1,17 @@
 """
 ASGI config for nihonGO project.
-
 It exposes the ASGI callable as a module-level variable named ``application``.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
 """
-
 import os
 from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 from django.urls import path
-import nihonGO.theme.routing as nihonGO_routing  # Adjust according to actual app structure
-import nihonGO.theme.routing as ChitChat_routing
+import nihonGO.theme.routing as nihonGO_routing
+import ChitChat.routing as ChitChat_routing
 
 # Set the default settings module for the 'nihonGO' project
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'nihonGO.settings')
