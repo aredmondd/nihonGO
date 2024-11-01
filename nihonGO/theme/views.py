@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from . forms import CreateUserForm, LoginForm
 from django.contrib.auth.models import auth
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.conf import settings
@@ -21,20 +21,26 @@ from .forms import DeckForm, FlashcardForm
 def index (request):
     return render(request, 'index.html')
 
-def register (request):
+def register(request):
     form = CreateUserForm()
 
     if request.method == "POST":
         form = CreateUserForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            user = form.save()
 
-            return redirect("login")
-        
-    
-    context = {'registerform':form}
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                return redirect("my-profile")
+
+    context = {'registerform': form}
     return render(request, 'register.html', context=context)
+
 
 def about(request):
     team_members = [

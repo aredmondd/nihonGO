@@ -5,11 +5,14 @@
     <form method="POST" class="space-y-4 md:space-y-6">
         {% csrf_token %}
         
-        {{ registerform.as_p }}
+        <div class="flex flex-col space-y-4 items-center">{{ registerform.as_p }}</div>
+
+        <div class="flex flex-col justify-center items-center">
+            <button type="submit" class="bg-orange text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-crimson transition duration-300">Register</button>
+            <p class="text-sm font-light text-black text-opacity-50 mt-3">
+                Already have an account? <a href="{% url 'login' %}" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</a>
+            </p>
+        </div>
         
-        <button type="submit">Register</button>
-        <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-            Already have an account? <a href="{% url 'login' %}" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</a>
-        </p>
     </form>
 {% endblock %}
