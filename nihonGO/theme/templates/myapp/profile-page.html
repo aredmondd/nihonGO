@@ -15,6 +15,7 @@
 			<div class="row my-3 p-3">
 				<h1>This is the profile page for {{user.username}}</h1>
 			</div>
+			<img class="w-full h-full rounded-full object-cover shadow-lg" src="{{ user.profile.avatar.url }}" alt="User's Profile Picture"/>
 			
 		{% endblock content %}
 		
