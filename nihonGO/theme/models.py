@@ -13,6 +13,7 @@ class Deck(models.Model):
 
     def __str__(self):
         return self.name
+
 class Card(models.Model):
     deck = models.ForeignKey(Deck, on_delete=models.CASCADE)
     vocab_word = models.CharField(max_length=100)

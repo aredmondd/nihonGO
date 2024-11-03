@@ -194,7 +194,7 @@ def study(request, deck_id):
             # Return all flashcards in the deck without filtering for spaced repetition
             context = {
                 'deck': deck,
-                'flashcards': deck.flashcards.all()
+                'flashcards': deck.card_set.all()
             }
             return render(request, 'flashcards/study.html', context)
 
