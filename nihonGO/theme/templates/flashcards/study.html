@@ -8,7 +8,6 @@
 {% block content %}
 <h1 class="ml-10 text-title text-black font-japanese font-bold">{{ deck.name }}</h1>
 
-<!-- Show message and shuffle button only if the user is not authenticated -->
 {% if not user.is_authenticated %}
     <p class="text-crimson text-center font-semibold">
         You are in standard mode. Log in or create an account to access spaced repetition.
@@ -18,33 +17,30 @@
 <div id="cardList" class="flashcards-container flex justify-center items-center">
     {% for flashcard in flashcards %}
     <div class="flashcard border-2 border-black shadow-md cursor-pointer hidden relative" onclick="flipCard(this)">
-        <!-- Front side of the flashcard -->
         <div class="flashcard-front flex items-center justify-center h-full">
             <h3 class="text-7xl text-crimson font-semibold mb-4">{{ flashcard.vocab_word }}</h3>
         </div>
-
-        <!-- Back side of the flashcard -->
         <div class="flashcard-back flex flex-col items-center justify-center">
             {% if flashcard.kana %}
-                <p class="text-5xl text-crimson font-semibold mb-4 text-center">{{ flashcard.kana }}</p>
+                {% if not flashcard.english_translation and not flashcard.part_of_speech and not flashcard.example_sentence and not flashcard.example_sentence_kana and not flashcard.example_sentence_english %}
+                    <!-- Add quotes around kana if it is the only field on the card -->
+                    <p class="text-5xl text-crimson font-semibold mb-4 text-center">'{{ flashcard.kana }}'</p>
+                {% else %}
+                    <p class="text-5xl text-crimson font-semibold mb-4 text-center">{{ flashcard.kana }}</p>
+                {% endif %}
             {% endif %}
-            
             {% if flashcard.english_translation %}
                 <p class="text-2xl text-black mb-4 font-semibold text-center">{{ flashcard.english_translation }}</p>
             {% endif %}
-            
             {% if flashcard.part_of_speech %}
                 <p class="text-xl text-orange mb-4 text-center">{{ flashcard.part_of_speech }}</p>
             {% endif %}
-            
             {% if flashcard.example_sentence %}
                 <p class="text-xl text-gray-600 mb-4 text-center">{{ flashcard.example_sentence|striptags }}</p>
             {% endif %}
-            
             {% if flashcard.example_sentence_kana %}
                 <p class="text-xl text-gray-600 mb-4 text-center">{{ flashcard.example_sentence_kana|striptags }}</p>
             {% endif %}
-            
             {% if flashcard.example_sentence_english %}
                 <p class="text-xl text-gray-600 mb-4 text-center">{{ flashcard.example_sentence_english }}</p>
             {% endif %}
@@ -55,7 +51,6 @@
     {% endfor %}
 </div>
 
-<!-- Shuffle Button (only shown if user is not authenticated) -->
 {% if not user.is_authenticated %}
     <div class="flex justify-center mt-6">
         <button id="shuffleButton" class="bg-orange text-white px-4 py-2 rounded-md hover:bg-crimson">
@@ -70,36 +65,30 @@
 </div>
 
 <script>
-    document.getElementById('shuffleButton')?.addEventListener('click', function() {
-        const cards = Array.from(flashcards); // Get current flashcards
-        // Shuffle the cards array
-        for (let i = cards.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [cards[i], cards[j]] = [cards[j], cards[i]];
-        }
-        
-        // Clear the current display and append shuffled cards
-        document.querySelector('.flashcards-container').innerHTML = ''; // Clear the flashcards display
-        cards.forEach(card => document.querySelector('.flashcards-container').appendChild(card)); // Append shuffled cards
-
-        // Update flashcards NodeList to reflect the new order
-        flashcards = document.querySelectorAll('.flashcard');
-
-        // Reset the current card index to the first card after shuffling
-        currentCardIndex = 0;
-
-        // Show the first card in the shuffled set
-        showCurrentCard();
-    });
-
     let currentCardIndex = 0;
-    const flashcards = document.querySelectorAll('.flashcard');
+    let flashcards = Array.from(document.querySelectorAll('.flashcard'));
 
     function showCurrentCard() {
         flashcards.forEach((card, index) => {
             card.classList.toggle('hidden', index !== currentCardIndex);
         });
     }
+
+    function shuffleFlashcards() {
+        for (let i = flashcards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [flashcards[i], flashcards[j]] = [flashcards[j], flashcards[i]];
+        }
+
+        const container = document.querySelector('.flashcards-container');
+        container.innerHTML = '';
+        flashcards.forEach(card => container.appendChild(card));
+
+        currentCardIndex = 0;
+        showCurrentCard();
+    }
+
+    document.getElementById('shuffleButton')?.addEventListener('click', shuffleFlashcards);
 
     function showNextCard() {
         currentCardIndex = (currentCardIndex + 1) % flashcards.length;
@@ -120,6 +109,15 @@
 
     // Show the first card on page load
     showCurrentCard();
+
+    // Add event listener for space bar to flip card
+    document.addEventListener('keydown', function(event) {
+        if (event.code === 'Space') {
+            event.preventDefault(); // Prevent default spacebar scroll behavior
+            const currentCard = flashcards[currentCardIndex];
+            flipCard(currentCard);
+        }
+    });
 </script>
 
 {% endblock %}

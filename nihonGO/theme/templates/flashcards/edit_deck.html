@@ -2,7 +2,8 @@
 
 {% block content %}
 <div style="padding: 20px; margin: 20px; border: 2px solid #b5b5b5; border-radius: 8px; background-color: #fdfdfd;">
-    <h1>{{ deck.name }}</h1>
+    <h1 style="font-size: 2.5em; font-weight: bold; color: crimson;">{{ deck.name }}</h1>
+</div>
     <p>
         {% if is_owner %}
             You can edit this deck's name, settings, or cards below.
