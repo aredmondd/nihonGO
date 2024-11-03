@@ -3,20 +3,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import timedelta
-
-class Card(models.Model):
-    deck = models.ForeignKey('Deck', related_name='flashcards', on_delete=models.CASCADE)
-    vocab_word = models.CharField(max_length=255)
-    kana = models.CharField(max_length=255)
-    english_translation = models.TextField()
-    part_of_speech = models.CharField(max_length=50)
-    example_sentence = models.TextField()
-    example_sentence_kana = models.TextField()
-    example_sentence_english = models.TextField()
-
-    def __str__(self):
-        return self.vocab_word  # Return the question as the string representation
-
 # Model for Deck 
 class Deck(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
@@ -27,6 +13,20 @@ class Deck(models.Model):
 
     def __str__(self):
         return self.name
+class Card(models.Model):
+    deck = models.ForeignKey(Deck, on_delete=models.CASCADE)
+    vocab_word = models.CharField(max_length=100)
+    kana = models.CharField(max_length=100)
+    english_translation = models.CharField(max_length=255, blank=True, null=True)
+    part_of_speech = models.CharField(max_length=100, blank=True, null=True)
+    example_sentence = models.TextField(blank=True, null=True)
+    example_sentence_kana = models.TextField(blank=True, null=True)
+    example_sentence_english = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.vocab_word  # Return the question as the string representation
+
+
 
     
 from django.db.models.signals import post_save
@@ -72,3 +72,22 @@ class UserCardProgress(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.card.vocab_word}"
+    
+#MESSAGES - Alex
+from django.db import models
+from django.contrib.auth.models import User
+class Chat(models.Model):
+    users = models.ManyToManyField(User, related_name='chats')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Chat {self.id} between {", ".join([user.username for user in self.users.all()])}'
+
+class Message(models.Model):
+    sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
+    recipient = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.sender} to {self.recipient}: {self.content}'

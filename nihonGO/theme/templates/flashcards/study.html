@@ -1,41 +1,23 @@
 {% extends 'components/wrapper.html' %}
-</head>
+
+<head>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMr7a2I5upY5u5V6B1ar1f8tr9IgIVbq7Cg9M" crossorigin="anonymous">
 </head>
 
 {% block content %}
 <h1 class="ml-10 text-title text-black font-japanese font-bold">{{ deck.name }}</h1>
-{% if not user.is_authenticated and deck.is_default %}
+
+<!-- Show message and shuffle button only if the user is not authenticated -->
+{% if not user.is_authenticated %}
     <p class="text-crimson text-center font-semibold">
         You are in standard mode. Log in or create an account to access spaced repetition.
     </p>
-    <i id="shuffleButton" class="fas fa-random shuffle-icon" title="Shuffle Cards"></i>
 {% endif %}
 
-<style>
-    .shuffle-icon {
-        position: absolute;
-        top: 10px; /* Adjust as needed */
-        right: 10px; /* Adjust as needed */
-        font-size: 24px; /* Size of the icon */
-        color: #ff5733; /* Change color as needed */
-        cursor: pointer; /* Change cursor on hover */
-    }
-
-    .shuffle-icon:hover {
-        color: #c0392b; /* Change color on hover */
-    }
-</style>
-
-<div class="flashcards-container flex justify-center items-center">
+<div id="cardList" class="flashcards-container flex justify-center items-center">
     {% for flashcard in flashcards %}
     <div class="flashcard border-2 border-black shadow-md cursor-pointer hidden relative" onclick="flipCard(this)">
-        <!-- Shuffle Icon (only for unauthenticated users) -->
-        {% if not user.is_authenticated %}
-            <i id="shuffleButton" class="fas fa-random shuffle-icon" title="Shuffle Cards"></i>
-        {% endif %}
-
         <!-- Front side of the flashcard -->
         <div class="flashcard-front flex items-center justify-center h-full">
             <h3 class="text-7xl text-crimson font-semibold mb-4">{{ flashcard.vocab_word }}</h3>
@@ -44,44 +26,27 @@
         <!-- Back side of the flashcard -->
         <div class="flashcard-back flex flex-col items-center justify-center">
             {% if flashcard.kana %}
-                <p class="text-5xl text-crimson font-semibold mb-4 text-center">
-                    <strong></strong> 
-                    {% if not flashcard.english_translation and not flashcard.part_of_speech and not flashcard.example_sentence and not flashcard.example_sentence_kana and not flashcard.example_sentence_english %}
-                        '{{ flashcard.kana }}'  <!-- Show kana in quotes if it's the only content -->
-                    {% else %}
-                        {{ flashcard.kana }}  <!-- Show kana normally if there are other contents -->
-                    {% endif %}
-                </p>
+                <p class="text-5xl text-crimson font-semibold mb-4 text-center">{{ flashcard.kana }}</p>
             {% endif %}
             
             {% if flashcard.english_translation %}
-                <p class="text-2xl text-black mb-4 font-semibold text-center">
-                    <strong></strong> {{ flashcard.english_translation }}
-                </p>
+                <p class="text-2xl text-black mb-4 font-semibold text-center">{{ flashcard.english_translation }}</p>
             {% endif %}
             
             {% if flashcard.part_of_speech %}
-                <p class="text-xl text-orange mb-4 text-center">
-                    <strong></strong> {{ flashcard.part_of_speech }}
-                </p>
+                <p class="text-xl text-orange mb-4 text-center">{{ flashcard.part_of_speech }}</p>
             {% endif %}
             
             {% if flashcard.example_sentence %}
-                <p class="text-xl text-gray-600 mb-4 text-center">
-                    <strong></strong> {{ flashcard.example_sentence|striptags }}
-                </p>
+                <p class="text-xl text-gray-600 mb-4 text-center">{{ flashcard.example_sentence|striptags }}</p>
             {% endif %}
             
             {% if flashcard.example_sentence_kana %}
-                <p class="text-xl text-gray-600 mb-4 text-center">
-                    <strong></strong> {{ flashcard.example_sentence_kana|striptags }}
-                </p>
+                <p class="text-xl text-gray-600 mb-4 text-center">{{ flashcard.example_sentence_kana|striptags }}</p>
             {% endif %}
             
             {% if flashcard.example_sentence_english %}
-                <p class="text-xl text-gray-600 mb-4 text-center">
-                    <strong></strong> {{ flashcard.example_sentence_english }}
-                </p>
+                <p class="text-xl text-gray-600 mb-4 text-center">{{ flashcard.example_sentence_english }}</p>
             {% endif %}
         </div> 
     </div>
@@ -90,63 +55,67 @@
     {% endfor %}
 </div>
 
+<!-- Shuffle Button (only shown if user is not authenticated) -->
+{% if not user.is_authenticated %}
+    <div class="flex justify-center mt-6">
+        <button id="shuffleButton" class="bg-orange text-white px-4 py-2 rounded-md hover:bg-crimson">
+            Shuffle Cards
+        </button>
+    </div>
+{% endif %}
+
 <div class="flex justify-center space-x-4 mt-10">
     <button class="bg-orange text-white px-4 py-2 rounded-md hover:bg-crimson" onclick="markIncorrect()">Incorrect</button>
     <button class="bg-orange text-white px-4 py-2 rounded-md hover:bg-crimson" onclick="markCorrect()">Correct</button>
 </div>
 
 <script>
-    document.querySelectorAll('.shuffle-icon').forEach(icon => {
-        icon.addEventListener('click', function() {
-            const cardList = document.getElementById('cardList');
-            const cards = Array.from(cardList.children);
-            
-            // Shuffle the cards
-            for (let i = cards.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [cards[i], cards[j]] = [cards[j], cards[i]];
-            }
-            
-            // Clear the list and append shuffled cards
-            cardList.innerHTML = '';
-            cards.forEach(card => cardList.appendChild(card));
-        });
+    document.getElementById('shuffleButton')?.addEventListener('click', function() {
+        const cards = Array.from(flashcards); // Get current flashcards
+        // Shuffle the cards array
+        for (let i = cards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [cards[i], cards[j]] = [cards[j], cards[i]];
+        }
+        
+        // Clear the current display and append shuffled cards
+        document.querySelector('.flashcards-container').innerHTML = ''; // Clear the flashcards display
+        cards.forEach(card => document.querySelector('.flashcards-container').appendChild(card)); // Append shuffled cards
+
+        // Update flashcards NodeList to reflect the new order
+        flashcards = document.querySelectorAll('.flashcard');
+
+        // Reset the current card index to the first card after shuffling
+        currentCardIndex = 0;
+
+        // Show the first card in the shuffled set
+        showCurrentCard();
     });
 
-    let currentCardIndex = 0; // Index of the current card
-    const flashcards = document.querySelectorAll('.flashcard'); // Get all flashcards
+    let currentCardIndex = 0;
+    const flashcards = document.querySelectorAll('.flashcard');
 
-    // Function to show the current flashcard
     function showCurrentCard() {
         flashcards.forEach((card, index) => {
-            card.classList.toggle('hidden', index !== currentCardIndex); // Show only the current card
+            card.classList.toggle('hidden', index !== currentCardIndex);
         });
     }
 
-    // Function to show the next card
     function showNextCard() {
-        if (currentCardIndex < flashcards.length - 1) {
-            currentCardIndex++;
-        } else {
-            currentCardIndex = 0; // Loop back to the first card
-        }
-        showCurrentCard(); // Update the display
+        currentCardIndex = (currentCardIndex + 1) % flashcards.length;
+        showCurrentCard();
     }
 
-    // Function to flip the card
     function flipCard(card) {
-        // Toggle the 'flipped' class to handle flipping
         card.classList.toggle('flipped');
     }
 
-    // Function to mark a card as correct
     function markCorrect() {
-        showNextCard(); // Show the next card automatically
+        showNextCard();
     }
 
-    // Function to mark a card as incorrect
     function markIncorrect() {
-        showNextCard(); // Show the next card automatically
+        showNextCard();
     }
 
     // Show the first card on page load
