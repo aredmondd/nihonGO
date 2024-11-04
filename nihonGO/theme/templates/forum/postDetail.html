@@ -1,0 +1,38 @@
+{% extends 'components/wrapper.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ post.title }}</h1>
+    <p>Posted by {{ post.user.username }} on {{ post.created_at|date:"F j, Y, g:i a" }}</p>
+    <p>{{ post.content }}</p>
+    <p><strong>Upvotes:</strong> {{ post.upvotes }}</p>
+    <a href="{% url 'upvote_post' post.id %}" class="btn btn-outline-secondary">Upvote</a>
+
+    <hr>
+
+    <h2>Replies</h2>
+    <div class="reply-list">
+        {% for reply in replies %}
+        <div class="reply-card mb-2 border rounded p-2">
+            <p><strong>{{ reply.user.username }}:</strong> {{ reply.content }}</p>
+            <p class="text-muted">Posted on {{ reply.created_at|date:"F j, Y, g:i a" }}</p>
+        </div>
+        {% empty %}
+        <p>No replies yet. Be the first to reply!</p>
+        {% endfor %}
+    </div>
+
+    {% if user.is_authenticated %}
+    <div class="reply-form mt-4">
+        <h3>Reply to this post</h3>
+        <form method="POST">
+            {% csrf_token %}
+            {{ reply_form.as_p }}
+            <button type="submit" class="btn btn-primary">Submit Reply</button>
+        </form>
+    </div>
+    {% else %}
+    <p>You must be logged in to reply to this post. <a href="{% url 'login' %}">Log in</a></p>
+    {% endif %}
+</div>
+{% endblock %}

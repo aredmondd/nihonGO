@@ -70,3 +70,13 @@ class LoginForm(AuthenticationForm):
             'required': True
         })
     )
+
+
+#FORUM
+from django import forms
+from .models import Question, Answer, Comment
+
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = ['title', 'content']

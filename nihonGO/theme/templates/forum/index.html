@@ -1,0 +1,23 @@
+{% extends 'components/wrapper.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Forum</h1>
+    <div class="mb-4">
+        <a href="{% url 'create_post' %}" class="btn btn-primary">Create New Post</a>
+    </div>
+    <div class="post-list">
+        {% for post in posts %}
+        <div class="post-card mb-3 border rounded p-3">
+            <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
+            <p>Posted by {{ post.user.username }} on {{ post.created_at|date:"F j, Y, g:i a" }}</p>
+            <p>{{ post.content|truncatewords:30 }}</p>
+            <p><strong>Upvotes:</strong> {{ post.upvotes }}</p>
+            <a href="{% url 'upvote_post' post.id %}" class="btn btn-outline-secondary">Upvote</a>
+        </div>
+        {% empty %}
+        <p>No posts available. Be the first to create one!</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

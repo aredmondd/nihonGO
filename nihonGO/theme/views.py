@@ -346,3 +346,58 @@ def delete_deck(request, deck_id):
     deck = get_object_or_404(Deck, id=deck_id, user=request.user)
     deck.delete()  # Delete the deck along with its associated flashcards
     return redirect('my_decks')  # Redirect to the decks page after deletion
+
+
+#FORUM VIEWS
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Post, Reply
+from .forms import PostForm, ReplyForm  # You'll need to create these forms
+from django.contrib.auth.decorators import login_required
+
+# View for the forum index
+def forum_index(request):
+    posts = Post.objects.all().order_by('-created_at')
+    return render(request, 'forum/index.html', {'posts': posts})
+
+# View for creating a new post
+@login_required
+def create_post(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user = request.user
+            post.save()
+            return redirect('forum_index')
+    else:
+        form = PostForm()
+    return render(request, 'forum/newPost.html', {'form': form})
+
+# View for a specific post and its replies
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    replies = post.replies.all().order_by('-created_at')
+    if request.method == 'POST':
+        reply_form = ReplyForm(request.POST)
+        if reply_form.is_valid():
+            reply = reply_form.save(commit=False)
+            reply.post = post
+            reply.user = request.user
+            reply.save()
+            return redirect('post_detail', post_id=post.id)
+    else:
+        reply_form = ReplyForm()
+    return render(request, 'forum/postDetail.html', {
+        'post': post,
+        'replies': replies,
+        'reply_form': reply_form,
+    })
+
+# View for upvoting a post
+@login_required
+def upvote_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    post.upvotes += 1
+    post.save()
+    return redirect('post_detail', post_id=post.id)
+

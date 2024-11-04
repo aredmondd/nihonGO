@@ -4,6 +4,7 @@ from .views import profile
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView
+from .views import forum_index, create_post, post_detail, upvote_post
 
 urlpatterns = [
     path('', views.index, name="index"),
@@ -11,7 +12,6 @@ urlpatterns = [
     path('register/', views.register, name="register"),
     path('about/', views.about, name="about"),
     path('dashboard/', views.dashboard, name="dashboard"),
-    path('forum/', views.forum, name="forum"),
     path('my-profile/', views.profile, name="my-profile"),
     path('messages/', views.messages, name="messages"),
     path('mydecks/', views.my_decks, name="my_decks"),
@@ -27,4 +27,9 @@ urlpatterns = [
     path('edit/<int:deck_id>/', views.edit_deck, name='edit_deck'),
     path('delete/<int:deck_id>/', views.delete_deck, name='delete_deck'),  
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('', forum_index, name='forum_index'),
+    path('forum/', views.forum, name="forum"),
+    path('post/new/', create_post, name='create_post'),
+    path('post/<int:post_id>/', post_detail, name='post_detail'),
+    path('post/<int:post_id>/upvote/', upvote_post, name='upvote_post'),
 ]
