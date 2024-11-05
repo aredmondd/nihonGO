@@ -1,0 +1,36 @@
+{% extends 'components/wrapper.html' %}
+
+{% block content %}
+<h1 class="ml-4 text-heading text-black font-japanese font-bold">
+    nihon<span style="color:rgb(193, 16, 51);">GO</span> の Forum へようこそ!
+</h1>
+
+{% if user.is_authenticated %}
+    <a href="{% url 'theme:create_post' %}" class="btn btn-primary">Create New Post</a>
+    <p>Viewing all posts</p>
+{% else %}
+    <p>Viewing the 50 most recent posts. Create an account or login to create your own!</p>
+{% endif %}
+
+<div class="forum-posts">
+    {% for post in posts %}
+        <div class="post">
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.content|truncatewords:30 }}</p>
+            <p><strong>Posted by:</strong> {{ post.user.username }} on {{ post.created_at }}</p>
+            <p><strong>Upvotes:</strong> {{ post.upvotes }}</p>
+
+            {% if user.is_authenticated %}
+                <form action="{% url 'theme:upvote_post' post.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-secondary">Upvote</button>
+                </form>
+                <a href="{% url 'theme:post_detail' post.id %}" class="btn btn-info">Reply</a>
+            {% else %}
+                <p>Login to upvote and reply to posts.</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

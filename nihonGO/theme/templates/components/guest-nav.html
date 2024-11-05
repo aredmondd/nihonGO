@@ -24,7 +24,7 @@
 
            <!-- Decks with dropdown -->
            <li class="relative group">
-            <a href="#" class="flex items-center p-2 text-black rounded-lg hover:underline underline-offset-2 decoration-crimson">
+            <a href="#" class="flex items-center p-2 text-black rounded-lg hover:underline underline-offset-2 decoration-crimson {% if request.resolver_match.url_name == 'my_decks' or request.resolver_match.url_name == 'add_deck' %} underline {% endif %}">
                 <span class="ms-3 flex-1 whitespace-nowrap">Decks</span>
                 <svg class="w-4 h-4 ms-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
@@ -40,6 +40,7 @@
                 </li>
             </ul>
         </li>
+        
 
             <li>
                 <a href="{% url 'messages' %}" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'messages' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
@@ -49,10 +50,11 @@
             </li>
 
             <li>
-                <a href="{% url 'forum' %}" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'forum' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
-                <span class="ms-3">Forum</span>
+                <a href="{% url 'forum_index' %}" class="flex items-center p-2 text-black rounded-lg group hover:underline underline-offset-2 decoration-crimson {% if request.resolver_match.url_name == 'forum_index' %} underline {% endif %}">
+                    <span class="ms-3">Forum</span>
                 </a>
             </li>
+            
         </ul>
 
         <img src="{% static 'redmond.jpg' %}" alt="" class="w-16 h-16 rounded-full">

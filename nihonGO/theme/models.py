@@ -94,7 +94,6 @@ class Message(models.Model):
         return f'{self.sender} to {self.recipient}: {self.content}'
     
 
-
 #FORUM MODELS
 from django.db import models
 from django.contrib.auth.models import User

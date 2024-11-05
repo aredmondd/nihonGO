@@ -48,8 +48,6 @@ def about(request):
 def dashboard (request):
     return render(request, 'dashboard.html')
 
-def forum (request):
-    return render(request, 'forum.html')
 
 def profile (request):
     return render(request, 'my-profile.html')
@@ -354,10 +352,15 @@ from .models import Post, Reply
 from .forms import PostForm, ReplyForm  # You'll need to create these forms
 from django.contrib.auth.decorators import login_required
 
+
 # View for the forum index
 def forum_index(request):
-    posts = Post.objects.all().order_by('-created_at')
-    return render(request, 'forum/index.html', {'posts': posts})
+    if request.user.is_authenticated:
+        posts = Post.objects.all().order_by('-created_at')  # All posts for logged-in users
+    else:
+        posts = Post.objects.all().order_by('-created_at')[:50]  # 50 most recent posts for logged-out users
+    
+    return render(request, 'forum/forumIndex.html', {'posts': posts})
 
 # View for creating a new post
 @login_required
@@ -400,4 +403,18 @@ def upvote_post(request, post_id):
     post.upvotes += 1
     post.save()
     return redirect('post_detail', post_id=post.id)
+
+def add_reply(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        form = ReplyForm(request.POST)
+        if form.is_valid():
+            new_reply = form.save(commit=False)
+            new_reply.user = request.user  # Assuming the user is logged in
+            new_reply.post = post
+            new_reply.save()
+            return redirect('theme:post_detail', post_id=post.id)
+    else:
+        form = ReplyForm()
+    return render(request, 'theme/add_reply.html', {'form': form, 'post': post})
 

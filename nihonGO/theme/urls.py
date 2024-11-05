@@ -4,7 +4,6 @@ from .views import profile
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView
-from .views import forum_index, create_post, post_detail, upvote_post
 
 urlpatterns = [
     path('', views.index, name="index"),
@@ -27,9 +26,12 @@ urlpatterns = [
     path('edit/<int:deck_id>/', views.edit_deck, name='edit_deck'),
     path('delete/<int:deck_id>/', views.delete_deck, name='delete_deck'),  
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('', forum_index, name='forum_index'),
-    path('forum/', views.forum, name="forum"),
-    path('post/new/', create_post, name='create_post'),
-    path('post/<int:post_id>/', post_detail, name='post_detail'),
-    path('post/<int:post_id>/upvote/', upvote_post, name='upvote_post'),
+    path('forum/', views.forum_index, name='forum_index'),                   # List all posts
+    path('forum/post/<int:post_id>/', views.post_detail, name='post_detail'),  # View a single post with replies
+    path('forum/new/', views.create_post, name='create_post'),             # Create a new post
+    path('forum/post/<int:post_id>/reply/', views.add_reply, name='add_reply'), # Add a reply to a post
+
+
 ]
+
+
