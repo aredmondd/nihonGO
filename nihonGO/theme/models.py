@@ -1,6 +1,7 @@
 # models.py
 from django.db import models
 from django.contrib.auth.models import User
+from PIL import Image
 from django.utils import timezone
 from datetime import timedelta
 # Model for Deck 
@@ -42,7 +43,7 @@ def create_default_deck(sender, instance, created, **kwargs):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="theme_profile")
 
-    avatar = models.ImageField(default='default.jpg', upload_to='profile_images')
+    avatar = models.ImageField(default='media\default.jpg', upload_to='profile_images')
     bio = models.TextField()
 
     def __str__(self):
@@ -141,3 +142,15 @@ class Reply(models.Model):
     def __str__(self):
         return f"Reply by {self.user.username} to {self.post.title}"
 
+
+    
+# resizing images
+def save(self, *args, **kwargs):
+    super().save()
+
+    img = Image.open(self.avatar.path)
+
+    if img.height > 100 or img.width > 100:
+        new_img = (100, 100)
+        img.thumbnail(new_img)
+        img.save(self.avatar.path)

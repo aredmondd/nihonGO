@@ -15,7 +15,10 @@ from django.contrib import messages
 from django.conf import settings
 import json
 from .models import Deck
-from .forms import DeckForm, FlashcardForm
+from .forms import DeckForm, FlashcardForm, UpdateUserForm, UpdateProfileForm
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy
 
 # Create your views here.
 def index (request):
@@ -51,6 +54,9 @@ def dashboard (request):
 
 def profile (request):
     return render(request, 'my-profile.html')
+
+def edit_profile (request):
+    return render(request, 'myapp/edit_profile.html')
 
 def messages (request):
     return render(request, 'messages.html')
@@ -90,12 +96,49 @@ def user_logout(request):
     auth.logout(request)
 
     return redirect("index")
+    return redirect("index")
 
 @login_required
 def profile(request):
     return render(request, 'users/profile.html')
 
-#Use BASE_DIR to construct the relative path
+# Change password view
+class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
+    template_name = 'myapp/change_password.html'
+    success_message = "Successfully Changed Your Password"
+    success_url = reverse_lazy('profile-page')
+
+# Update profile
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        # Initialize forms with POST data and files
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.theme_profile)
+
+        # Check if user form is valid and has changed data
+        if user_form.is_valid():
+            if user_form.has_changed():  # Only save if there are changes
+                user_form.save()
+
+        # Check if profile form is valid and has changed data
+        if profile_form.is_valid():
+            if profile_form.has_changed():  # Only save if there are changes
+                profile_form.save()
+
+        return redirect('profile-page')  # Redirect to profile page after update
+
+    else:
+        # GET request - initialize forms with existing user data
+        user_form = UpdateUserForm(instance=request.user)
+        profile_form = UpdateProfileForm(instance=request.user.theme_profile)
+
+    return render(request, 'myapp/edit_profile.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })
+
+# Use BASE_DIR to construct the relative path
 file_path = f"{settings.BASE_DIR}/theme/templates/flashcards/japanesebasics.json"
 
 #Open Japanese Basics
