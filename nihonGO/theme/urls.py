@@ -11,7 +11,6 @@ urlpatterns = [
     path('register/', views.register, name="register"),
     path('about/', views.about, name="about"),
     path('dashboard/', views.dashboard, name="dashboard"),
-    path('forum/', views.forum, name="forum"),
     path('my-profile/', views.profile, name="my-profile"),
     path('messages/', views.messages, name="messages"),
     path('mydecks/', views.my_decks, name="my_decks"),
@@ -26,4 +25,12 @@ urlpatterns = [
     path('edit/<int:deck_id>/', views.edit_deck, name='edit_deck'),
     path('delete/<int:deck_id>/', views.delete_deck, name='delete_deck'),  
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('forum/', views.forum_index, name='forum_index'),                   # List all posts
+    path('forum/post/<int:post_id>/', views.post_detail, name='post_detail'),  # View a single post with replies
+    path('forum/new/', views.create_post, name='create_post'),             # Create a new post
+    path('forum/post/<int:post_id>/reply/', views.add_reply, name='add_reply'), # Add a reply to a post
+
+
 ]
+
+

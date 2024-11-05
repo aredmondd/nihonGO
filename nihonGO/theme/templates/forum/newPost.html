@@ -1,0 +1,13 @@
+{% extends 'components/wrapper.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Create New Post</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Create Post</button>
+    </form>
+    <a href="{% url 'forum_index' %}" class="btn btn-secondary mt-2">Back to Forum</a>
+</div>
+{% endblock %}

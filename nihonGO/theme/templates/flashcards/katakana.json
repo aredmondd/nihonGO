@@ -1,0 +1,570 @@
+{
+    "ア": {
+        "kana": "a",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "イ": {
+        "kana": "i",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ウ": {
+        "kana": "u",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "エ": {
+        "kana": "e",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "オ": {
+        "kana": "o",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "カ": {
+        "kana": "ka",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "キ": {
+        "kana": "ki",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ク": {
+        "kana": "ku",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ケ": {
+        "kana": "ke",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "コ": {
+        "kana": "ko",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "サ": {
+        "kana": "sa",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "シ": {
+        "kana": "shi",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ス": {
+        "kana": "su",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "セ": {
+        "kana": "se",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ソ": {
+        "kana": "so",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "タ": {
+        "kana": "ta",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "チ": {
+        "kana": "chi",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ツ": {
+        "kana": "tsu",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "テ": {
+        "kana": "te",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ト": {
+        "kana": "to",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ナ": {
+        "kana": "na",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ニ": {
+        "kana": "ni",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ヌ": {
+        "kana": "nu",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ネ": {
+        "kana": "ne",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ノ": {
+        "kana": "no",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ハ": {
+        "kana": "ha",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ヒ": {
+        "kana": "hi",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "フ": {
+        "kana": "fu",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ヘ": {
+        "kana": "he",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ホ": {
+        "kana": "ho",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "マ": {
+        "kana": "ma",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ミ": {
+        "kana": "mi",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ム": {
+        "kana": "mu",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "メ": {
+        "kana": "me",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "モ": {
+        "kana": "mo",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ヤ": {
+        "kana": "ya",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ユ": {
+        "kana": "yu",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ヨ": {
+        "kana": "yo",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ラ": {
+        "kana": "ra",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "リ": {
+        "kana": "ri",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ル": {
+        "kana": "ru",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "レ": {
+        "kana": "re",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ロ": {
+        "kana": "ro",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ワ": {
+        "kana": "wa",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ヲ": {
+        "kana": "wo",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ン": {
+        "kana": "n",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ガ": {
+        "kana": "ga",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ギ": {
+        "kana": "gi",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "グ": {
+        "kana": "gu",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ゲ": {
+        "kana": "ge",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ゴ": {
+        "kana": "go",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ザ": {
+        "kana": "za",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ジ": {
+        "kana": "ji",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ズ": {
+        "kana": "zu",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ゼ": {
+        "kana": "ze",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ゾ": {
+        "kana": "zo",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ダ": {
+        "kana": "da",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ヂ": {
+        "kana": "ji",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ヅ": {
+        "kana": "zu",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "デ": {
+        "kana": "de",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ド": {
+        "kana": "do",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "バ": {
+        "kana": "ba",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ビ": {
+        "kana": "bi",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ブ": {
+        "kana": "bu",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ベ": {
+        "kana": "be",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ボ": {
+        "kana": "bo",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "パ": {
+        "kana": "pa",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ピ": {
+        "kana": "pi",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "プ": {
+        "kana": "pu",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ペ": {
+        "kana": "pe",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    },
+    "ポ": {
+        "kana": "po",
+        "english_translation": "",
+        "part_of_speech": "",
+        "example_sentence": "",
+        "example_sentence_kana": "",
+        "example_sentence_english": ""
+    }
+}
