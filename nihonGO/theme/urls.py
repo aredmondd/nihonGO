@@ -3,11 +3,12 @@ from . import views
 from .views import profile, ChangePasswordView
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.views import LogoutViewfrom django.contrib.auth.views import LoginView
+
+from django.contrib.auth.views import LoginView
 
 urlpatterns = [
     path('', views.index, name="index"),
-    path('login/', views.my_my_login, name="login"),
+    path('login/', views.my_login, name="login"),
     path('register/', views.register, name="register"),
     path('about/', views.about, name="about"),
     path('dashboard/', views.dashboard, name="dashboard"),
@@ -27,7 +28,6 @@ urlpatterns = [
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('edit/<int:deck_id>/', views.edit_deck, name='edit_deck'),
     path('delete/<int:deck_id>/', views.delete_deck, name='delete_deck'),  
-    path('logout/', LogoutView.as_view(), name='logout'),
     path('forum/', views.forum_index, name='forum_index'),                   # List all posts
     path('forum/post/<int:post_id>/', views.post_detail, name='post_detail'),  # View a single post with replies
     path('forum/new/', views.create_post, name='create_post'),             # Create a new post
