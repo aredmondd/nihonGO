@@ -86,6 +86,8 @@ def my_login(request):
                 auth.login(request, user)
 
                 return redirect("profile-page")
+            else:
+                messages.error(request, 'Invalid username or password. Please try again.')
             
     
     context = {'loginform':form}

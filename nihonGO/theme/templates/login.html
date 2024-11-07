@@ -2,6 +2,21 @@
 
 {% block content %}
     <h1 class="text-center text-title text-black font-japanese font-bold">おかえり!</h1>
+
+    <!-- Error messages -->
+    {% if form.errors %}
+        <div class="text-red-500 text-center mx-96">
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <form class="space-y-4 md:space-y-6" action="{% url 'login' %}" method="POST">
         {% csrf_token %}
         
