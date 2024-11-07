@@ -40,7 +40,7 @@ def create_default_deck(sender, instance, created, **kwargs):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="theme_profile")
 
-    avatar = models.ImageField(default='media\default.jpg', upload_to='profile_images')
+    avatar = models.ImageField(default='media/default.jpg', upload_to='profile_images')
     bio = models.TextField()
 
     def __str__(self):
