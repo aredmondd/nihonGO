@@ -105,30 +105,6 @@ file_path = f"{settings.BASE_DIR}/theme/templates/flashcards/japanesebasics.json
 with open(file_path, 'r') as file:
     japaneseDict = json.load(file)
 
-
-def my_decks(request):
-    if not request.user.is_authenticated:
-        # For non-authenticated users, show a default "Japanese Basics" deck.
-       
-        decks = [
-            {'id': 1, 'name': 'Japanese Basics', 'cards': load_japanese_dict()},
-            {'id': 5, 'name': 'Hiragana', 'cards': load_hiragana_dict},  # No cards
-            {'id': 6, 'name': 'Katakana', 'cards': load_katakana_dict},  # No cards
-        ]
-    else:
-        # Check if the default deck exists for authenticated users; if not, create it.
-        user = request.user
-        if not Deck.objects.filter(user=user, is_default=True).exists():
-            create_default_deck(user)  # Create the deck for the user.
-            create_hiragana_deck(user)
-            create_katakana_deck(user)
-        
-        # Fetch the user's decks including the default deck
-        decks = Deck.objects.filter(user=user)
-    
-    return render(request, 'flashcards/mydecks.html', {'decks': decks})
-
-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.utils import timezone
@@ -184,40 +160,46 @@ from django.utils import timezone
 from .models import Deck, Card
 from datetime import timedelta
 
-DEFAULT_DECKS = ["Japanese Basics", "Hiragana", "Katakana"]
+
 def study(request, deck_id):
     # Get the deck object
     deck = get_object_or_404(Deck, id=deck_id)
+    
+    # Initialize context with the deck and empty flashcards list
+    context = {
+        'deck': deck,
+        'flashcards': [],
+        'message': None,
+    }
 
-    # Check if the deck is a default deck
+    # For default decks, show all flashcards for logged-out users
     if deck.is_default and deck.name in DEFAULT_DECKS:
-        # If the user is not logged in, do not apply spaced repetition
         if not request.user.is_authenticated:
-            # Return all flashcards in the deck without filtering for spaced repetition
-            context = {
-                'deck': deck,
-                'flashcards': deck.card_set.all()
-            }
+            # Show all flashcards in the deck for logged-out users
+            context['flashcards'] = deck.card_set.all()
+            context['message'] = "Log in to enable spaced repetition and save your progress."
             return render(request, 'flashcards/study.html', context)
 
-    # If the user is logged in, apply spaced repetition logic for all decks
-    elif request.user.is_authenticated:
-        # Ensure user is authorized to access the deck (either it’s default or belongs to them)
+    # For authenticated users or non-default decks
+    if request.user.is_authenticated:
+        # Check if the user owns the deck if it's not default
         if not deck.is_default and deck.user != request.user:
-            return redirect('login')  # Redirect if unauthorized access
-
-        # Apply spaced repetition: show only flashcards that are due for review
-        current_time = timezone.now()
-        due_flashcards = deck.flashcards.filter(next_review_date__lte=current_time)
+            return redirect('my_decks')  # Redirect unauthorized access to the user's deck list
         
-        context = {
-            'deck': deck,
-            'flashcards': due_flashcards
-        }
+        # Show flashcards for the user's deck (whether default or custom)
+        context['flashcards'] = deck.card_set.all()
+        
+        # Apply spaced repetition: show only flashcards due for review
+        if not deck.is_default:
+            current_time = timezone.now()
+            context['flashcards'] = context['flashcards'].filter(next_review_date__lte=current_time)
+        
         return render(request, 'flashcards/study.html', context)
 
-    # If an anonymous user tries to access a non-default deck, redirect to login
-    return redirect('login')
+    # If an unauthenticated user tries to access a non-default deck
+    context['message'] = "Please log in to access this deck."
+    return render(request, 'flashcards/study.html', context)
+
 
 
 import os
@@ -241,11 +223,16 @@ def load_katakana_dict():
         return json.load(file)
 
 # View to create a default deck for a user
-def create_default_deck(user):
+def create_default_deck():
     if not Deck.objects.filter(name="Japanese Basics").exists():
         japaneseDict = load_japanese_dict()  # Load the Japanese Dictionary
         # Create the default deck
-        japanese_basics_deck = Deck.objects.create(name="Japanese Basics", is_default=True)
+        #japanese_basics_deck = Deck.objects.create(name="Japanese Basics", is_default=True)
+        japanese_basics_deck = Deck.objects.create(
+                id=1,  # Assign a fixed ID
+                name="Japanese Basics", 
+                is_default=True
+            )
 
         # Loop through the dictionary and create flashcards
         for vocab_word, details in japaneseDict.items():
@@ -261,11 +248,19 @@ def create_default_deck(user):
 
             )
 
-def create_hiragana_deck(user):
-    if not Deck.objects.filter(name="Hiragana", user=user).exists():
+        return japanese_basics_deck
+
+def create_hiragana_deck():
+    if not Deck.objects.filter(name="Hiragana").exists():
         hiragana_dict = load_hiragana_dict()  # Load Hiragana Dictionary
         # Create the Hiragana deck
-        hiragana_deck = Deck.objects.create(name="Hiragana", user=user, is_default=True)
+        #hiragana_deck = Deck.objects.create(name="Hiragana", is_default=True)
+        hiragana_deck = Deck.objects.create(
+                id=4,  # Assign a fixed ID
+                name="Hiragana", 
+                is_default=True
+            )
+        
 
         # Loop through the dictionary and create flashcards
         for vocab_word, details in hiragana_dict.items():
@@ -279,12 +274,18 @@ def create_hiragana_deck(user):
                 example_sentence_kana=details['example_sentence_kana'],
                 example_sentence_english=details['example_sentence_english']
             )
+        return hiragana_deck
 
-def create_katakana_deck(user):
-    if not Deck.objects.filter(name="Katakana", user=user).exists():
+def create_katakana_deck():
+    if not Deck.objects.filter(name="Katakana").exists():
         katakana_dict = load_katakana_dict()  # Load Katakana Dictionary
         # Create the Katakana deck
-        katakana_deck = Deck.objects.create(name="Katakana", user=user, is_default=True)
+        #katakana_deck = Deck.objects.create(name="Katakana", is_default=True)
+        katakana_deck = Deck.objects.create(
+                id=6,  # Assign a fixed ID
+                name="Katakana", 
+                is_default=True
+            )
 
         # Loop through the dictionary and create flashcards
         for vocab_word, details in katakana_dict.items():
@@ -298,10 +299,27 @@ def create_katakana_deck(user):
                 example_sentence_kana=details['example_sentence_kana'],
                 example_sentence_english=details['example_sentence_english']
             )
-
+        return katakana_deck
 
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import Deck, Card
+from django.db.models import Q
+DEFAULT_DECKS = ["Japanese Basics", "Hiragana", "Katakana"]
+def my_decks(request):
+    create_default_deck()
+    create_hiragana_deck()
+    create_katakana_deck()
+
+    if not request.user.is_authenticated:
+        # For non-authenticated users, only show the default decks
+        decks = Deck.objects.filter(id__in=[1, 5, 6])  # Fetch only default decks with fixed IDs (1, 5, 6)
+    else:
+        # For authenticated users, show both their decks and the default decks
+        decks = Deck.objects.filter(Q(user=request.user) | Q(id__in=[1, 5, 6])).distinct()
+        for deck in decks:
+            deck.cards = deck.card_set.all()
+
+    return render(request, 'flashcards/mydecks.html', {'decks': decks})
 
 def edit_deck(request, deck_id):
     # Get the deck without filtering by user, allowing access for logged-out users
@@ -375,10 +393,12 @@ def create_post(request):
             post = form.save(commit=False)
             post.user = request.user
             post.save()
-            return redirect('forum_index')
+            # Redirect to the post_detail view for the newly created post
+            return redirect('post_detail', post_id=post.id)
     else:
         form = PostForm()
     return render(request, 'forum/newPost.html', {'form': form})
+
 
 # View for a specific post and its replies
 def post_detail(request, post_id):
