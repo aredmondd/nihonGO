@@ -421,12 +421,14 @@ def post_detail(request, post_id):
     })
 
 # View for upvoting a post
+from django.views.decorators.http import require_POST
 @login_required
+@require_POST  # Ensure this view is accessed only via POST requests
 def upvote_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     post.upvotes += 1
     post.save()
-    return redirect('post_detail', post_id=post.id)
+    return JsonResponse({'upvotes': post.upvotes}) 
 
 def add_reply(request, post_id):
     post = get_object_or_404(Post, id=post_id)

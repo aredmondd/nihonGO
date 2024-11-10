@@ -29,7 +29,8 @@ urlpatterns = [
     path('forum/post/<int:post_id>/', views.post_detail, name='post_detail'),  # View a single post with replies
     path('forum/new/', views.create_post, name='create_post'),             # Create a new post
     path('forum/post/<int:post_id>/reply/', views.add_reply, name='add_reply'), # Add a reply to a post
-
+    path('upvote/<int:post_id>/', views.upvote_post, name='upvote_post'),
+    path('post/<int:post_id>/', views.post_detail, name='post_detail'),  # Check that 'post_detail' is correctly defined
 
 ]
 
