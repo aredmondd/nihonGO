@@ -1,5 +1,71 @@
 {% extends 'components/wrapper.html' %}
 
 {% block content %}
-    <h1 class="ml-12 text-title text-black font-japanese font-bold">My Profile</span></h1>
+<div class="container mx-auto p-4">
+    <!-- Profile Section -->
+    <div class="profile-section mb-6">
+        <h2 class="text-3xl font-bold mb-2">User Profile</h2>
+        
+        <!-- Collapsible Section for Personal Information -->
+        <button class="w-full text-left bg-gray-200 py-2 px-4 rounded-md mb-2 focus:outline-none" data-toggle="collapse" data-target="#personal-info" aria-expanded="false">
+            Personal Information
+        </button>
+        <div id="personal-info" class="collapse">
+            <div class="bg-gray-100 p-4 rounded-md">
+                <img src="{{ user_profile.profile_picture.url }}" alt="Profile Picture" class="w-24 h-24 rounded-full mb-2">
+                <p><strong>Username:</strong> {{ user_profile.user.username }}</p>
+                <p><strong>Email:</strong> {{ user_profile.user.email }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Flashcards Section -->
+    <div class="flashcards-section mb-6">
+        <h2 class="text-3xl font-bold mb-2">Flashcard Progress</h2>
+        
+        <!-- Collapsible Section for Flashcards Progress -->
+        <button class="w-full text-left bg-gray-200 py-2 px-4 rounded-md mb-2 focus:outline-none" data-toggle="collapse" data-target="#flashcard-progress" aria-expanded="false">
+            Flashcard Statistics
+        </button>
+        <div id="flashcard-progress" class="collapse">
+            <div class="bg-gray-100 p-4 rounded-md">
+                <p><strong>Total Cards Studied:</strong> {{ flashcard_progress.count }}</p>
+                <p><strong>Progress:</strong> {{ flashcard_progress.progress_percentage }}%</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forum Posts Section -->
+    <div class="posts-section mb-6">
+        <h2 class="text-3xl font-bold mb-2">Forum Posts</h2>
+        
+        <!-- Collapsible Section for Forum Posts -->
+        <button class="w-full text-left bg-gray-200 py-2 px-4 rounded-md mb-2 focus:outline-none" data-toggle="collapse" data-target="#forum-posts" aria-expanded="false">
+            Your Forum Posts
+        </button>
+        <div id="forum-posts" class="collapse">
+            <div class="bg-gray-100 p-4 rounded-md">
+                {% for post in forum_posts %}
+                    <div class="post mb-4">
+                        <h3 class="font-semibold">{{ post.title }}</h3>
+                        <p>{{ post.content|truncatewords:20 }}</p>
+                        <a href="{% url 'forum_post_detail' post.id %}" class="text-blue-600">Read more</a>
+                    </div>
+                {% empty %}
+                    <p>You have no forum posts yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Collapsing Sections -->
+<script>
+    document.querySelectorAll('[data-toggle="collapse"]').forEach(button => {
+        button.addEventListener('click', function () {
+            const target = document.querySelector(button.getAttribute('data-target'));
+            target.classList.toggle('collapse');
+        });
+    });
+</script>
 {% endblock %}

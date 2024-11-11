@@ -55,8 +55,21 @@ def dashboard (request):
     return render(request, 'dashboard.html')
 
 
-def profile (request):
-    return render(request, 'my-profile.html')
+def profile(request):
+    user = request.user
+    profile = profile.objects.get(user=user)
+    
+    # Fetch user-specific flashcard progress and statistics
+    flashcard_progress = UserCardProgress.objects.filter(user=user)
+    
+    # Fetch user's forum posts
+    forum_posts = Post.objects.filter(user=user)
+    
+    return render(request, 'my-profile.html', {
+        'profile': profile,
+        'flashcard_progress': flashcard_progress,
+        'forum_posts': forum_posts,
+    })
 
 def messages (request):
     return render(request, 'messages.html')
@@ -160,11 +173,14 @@ from django.utils import timezone
 from .models import Deck, Card
 from datetime import timedelta
 
+from django.utils import timezone
+from django.shortcuts import get_object_or_404, render, redirect
+from .models import Deck, UserCardProgress
 
 def study(request, deck_id):
     # Get the deck object
     deck = get_object_or_404(Deck, id=deck_id)
-    
+
     # Initialize context with the deck and empty flashcards list
     context = {
         'deck': deck,
@@ -173,7 +189,7 @@ def study(request, deck_id):
     }
 
     # For default decks, show all flashcards for logged-out users
-    if deck.is_default and deck.name in DEFAULT_DECKS:
+    if deck.is_default:
         if not request.user.is_authenticated:
             # Show all flashcards in the deck for logged-out users
             context['flashcards'] = deck.card_set.all()
@@ -185,20 +201,26 @@ def study(request, deck_id):
         # Check if the user owns the deck if it's not default
         if not deck.is_default and deck.user != request.user:
             return redirect('my_decks')  # Redirect unauthorized access to the user's deck list
-        
-        # Show flashcards for the user's deck (whether default or custom)
-        context['flashcards'] = deck.card_set.all()
-        
-        # Apply spaced repetition: show only flashcards due for review
+
+        # Retrieve all flashcards in the deck
+        flashcards = deck.card_set.all()
+
+        # Apply spaced repetition for authenticated users on non-default decks
         if not deck.is_default:
             current_time = timezone.now()
-            context['flashcards'] = context['flashcards'].filter(next_review_date__lte=current_time)
-        
+            flashcards = flashcards.filter(
+                usercardprogress__user=request.user,
+                usercardprogress__next_review_date__lte=current_time
+            )
+
+        # Update the context with filtered flashcards
+        context['flashcards'] = flashcards
         return render(request, 'flashcards/study.html', context)
 
     # If an unauthenticated user tries to access a non-default deck
     context['message'] = "Please log in to access this deck."
     return render(request, 'flashcards/study.html', context)
+
 
 
 
