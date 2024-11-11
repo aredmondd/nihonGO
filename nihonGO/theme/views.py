@@ -16,7 +16,7 @@ from django.conf import settings
 import json
 from .models import Deck
 from .forms import DeckForm, FlashcardForm, UpdateUserForm, UpdateProfileForm
-from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.views import PasswordChangeView, PasswordResetView, PasswordResetDoneView, PasswordResetCompleteView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 
@@ -100,6 +100,17 @@ def user_logout(request):
     auth.logout(request)
 
     return redirect("index")
+
+# Remember password views
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'registration/password_reset_form.html'
+    success_url = reverse_lazy('password_reset_done')
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'theme/registration/password_reset_done.html'
+
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = 'theme/registration/password_reset_complete.html'
 
 @login_required
 def profile(request):

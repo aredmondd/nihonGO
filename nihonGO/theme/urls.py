@@ -1,6 +1,6 @@
 from django.urls import path, include
 from . import views
-from .views import profile, ChangePasswordView
+from .views import profile, ChangePasswordView, CustomPasswordResetView, CustomPasswordResetDoneView, CustomPasswordResetCompleteView
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LoginView
 from django.conf import settings
@@ -23,10 +23,11 @@ urlpatterns = [
     path('user-logout', views.user_logout, name="user-logout"),
     path('profile/', profile, name='users-profile'),
     path('change-password/', ChangePasswordView.as_view(), name='change-password'),
-    path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
-    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    # path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/', CustomPasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/done/', CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('reset/done/', CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
