@@ -1,62 +1,38 @@
 {% extends 'components/wrapper.html' %}
 
 {% block content %}
-<div class="container" style="max-width: 900px; margin: auto; padding: 30px; border-radius: 10px; background-color: transparent;">
-    <!-- Navigation link back to the forum -->
-    <a href="{% url 'forum_index' %}" style="text-decoration: underline; color: #007bff; font-size: 16px; margin-bottom: 20px; display: inline-block;">&larr; Back to Forum</a>
-    
-    <!-- Post Title and Meta Info -->
-    <h1 style="font-size: 2.5rem; color: crimson; text-align: center; font-weight: bold; margin-bottom: 20px; font-family: 'Arial', sans-serif;">
-        {{ post.title }}
-    </h1>
-    <p style="text-align: center; color: #666; font-size: 1rem; margin-bottom: 20px;">
-        Posted by <strong>{{ post.user.username }}</strong> on {{ post.created_at|date:"F j, Y, g:i a" }}
-    </p>
-    <p style="font-size: 1.1rem; line-height: 1.6; color: #333; margin-bottom: 20px;">
-        {{ post.content }}
-    </p>
-    <p style="font-size: 1.1rem; font-weight: bold; color: #333;">
-        <strong>Upvotes:</strong> {{ post.upvotes }}
-    </p>
-    <a href="{% url 'upvote_post' post.id %}" class="btn" style="background-color: orange; color: white; border: none; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-size: 1rem; margin-top: 20px; display: inline-block; cursor: pointer; transition: background-color 0.3s ease;">
-        Upvote
-    </a>
-
-    <hr style="margin: 40px 0; border: 1px solid #ddd;">
-
-    <!-- Replies Section -->
-    <h2 style="font-size: 2rem; color: crimson; text-align: center; margin-bottom: 20px;">Replies</h2>
-    <div class="reply-list" style="display: flex; flex-direction: column; gap: 15px;">
-        {% for reply in replies %}
-        <div class="reply-card" style="border: 1px solid #ddd; border-radius: 10px; padding: 20px; background-color: #f9f9f9; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);">
-            <p style="font-size: 1.1rem; color: #333; margin-bottom: 10px;">
-                <strong>{{ reply.user.username }}:</strong> {{ reply.content }}
-            </p>
-            <p class="text-muted" style="font-size: 0.9rem; color: #777; margin-top: 10px;">
-                Posted on {{ reply.created_at|date:"F j, Y, g:i a" }}
-            </p>
+<div class="container" style="max-width: 900px; margin: auto; padding: 34px; border-radius: 15px; background-color: transparent;">
+    <h1 style="font-size: 2.5rem; color: rgb(190, 15, 50); text-align: center; margin-bottom: 30px; font-family: 'Arial', sans-serif; font-weight: bold; border-radius: 10px;">相談したいことがある？</h1>
+    <form method="POST" style="display: flex; flex-direction: column; gap: 25px; border-radius: 10px;">
+        {% csrf_token %}
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            {% for field in form %}
+                <div style="border-radius: 8px; overflow: hidden;">
+                    {{ field.label_tag }}
+                    {{ field }}
+                </div>
+            {% endfor %}
         </div>
-        {% empty %}
-        <p style="color: #777; text-align: center;">No replies yet. Be the first to reply!</p>
-        {% endfor %}
-    </div>
 
-    <!-- Reply Form (only shown if logged in) -->
-    {% if user.is_authenticated %}
-    <div class="reply-form" style="margin-top: 40px;">
-        <h3 style="font-size: 1.8rem; color: #333; font-weight: bold; margin-bottom: 20px;">Reply to this post</h3>
-        <form method="POST" style="display: flex; flex-direction: column; gap: 20px;">
-            {% csrf_token %}
-            <div class="form-field" style="display: flex; flex-direction: column; gap: 10px;">
-                {{ reply_form.as_p }}
-            </div>
-            <button type="submit" class="btn" style="background-color: peach; color: black; padding: 12px 25px; border-radius: 25px; font-size: 1rem; text-align: center; cursor: pointer; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); transition: background-color 0.3s ease;">
-                Submit Reply
-            </button>
-        </form>
-    </div>
-    {% else %}
-    <p style="color: #777; text-align: center;">You must be logged in to reply to this post. <a href="{% url 'login' %}" style="color: orange; text-decoration: underline;">Log in</a></p>
-    {% endif %}
+        <button type="submit" class="mt-6 border-2 border-black rounded-3xl bg-peach shadow-md p-4 text-center text-white flex justify-center items-center hover:bg-orange margin-top: 15px">Create Post</button>
+    </form>
+    <a href="{% url 'forum_index' %}" class="mt-6 border-2 border-black rounded-3xl bg-orange shadow-md p-4 text-center text-white flex justify-center items-center hover:bg-crimson margin-top: 15px">Back to Forum</a>
 </div>
+
+<style>
+    /* Additional styling for rounded form fields */
+    input[type="text"], input[type="email"], textarea, select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"]:focus, input[type="email"]:focus, textarea:focus, select:focus {
+        outline: none;
+        border-color: rgb(190, 15, 50);
+        box-shadow: 0 0 5px rgba(190, 15, 50, 0.5);
+    }
+</style>
 {% endblock %}

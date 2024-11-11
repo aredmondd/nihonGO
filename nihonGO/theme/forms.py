@@ -91,7 +91,11 @@ from .models import Post, Reply
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content']  # Adjust fields as needed
+        fields = ['title', 'content'] 
+        labels = {
+            'title': 'Post Title',  
+            'content': "What do you wan to know?"
+        }
 
 class ReplyForm(forms.ModelForm):
     class Meta:
