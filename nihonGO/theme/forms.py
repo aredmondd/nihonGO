@@ -94,7 +94,7 @@ class PostForm(forms.ModelForm):
         fields = ['title', 'content'] 
         labels = {
             'title': 'Post Title',  
-            'content': "What do you wan to know?"
+            'content': "What do you want to know?"
         }
 
 class ReplyForm(forms.ModelForm):
