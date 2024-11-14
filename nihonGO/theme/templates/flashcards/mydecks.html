@@ -17,7 +17,7 @@
         {% for deck in decks %}
         <div class="border-2 border-black rounded-3xl bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center items-center  transition duration-300">
             <h2 class="text-xl font-semibold mb-4">{{ deck.name }}</h2>
-            <p class="text-gray-500 mb-4">{{ deck.card_set.count }} Cards</p>  
+            <p class="text-gray-500 mb-4">{{ deck.cards.count }} Cards</p>  
             <div class="flex space-x-12 items-center">
                 <a href="{% url 'study' deck.id %}" class="text-orange hover:text-crimson">Study Deck</a>
                 <a href="{% url 'edit_deck' deck.id %}" class="text-orange hover:text-crimson">Edit Deck</a>

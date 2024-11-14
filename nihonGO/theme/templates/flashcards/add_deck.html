@@ -130,11 +130,17 @@
     `;
 
     // Add event listener to the "+ Add Card" button
-    document.getElementById('addCardButton').addEventListener('click', function() {
-        // Append new flashcard fields
-        flashcardsContainer.insertAdjacentHTML('beforeend', flashcardTemplate);
-        addDeleteListeners(); // Attach delete functionality to newly added cards
+    document.getElementById('addCardButton').addEventListener('click', () => {
+    const newCard = document.createElement('div');
+    newCard.innerHTML = flashcardTemplate;
+    flashcardsContainer.appendChild(newCard);
+
+    // Add functionality for deleting individual cards
+    newCard.querySelector('.delete-card-btn').addEventListener('click', () => {
+        newCard.remove();
     });
+});
+
 
     // Function to add delete event listeners to all delete buttons
     function addDeleteListeners() {

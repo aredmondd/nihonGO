@@ -15,7 +15,10 @@ from django.contrib import messages
 from django.conf import settings
 import json
 from .models import Deck
-from .forms import DeckForm, FlashcardForm
+from .forms import DeckForm, FlashcardForm, UpdateUserForm, UpdateProfileForm
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy
 
 # Create your views here.
 def index (request):
@@ -71,6 +74,9 @@ def profile(request):
         'forum_posts': forum_posts,
     })
 
+def edit_profile (request):
+    return render(request, 'myapp/edit_profile.html')
+
 def messages (request):
     return render(request, 'messages.html')
 
@@ -110,6 +116,42 @@ def user_logout(request):
 @login_required
 def profile(request):
     return render(request, 'my-profile.html')
+
+# Change password view
+class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
+    template_name = 'myapp/change_password.html'
+    success_message = "Successfully Changed Your Password"
+    success_url = reverse_lazy('profile-page')
+
+# Update profile
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        # Initialize forms with POST data and files
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.theme_profile)
+
+        # Check if user form is valid and has changed data
+        if user_form.is_valid():
+            if user_form.has_changed():  # Only save if there are changes
+                user_form.save()
+
+        # Check if profile form is valid and has changed data
+        if profile_form.is_valid():
+            if profile_form.has_changed():  # Only save if there are changes
+                profile_form.save()
+
+        return redirect('profile-page')  # Redirect to profile page after update
+
+    else:
+        # GET request - initialize forms with existing user data
+        user_form = UpdateUserForm(instance=request.user)
+        profile_form = UpdateProfileForm(instance=request.user.theme_profile)
+
+    return render(request, 'myapp/edit_profile.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })
 
 #Use BASE_DIR to construct the relative path
 file_path = f"{settings.BASE_DIR}/theme/templates/flashcards/japanesebasics.json"
@@ -253,7 +295,7 @@ def create_default_deck():
         japanese_basics_deck = Deck.objects.create(
                 id=1,  # Assign a fixed ID
                 name="Japanese Basics", 
-                is_default=True
+                is_default=True,
             )
 
         # Loop through the dictionary and create flashcards
@@ -267,6 +309,7 @@ def create_default_deck():
                 example_sentence=details['example_sentence'],
                 example_sentence_kana=details['example_sentence_kana'],
                 example_sentence_english=details['example_sentence_english']
+                
 
             )
 
@@ -350,8 +393,9 @@ def edit_deck(request, deck_id):
 
     # Check if the user is authenticated and is the owner of the deck
     is_owner = request.user.is_authenticated and deck.user == request.user
+    is_default = deck.is_default
 
-    if request.method == "POST" and is_owner:
+    if request.method == "POST" and is_owner and is_default:
         # Handle updates only if the user is the owner
         deck_form = DeckForm(request.POST, instance=deck)
         if deck_form.is_valid():
@@ -381,6 +425,7 @@ def edit_deck(request, deck_id):
         'deck': deck,
         'flashcards': flashcards,
         'is_owner': is_owner,  # Pass ownership status to the template
+        'is_default': is_default,
     })
 
 

@@ -1,46 +1,64 @@
 {% extends 'components/wrapper.html' %}
 
 {% block content %}
-<div style="padding: 20px; margin: 20px; border: 2px solid #b5b5b5; border-radius: 8px; background-color: #fdfdfd;">
-    <h1 style="font-size: 2.5em; font-weight: bold; color: crimson;">{{ deck.name }}</h1>
-</div>
+<div class="back-button-container flex justify-between items-center p-4"></div>
+    <a href="{% url 'my_decks' %}" style="text-decoration: underline; color: orange; font-weight: bold;" 
+       onmouseover="this.style.color='#DC143C'" onmouseout="this.style.color='#FFA500'">
+        <i class="fas fa-arrow-left"></i> Back to My Decks
+    </a>
+    <div style="padding: 20px; margin: 10px; border: 2px solid #b5b5b5; border-radius: 8px; background-color: #fdfdfd;">
+        <h1 style="font-size: 2.5em; font-weight: bold; color: crimson;">{{ deck.name }}</h1>
+        
+    </div>
     <p>
+        {% if is_default %}
+            This is a prebuilt deck. Create your own deck to customize features!
+        {% endif %}
+        
         {% if is_owner %}
             You can edit this deck's name, settings, or cards below.
-        {% else %}
+    
+    
+        {% elif not is_owner and not is_default%}
             You are viewing this deck in read-only mode. Log in to make changes.
         {% endif %}
+    
+        
     </p>
-
-    {% if is_owner %}
-        <form method="post" id="deckForm">
-            {% csrf_token %}
-            <input type="text" name="deck_name" value="{{ deck.name }}" placeholder="Deck Name" style="margin-top: 10px; padding: 8px; font-size: 16px; border: 1px solid #b5b5b5; border-radius: 5px;" />
-            <button type="submit" style="margin-top: 10px; padding: 8px; font-size: 16px; border: 1px solid #b5b5b5; border-radius: 5px; background-color: #f0f0f0; cursor: pointer;">Save Changes</button>
-            <a href="{% url 'delete_deck' deck.id %}" style="color: red; margin-left: 10px;">Delete Deck</a>
-        </form>
-    {% endif %}
-
-    <!-- Toggle Button for showing/hiding cards -->
-    <button id="toggleButton" onclick="toggleCardList()" style="margin-top: 10px; padding: 8px; font-size: 16px; border: 1px solid #b5b5b5; border-radius: 5px; background-color: #f0f0f0; cursor: pointer;">Show All Cards</button>
-
-    <!-- Card list (initially hidden) -->
-    <!-- Card list (initially hidden) -->
-<ul id="cardList" style="display: none; list-style-type: none; padding: 0; margin-top: 15px;">
-    {% for flashcard in flashcards %}
-        <li style="padding: 8px; border-bottom: 1px solid #ddd; margin-bottom: 4px;">
-            {{ flashcard.vocab_word }} - {{ flashcard.kana }} 
-            {% if flashcard.english_translation %}
-                - {{ flashcard.english_translation }}
-            {% endif %}
-            {% if is_owner %}
-                <a href="{% url 'delete_card' flashcard.id %}" style="color: red; margin-left: 10px;">Delete</a>
-            {% endif %}
-        </li>
-    {% endfor %}
-</ul>
-
+    
+        {% if is_owner %}
+            <form method="post" id="deckForm">
+                {% csrf_token %}
+                <input type="text" name="deck_name" value="{{ deck.name }}" placeholder="Deck Name" style="margin-top: 10px; padding: 8px; font-size: 16px; border: 1px solid #b5b5b5; border-radius: 5px;" />
+                <button type="submit" style="margin-top: 10px; padding: 8px; font-size: 16px; border: 1px solid #b5b5b5; border-radius: 5px; background-color: #f0f0f0; cursor: pointer;">Save Changes</button>
+                <a href="{% url 'delete_deck' deck.id %}" style="color: red; margin-left: 10px;">Delete Deck</a>
+            </form>
+        {% endif %}
+    
+        <!-- Toggle Button for showing/hiding cards -->
+        <button id="toggleButton" onclick="toggleCardList()" style="margin-top: 10px; padding: 8px; font-size: 16px; border: 1px solid #b5b5b5; border-radius: 5px; background-color: #f0f0f0; cursor: pointer;">Show All Cards</button>
+    
+        <!-- Card list (initially hidden) -->
+        <!-- Card list (initially hidden) -->
+    <ul id="cardList" style="display: none; list-style-type: none; padding: 0; margin-top: 15px;">
+        {% for flashcard in flashcards %}
+            <li style="padding: 8px; border-bottom: 1px solid #ddd; margin-bottom: 4px;">
+                {{ flashcard.vocab_word }} - {{ flashcard.kana }} 
+                {% if flashcard.english_translation %}
+                    - {{ flashcard.english_translation }}
+                {% endif %}
+                {% if is_owner %}
+                    <a href="{% url 'delete_card' flashcard.id %}" style="color: red; margin-left: 10px;">Delete</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    
+    </div>
+    
 </div>
+
+
 
 <script>
     function toggleCardList() {
