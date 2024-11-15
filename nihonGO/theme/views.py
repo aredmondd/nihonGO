@@ -471,7 +471,15 @@ def create_post(request):
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     replies = post.replies.all().order_by('-created_at')
-    if request.method == 'POST':
+
+    # Check if the delete button was clicked and the user is the post owner
+    if request.method == "POST" and request.POST.get("delete_post") == "delete":
+        if request.user == post.user:
+            post.delete()
+            return redirect('forum_index')
+
+    # Handle reply form submission
+    elif request.method == 'POST':
         reply_form = ReplyForm(request.POST)
         if reply_form.is_valid():
             reply = reply_form.save(commit=False)
@@ -481,6 +489,7 @@ def post_detail(request, post_id):
             return redirect('post_detail', post_id=post.id)
     else:
         reply_form = ReplyForm()
+
     return render(request, 'forum/postDetail.html', {
         'post': post,
         'replies': replies,
@@ -510,4 +519,3 @@ def add_reply(request, post_id):
     else:
         form = ReplyForm()
     return render(request, 'theme/add_reply.html', {'form': form, 'post': post})
-

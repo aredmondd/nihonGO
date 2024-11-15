@@ -58,7 +58,17 @@
     {% else %}
     <p style="color: #777; text-align: center;">You must be logged in to reply to this post. <a href="{% url 'login' %}" style="color: orange; text-decoration: underline;">Log in</a></p>
     {% endif %}
+
+    {% if user == post.user %}
+    <form method="POST" action="{% url 'post_detail' post.id %}">
+        {% csrf_token %}
+        <button type="submit" class="mt-6 border-2 border-black rounded-3xl bg-orange shadow-md p-4 text-center text-white flex justify-center items-center hover:bg-crimson margin-top: 15px">
+            Delete Post
+        </button>
+    </form>
+{% endif %}
 </div>
+
 
 <style>
     /* Additional styling for rounded form fields */
