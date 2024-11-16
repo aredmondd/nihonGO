@@ -12,7 +12,7 @@
         </button>
         <div id="personal-info" class="collapse">
             <div class="bg-gray-100 p-4 rounded-md">
-                <img src="{{ user.theme_profile.avatar.url|default:'/media/default_profile.jpg' }}" alt="Profile Picture" class="w-24 h-24 rounded-full mb-2">
+                <img src="{{ user.theme_profile.avatar.url }}" alt="Profile Picture" class="w-24 h-24 rounded-full mb-2">
                 <p><strong>Username:</strong> {{ user.username }}</p>
                 <p><strong>Email:</strong> {{ user.email }}</p>
             </div>
