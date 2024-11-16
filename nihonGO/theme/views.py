@@ -473,10 +473,9 @@ def post_detail(request, post_id):
     replies = post.replies.all().order_by('-created_at')
 
     # Check if the delete button was clicked and the user is the post owner
-    if request.method == "POST" and request.POST.get("delete_post") == "delete":
-        if request.user == post.user:
-            post.delete()
-            return redirect('forum_index')
+    if request.method == "POST" and request.user == post.user:
+        post.delete()
+        return redirect('forum_index') 
 
     # Handle reply form submission
     elif request.method == 'POST':
