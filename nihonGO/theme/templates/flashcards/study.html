@@ -24,7 +24,7 @@
 
 <div id="cardList" class="flashcards-container flex justify-center items-center">
     {% for flashcard in flashcards %}
-    <div class="flashcard border-2 border-black shadow-md cursor-pointer hidden relative" onclick="flipCard(this)">
+    <div class="flashcard border-2 border-black shadow-md cursor-pointer relative" onclick="flipCard(this)">
         <div class="flashcard-front flex items-center justify-center h-full">
             <h3 class="text-7xl text-crimson font-semibold mb-4">{{ flashcard.vocab_word }}</h3>
         </div>

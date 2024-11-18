@@ -47,9 +47,7 @@
                 {% if flashcard.english_translation %}
                     - {{ flashcard.english_translation }}
                 {% endif %}
-                {% if is_owner %}
-                    <a href="{% url 'delete_card' flashcard.id %}" style="color: red; margin-left: 10px;">Delete</a>
-                {% endif %}
+               
             </li>
         {% endfor %}
     </ul>

@@ -50,7 +50,7 @@ def about(request):
         {'name': 'Alex Richardson', 'image': 'richardson.jpg', 'description': 'actually knows japanese', 'link' : 'https://github.com/lrichardson21'},
         {'name': 'Aiden Redmond', 'image': 'redmond.jpg', 'description': 'made everyone learn tailwind', 'link' : 'https://github.com/aredmondd'},
         {'name': 'Michael Durden', 'image': 'durden.jpg', 'description': 'had to nuke his github branch(es)', 'link' : 'https://github.com/masterjedidcfl'},
-        {'name': 'Eunice Ladu', 'image': 'eunice.jpg', 'description': 'tbd', 'link' : 'https://github.com/eunice-rayy'},
+        {'name': 'Eunice Ladu', 'image': 'eunice.jpg', 'description': 'cybersecurity & messaging god', 'link' : 'https://github.com/eunice-rayy'},
     ]
     return render(request, 'about.html', {'team_members': team_members})
 
@@ -169,38 +169,38 @@ from django.utils import timezone
 def add_deck(request):
     if request.method == "POST":
         deck_form = DeckForm(request.POST)
-        flashcard_forms = [FlashcardForm(request.POST) for _ in range(int(request.POST.get('num_cards', 0)))]
+        if deck_form.is_valid():
+            deck = deck_form.save(commit=False)
+            deck.user = request.user
+            deck.is_default = False
+            deck.save()
 
-        if deck_form.is_valid() and all(f.is_valid() for f in flashcard_forms):
-            new_deck = deck_form.save(commit=False)
-            new_deck.user = request.user  # Associate deck with user
-            new_deck.save()
+            # Process the flashcards
+            vocab_words = request.POST.getlist('vocab_word[]')
+            kana = request.POST.getlist('kana[]')
+            translations = request.POST.getlist('english_translation[]')
+            parts_of_speech = request.POST.getlist('part_of_speech[]')
+            example_sentences = request.POST.getlist('example_sentence[]')
+            example_sentences_kana = request.POST.getlist('example_sentence_kana[]')
+            example_sentences_english = request.POST.getlist('example_sentence_english[]')
 
-            for flashcard_form in flashcard_forms:
-                flashcard = flashcard_form.save(commit=False)
-                flashcard.deck = new_deck  # Associate flashcard with the new deck
-                flashcard.save()
-
-                # Create UserCardProgress for each flashcard
-                UserCardProgress.objects.create(
-                    user=request.user,
-                    card=flashcard,
-                    last_reviewed=timezone.now(),
-                    next_review_date=timezone.now(),
-                    ease_factor=2.5,  # Initial values for spaced repetition
-                    interval=1,
-                    repetition_count=0,
-                )
-
-            return redirect('my_decks')
+            for i in range(len(vocab_words)):
+                if vocab_words[i]:  # Only add cards with vocab words
+                    Card.objects.create(
+                        deck=deck,
+                        vocab_word=vocab_words[i],
+                        kana=kana[i],
+                        english_translation=translations[i],
+                        part_of_speech=parts_of_speech[i],
+                        example_sentence=example_sentences[i],
+                        example_sentence_kana=example_sentences_kana[i],
+                        example_sentence_english=example_sentences_english[i]
+                    )
+            return redirect('my_decks')  # Redirect to user's decks page
     else:
         deck_form = DeckForm()
-        flashcard_forms = [FlashcardForm() for _ in range(3)]
 
-    return render(request, 'flashcards/add_deck.html', {
-        'deck_form': deck_form,
-        'flashcard_forms': flashcard_forms,
-    })
+    return render(request, 'flashcards/add_deck.html', {'deck_form': deck_form})
 
 from .models import Card, Deck
 from django.shortcuts import get_object_or_404
@@ -226,7 +226,7 @@ def study(request, deck_id):
     # Initialize context with the deck and empty flashcards list
     context = {
         'deck': deck,
-        'flashcards': [],
+        'flashcards': deck.card_set.all(),
         'message': None,
     }
 
@@ -242,7 +242,7 @@ def study(request, deck_id):
     if request.user.is_authenticated:
         # Check if the user owns the deck if it's not default
         if not deck.is_default and deck.user != request.user:
-            return redirect('my_decks')  # Redirect unauthorized access to the user's deck list
+            return redirect('my_decks') 
 
         # Retrieve all flashcards in the deck
         flashcards = deck.card_set.all()
