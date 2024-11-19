@@ -415,7 +415,6 @@ def edit_deck(request, deck_id):
         return redirect('my_decks')  # Redirect to the decks page after saving changes
 
     else:
-        # Prepopulate the form with existing data
         deck_form = DeckForm(instance=deck)
         flashcard_forms = [FlashcardForm(instance=flashcard) for flashcard in flashcards]
 
