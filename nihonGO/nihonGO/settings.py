@@ -67,7 +67,10 @@ ROOT_URLCONF = 'nihonGO.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            # Testing directory for customizing django default reset password page. Delete if break anything
+            BASE_DIR / "theme" / "templates",
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
