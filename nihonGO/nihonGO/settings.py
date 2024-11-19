@@ -67,7 +67,10 @@ ROOT_URLCONF = 'nihonGO.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            # Testing directory for customizing django default reset password page. Delete if break anything
+            BASE_DIR / "theme" / "templates",
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -137,7 +140,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Media Root for User Uploaded Files/ Working With Images
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/theme/media/'
+MEDIA_URL = '/media/'
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend" # new
 

@@ -14,7 +14,7 @@
 		{% block title %}Edit Profile Page{% endblock title %}
         {% block content %}
             <div class="flex justify-center my-3 p-3">
-                <img class="rounded-full w-32 h-32 object-cover cursor-pointer" src="{{ user.profile.avatar.url }}" alt="Profile Picture" />
+                <img class="rounded-full w-32 h-32 object-cover cursor-pointer" src="{{ user.theme_profile.avatar.url }}" alt="Profile Picture" />
             </div>
 
             {% if user_form.errors %}
