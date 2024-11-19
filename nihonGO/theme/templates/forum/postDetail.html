@@ -1,26 +1,28 @@
 {% extends 'components/wrapper.html' %}
 
 {% block content %}
-<div class="container" style="max-width: 900px; margin: auto; padding: 30px; border-radius: 10px; background-color: transparent;">
-    <!-- Navigation link back to the forum -->
-    <a href="{% url 'forum_index' %}" style="text-decoration: underline; color: #ab1420; font-size: 16px; margin-bottom: 20px; display: inline-block;">&larr; Back to Forum</a>
-    
-    <!-- Post Title and Meta Info -->
-    <h1 style="font-size: 2.5rem; color: crimson; text-align: center; font-weight: bold; margin-bottom: 20px; font-family: 'Arial', sans-serif;">
+<!-- Navigation link back to the forum -->
+<a href="{% url 'forum_index' %}" class="underline text-crimson font-body">&larr; Back</a>
+<div class="flex flex-col mx-12 mt-6 font-outfit">
+    <h1 class="text-md text-crimson text-left font-bold mb-3 font-outfit">
         {{ post.title }}
     </h1>
-    <p style="text-align: center; color: #666; font-size: 1rem; margin-bottom: 20px;">
-        Posted by <strong>{{ post.user.username }}</strong> on {{ post.created_at|date:"F j, Y, g:i a" }}
-    </p>
-    <p style="font-size: 1.1rem; line-height: 1.6; color: #333; margin-bottom: 20px;">
+
+    <p class="text-body text-black text-opacity-75 mb-12">
         {{ post.content }}
     </p>
-    <p style="font-size: 1.1rem; font-weight: bold; color: #333;">
-        <strong>Upvotes:</strong> {{ post.upvotes }}
-    </p>
-    <a href="{% url 'upvote_post' post.id %}" class="mt-6 border-2 border-black rounded-3xl bg-orange shadow-md p-4 text-center text-white flex justify-center items-center hover:bg-crimson margin-top: 15px">
-        Upvote
-    </a>
+
+    <div class="flex justify-between">
+        <p class="text-center text-black text-opacity-75 font-md">
+            Posted by <strong>{{ post.user.username }}</strong> on {{ post.created_at|date:"F j, Y, g:i a" }}
+        </p>
+        <div class="flex items-center space-x-4">
+            <p class="font-body text-black text-opacity-75">
+                Upvotes: {{ post.upvotes }}
+            </p>
+            <a href="{% url 'upvote_post' post.id %}" class="material-symbols-outlined font-bold hover:text-crimson">arrow_upward</a>
+        </div>
+    </div>
 
     <hr style="margin: 40px 0; border: 1px solid #ddd;">
 

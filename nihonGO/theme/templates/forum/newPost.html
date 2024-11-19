@@ -1,6 +1,7 @@
 {% extends 'components/wrapper.html' %}
 
 {% block content %}
+<a href="{% url 'forum_index' %}" class="underline text-crimson font-body">&larr; Back</a>
 <div class="container" style="max-width: 900px; margin: auto; padding: 34px; border-radius: 15px; background-color: transparent;">
     <h1 style="font-size: 2.5rem; color: rgb(190, 15, 50); text-align: center; margin-bottom: 30px; font-family: 'Arial', sans-serif; font-weight: bold; border-radius: 10px;">相談したいことがある？</h1>
     <form method="POST" style="display: flex; flex-direction: column; gap: 25px; border-radius: 10px;">
@@ -16,7 +17,6 @@
 
         <button type="submit" class="mt-6 border-2 border-black rounded-3xl bg-peach shadow-md p-4 text-center text-white flex justify-center items-center hover:bg-orange margin-top: 15px">Create Post</button>
     </form>
-    <a href="{% url 'forum_index' %}" class="mt-6 border-2 border-black rounded-3xl bg-orange shadow-md p-4 text-center text-white flex justify-center items-center hover:bg-crimson margin-top: 15px">Back to Forum</a>
 </div>
 
 <style>

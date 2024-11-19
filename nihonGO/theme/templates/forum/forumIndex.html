@@ -23,7 +23,7 @@
                     <p>By: {{ post.user.username }} on {{ post.created_at|date:"m/d/y @hA" }}</p>
                     <div class="flex items-center justify-center space-x-8">
                         <div class="flex items-center justify-center gap-1">
-                            <span style="font-size: 1rem; color: #333;"><span id="upvote-count-{{ post.id }}">{{ post.upvotes }}</span></span>
+                            <span class="text-body text-black text-opacity-75"><span id="upvote-count-{{ post.id }}">{{ post.upvotes }}</span></span>
                             {% if user.is_authenticated %}
                                 <button onclick="upvotePost({{post.id}})" style="background: none; border: none; cursor: pointer; padding: 0; margin-top: 4px;"
                                     onmouseover="this.querySelector('svg').setAttribute('fill', 'crimson')"

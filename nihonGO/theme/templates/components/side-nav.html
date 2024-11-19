@@ -10,12 +10,6 @@
             </li>
 
             <li>
-                <a href="{% url 'dashboard' %}" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'dashboard' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
-                <span class="ms-3">Dashboard</span>
-                </a>
-            </li>
-
-            <li>
                 <a href="{% url 'my-profile' %}" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'profile' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
                 <span class="ms-3">My Profile</span>
                 </a>

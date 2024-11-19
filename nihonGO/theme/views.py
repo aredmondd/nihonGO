@@ -54,9 +54,6 @@ def about(request):
     ]
     return render(request, 'about.html', {'team_members': team_members})
 
-def dashboard (request):
-    return render(request, 'dashboard.html')
-
 
 def profile(request):
     user = request.user
