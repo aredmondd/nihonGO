@@ -2,32 +2,34 @@
 
 {% block content %}
 <div class="container mx-auto p-4">
-    <!-- Profile Section -->
+    <!-- Greeting Section -->
+    <div class="greeting-section mb-6">
+        <h1 class="text-5xl text-crimson font-bold mb-4">こにちは, {{ user.username }}!</h1>
+    </div>
+
+    <!-- Personal Information Section -->
     <div class="profile-section mb-6">
-        <h2 class="text-3xl font-bold mb-2">User Profile</h2>
-        
+        <h2 class="text-3xl font-bold mb-2">Personal Information</h2>
+
         <!-- Collapsible Section for Personal Information -->
-        <button class="w-full text-left bg-gray-200 py-2 px-4 rounded-md mb-2 focus:outline-none" data-toggle="collapse" data-target="#personal-info" aria-expanded="false">
-            Personal Information
-        </button>
-        <div id="personal-info" class="collapse">
+       
+        <div id="personal-info" >
             <div class="bg-gray-100 p-4 rounded-md">
-                <img src="{{ user.theme_profile.avatar.url }}" alt="Profile Picture" class="w-24 h-24 rounded-full mb-2">
+                <img src="{{ user.theme_profile.avatar.url }}" alt="Profile Picture" class="w-24 h-24 rounded-full mb-4">
                 <p><strong>Username:</strong> {{ user.username }}</p>
                 <p><strong>Email:</strong> {{ user.email }}</p>
-                <p><strong>Bio:</strong> {{ request.user.theme_profile.bio }}</p>
-                <a href="{% url 'edit-profile' %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit Profile</a>
+                <p><strong>Bio:</strong> {{ user.theme_profile.bio }}</p>
+                <a href="{% url 'edit-profile' %}" class="font-medium text-crimson hover:underline">Edit Profile</a>
             </div>
         </div>
     </div>
-    
+
     <!-- Flashcards Section -->
     <div class="flashcards-section mb-6">
-        <h2 class="text-3xl font-bold mb-2">Flashcard Progress</h2>
-        
-        <!-- Collapsible Section for Flashcards Progress -->
+        <h2 class="text-3xl font-bold mb-2">My Progress</h2>
+
         <button class="w-full text-left bg-gray-200 py-2 px-4 rounded-md mb-2 focus:outline-none" data-toggle="collapse" data-target="#flashcard-progress" aria-expanded="false">
-            Flashcard Statistics
+            View Flashcard Statistics
         </button>
         <div id="flashcard-progress" class="collapse">
             <div class="bg-gray-100 p-4 rounded-md">
@@ -39,19 +41,18 @@
 
     <!-- Forum Posts Section -->
     <div class="posts-section mb-6">
-        <h2 class="text-3xl font-bold mb-2">Forum Posts</h2>
-        
-        <!-- Collapsible Section for Forum Posts -->
+        <h2 class="text-3xl font-bold mb-2">My Posts</h2>
+
         <button class="w-full text-left bg-gray-200 py-2 px-4 rounded-md mb-2 focus:outline-none" data-toggle="collapse" data-target="#forum-posts" aria-expanded="false">
-            Your Forum Posts
+            View Your Forum Posts
         </button>
         <div id="forum-posts" class="collapse">
             <div class="bg-gray-100 p-4 rounded-md">
-                {% for post in forum_posts %}
+                {% for post in posts %}
                     <div class="post mb-4">
                         <h3 class="font-semibold">{{ post.title }}</h3>
                         <p>{{ post.content|truncatewords:20 }}</p>
-                        <a href="{% url 'forum_post_detail' post.id %}" class="text-blue-600">Read more</a>
+                        <a href="{% url 'post_detail' post.id %}" class="text-blue-600 hover:underline">Read more</a>
                     </div>
                 {% empty %}
                     <p>You have no forum posts yet.</p>

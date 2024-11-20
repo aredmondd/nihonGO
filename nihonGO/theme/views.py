@@ -62,13 +62,17 @@ def profile(request):
     # Fetch user-specific flashcard progress and statistics
     flashcard_progress = UserCardProgress.objects.filter(user=user)
     
+    
     # Fetch user's forum posts
-    forum_posts = Post.objects.filter(user=user)
+    #user_posts = Post.objects.filter(user=user).order_by('-created_at')  # Filter posts by logged-in user
+    posts = Post.objects.all().order_by('-created_at')
     
     return render(request, 'my-profile.html', {
         'profile': profile,
+        'user' : user,
         'flashcard_progress': flashcard_progress,
-        'forum_posts': forum_posts,
+        'posts' : posts,
+        #'forum_posts': user_posts,
     })
 
 def edit_profile (request):
@@ -375,6 +379,8 @@ def my_decks(request):
     if not request.user.is_authenticated:
         # For non-authenticated users, only show the default decks
         decks = Deck.objects.filter(id__in=[1, 5, 6])  # Fetch only default decks with fixed IDs (1, 5, 6)
+        for deck in decks:
+            deck.cards = deck.card_set.all()
     else:
         # For authenticated users, show both their decks and the default decks
         decks = Deck.objects.filter(Q(user=request.user) | Q(id__in=[1, 5, 6])).distinct()

@@ -1,68 +1,80 @@
+{% extends 'components/wrapper.html' %}
+
 {% load static tailwind_tags %}
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-    <title>Django Tailwind</title>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		{% tailwind_css %}
-	</head>
+{% block title %}Edit Profile Page{% endblock title %}
 
-	<body>
-		{% block title %}Edit Profile Page{% endblock title %}
-        {% block content %}
-            <div class="flex justify-center my-3 p-3">
-                <img class="rounded-full w-32 h-32 object-cover cursor-pointer" src="{{ user.theme_profile.avatar.url }}" alt="Profile Picture" />
+{% block content %}
+
+<div class="flex justify-start ">
+    
+    <div class="max-w-xl w-full p-6 bg-white rounded-md">
+        <div class="back-button-container flex justify-between items-center p-4">
+            <a href="{% url 'my-profile' %}" style="text-decoration: underline; color: orange; font-weight: bold;" 
+               onmouseover="this.style.color='#DC143C'" onmouseout="this.style.color='#FFA500'">
+                <i class="fas fa-arrow-left"></i> Back to My Profile
+            </a>
+        </div>
+        <!-- Page Title -->
+        <h1 class="text-5xl font-bold text-crimson mb-6">Edit Profile</h1>
+        
+        <div class="flex justify-start mb-6">
+            <img class="rounded-full w-32 h-32 object-cover cursor-pointer" src="{{ user.theme_profile.avatar.url }}" alt="Profile Picture" />
+        </div>
+
+        {% if user_form.errors or profile_form.errors %}
+            <div class="bg-red-500 text-white p-4 rounded mb-4">
+                <h3 class="font-bold">Please fix the following errors:</h3>
+                <ul>
+                    {% for field, error in user_form.errors.items %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                    {% for field, error in profile_form.errors.items %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
             </div>
+        {% endif %}
 
-            {% if user_form.errors %}
-                <div class="bg-red-500 text-white p-4 rounded mb-4">
-                    <div id="form_errors">
-                        {% for key, value in user_form.errors.items %}
-                            <strong>{{ value }}</strong>
-                        {% endfor %}
-                    </div>
-                </div>
-            {% endif %}
-
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Username -->
             <div>
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Username:</label>
-                            <input type="text" name="username" value="{{ user_form.username.value }}" />
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Email:</label>
-                            <input type="email" name="email" value="{{ user_form.email.value }}" />
-                        </div>
-
-                        <div>
-                            <a href="{% url 'change-password' %}" class="text-blue-600 hover:underline">Change Password</a>
-                            <hr class="my-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Change Avatar:</label>
-                            <input type="file" name="avatar" 
-                                class="mt-1 block w-full text-sm text-gray-500" />
-                        </div>
-
-                        <div>
-                            <label>Bio:</label>
-                            <textarea name="bio" rows="4" 
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500">{{ profile_form.bio.value }}</textarea>
-                        </div>
-                    </div>
-                    <br>
-                    <div>
-                        <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">Save Changes</button>
-                        <button type="reset" class="w-full bg-gray-300 text-gray-800 py-2 rounded-md hover:bg-gray-400">Reset</button>
-                    </div>
-                </form>
+                <label for="id_username" class="block text-sm font-medium text-gray-700">Username:</label>
+                <input type="text" id="id_username" name="username" value="{{ user_form.username.value }}" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 focus:ring-crimson focus:border-crimson" />
             </div>
-        {% endblock content %}
 
-	</body>
-</html>
+            <!-- Email -->
+            <div>
+                <label for="id_email" class="block text-sm font-medium text-gray-700">Email:</label>
+                <input type="email" id="id_email" name="email" value="{{ user_form.email.value }}" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 focus:ring-crimson focus:border-crimson" />
+            </div>
+
+            <!-- Change Password -->
+            <div>
+                <a href="{% url 'change-password' %}" class="text-crimson hover:underline">Change Password</a>
+            </div>
+
+            <hr class="my-4">
+
+            <!-- Avatar -->
+            <div>
+                <label for="id_avatar" class="block text-sm font-medium text-gray-700">Change Avatar:</label>
+                <input type="file" id="id_avatar" name="avatar" class="mt-1 block w-full text-sm text-gray-500 border-gray-300 rounded-lg shadow-sm p-2" />
+            </div>
+
+            <!-- Bio -->
+            <div>
+                <label for="id_bio" class="block text-sm font-medium text-gray-700">Bio:</label>
+                <textarea id="id_bio" name="bio" rows="4" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 focus:ring-crimson focus:border-crimson">{{ profile_form.bio.value }}</textarea>
+            </div>
+
+            <!-- Submit and Reset Buttons -->
+            <div class="space-y-2">
+                <button type="submit" class="w-full bg-orange text-white py-2 rounded-lg hover:bg-crimson transition duration-300">Save Changes</button>
+                <button type="reset" class="w-full bg-gray-300 text-gray-800 py-2 rounded-lg hover:bg-crimson transition duration-300">Reset</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
