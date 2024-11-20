@@ -57,13 +57,14 @@ def about(request):
 
 def profile(request):
     user = request.user
-    profile = profile.objects.get(user=user)
+    # profile = profile.objects.get(user=user)
     
     # Fetch user-specific flashcard progress and statistics
     flashcard_progress = UserCardProgress.objects.filter(user=user)
     
     # Fetch user's forum posts
-    forum_posts = Post.objects.filter(user=user)
+    forum_posts = user.posts.all()
+    print("Forum posts:", forum_posts)
     
     return render(request, 'my-profile.html', {
         'profile': profile,
@@ -110,9 +111,10 @@ def user_logout(request):
 
     return redirect("index")
 
-@login_required
-def profile(request):
-    return render(request, 'my-profile.html')
+# @login_required
+# def profile(request):
+#     print("Profile view is running teehee")
+#     return render(request, 'my-profile.html')
 
 # Change password view
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):

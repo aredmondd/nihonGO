@@ -51,7 +51,7 @@
                     <div class="post mb-4">
                         <h3 class="font-semibold">{{ post.title }}</h3>
                         <p>{{ post.content|truncatewords:20 }}</p>
-                        <a href="{% url 'forum_post_detail' post.id %}" class="text-blue-600">Read more</a>
+                        <a href="{% url 'post_detail' post.id %}" class="text-blue-600">Read more</a>
                     </div>
                 {% empty %}
                     <p>You have no forum posts yet.</p>
