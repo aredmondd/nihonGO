@@ -12,8 +12,7 @@
         <h2 class="text-3xl font-bold mb-2">Personal Information</h2>
 
         <!-- Collapsible Section for Personal Information -->
-       
-        <div id="personal-info" >
+        <div id="personal-info">
             <div class="bg-gray-100 p-4 rounded-md">
                 <img src="{{ user.theme_profile.avatar.url }}" alt="Profile Picture" class="w-24 h-24 rounded-full mb-4">
                 <p><strong>Username:</strong> {{ user.username }}</p>
@@ -48,15 +47,23 @@
         </button>
         <div id="forum-posts" class="collapse">
             <div class="bg-gray-100 p-4 rounded-md">
-                {% for post in posts %}
-                    <div class="post mb-4">
-                        <h3 class="font-semibold">{{ post.title }}</h3>
-                        <p>{{ post.content|truncatewords:20 }}</p>
-                        <a href="{% url 'post_detail' post.id %}" class="text-blue-600 hover:underline">Read more</a>
-                    </div>
-                {% empty %}
-                    <p>You have no forum posts yet.</p>
-                {% endfor %}
+                <div><p><strong>Total Posts:</strong> {{ forum_posts|length }}</p></div>
+                <div><p><strong>Total Upvotes:</strong> {{ total_upvotes }}</p></div>
+                
+                <!-- Loop through posts -->
+                <div class="space-y-4 mt-4">
+                    {% for post in forum_posts %}
+                        <div class="post bg-white border border-gray-300 rounded-md shadow-md p-4 overflow-hidden">
+                            <h3 class="font-semibold text-xl mb-2">{{ post.title }}</h3>
+                            <p class="text-gray-600 mb-2">{{ post.content|truncatewords:30 }}</p>
+                            <div class="overflow-y-auto max-h-48">
+                                <a href="{% url 'post_detail' post.id %}" class="text-crimson hover:underline">View Full Post</a>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p>You have no forum posts yet.</p>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>

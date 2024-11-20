@@ -54,25 +54,28 @@ def about(request):
     ]
     return render(request, 'about.html', {'team_members': team_members})
 
+from django.db.models import Sum
+from django.shortcuts import render
 
 def profile(request):
     user = request.user
-    profile = profile.objects.get(user=user)
+    #profile = profile.objects.get(user=user)
     
     # Fetch user-specific flashcard progress and statistics
     flashcard_progress = UserCardProgress.objects.filter(user=user)
     
     
     # Fetch user's forum posts
-    #user_posts = Post.objects.filter(user=user).order_by('-created_at')  # Filter posts by logged-in user
-    posts = Post.objects.all().order_by('-created_at')
+    forum_posts = user.posts.all()
+    total_upvotes = user.posts.aggregate(total_upvotes=Sum('upvotes'))['total_upvotes'] or 0
+
+    print("Forum posts:", forum_posts)
     
     return render(request, 'my-profile.html', {
         'profile': profile,
-        'user' : user,
         'flashcard_progress': flashcard_progress,
-        'posts' : posts,
-        #'forum_posts': user_posts,
+        'forum_posts': forum_posts,
+        'total_upvotes' : total_upvotes
     })
 
 def edit_profile (request):
@@ -114,9 +117,9 @@ def user_logout(request):
 
     return redirect("index")
 
-@login_required
-def profile(request):
-    return render(request, 'my-profile.html')
+#@login_required
+#def profile(request):
+    #return render(request, 'my-profile.html')
 
 # Change password view
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
@@ -247,6 +250,7 @@ def study(request, deck_id):
 
         # Retrieve all flashcards in the deck
         flashcards = deck.card_set.all()
+        print("Cards:", flashcards)
 
         # Apply spaced repetition for authenticated users on non-default decks
         if not deck.is_default:
