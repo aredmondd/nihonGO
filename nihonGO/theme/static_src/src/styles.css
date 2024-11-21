@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+<<<<<<< HEAD
 .flashcard {
     width: 600px; /* Set a fixed width */
     height: 300px; /* Set a fixed height */
@@ -36,3 +37,5 @@
 .flipped .flashcard-back {
     transform: rotateY(0deg); /* Show the back */
 }
+=======
+>>>>>>> eunice

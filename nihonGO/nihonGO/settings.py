@@ -46,12 +46,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'tailwind',
     'myapp',
-    'theme',
-    'django_browser_reload',
-    'flashcards',
-    'ChitChat.apps.ChitchatConfig',  # Ensure this line is included
-    'channels',  # Adding channels for WebSocket support
-    'daphne',  # Daphne must be listed after channels
 ]
 
 MIDDLEWARE = [
@@ -141,21 +135,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Media Root for User Uploaded Files/ Working With Images
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
-
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"  # new
-
-# User log in
-LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = 'my-profile'
-LOGOUT_REDIRECT_URL = '/'
-
-# Channels configuration for WebSocket
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",
-    },
-}
