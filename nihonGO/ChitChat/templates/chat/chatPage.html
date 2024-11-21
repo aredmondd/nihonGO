@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Outfit', 'sans-serif';
+            background-color: #F6F3F4;
+        }
+        .chat-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: #181113;
+            border-radius: 10px;
+        }
+        .chat-header {
+            text-align: center;
+            background-color: #BD002C;
+            color: #F6F3F4;
+            padding: 10px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .chat-header h1 {
+            font-size: 50px;
+        }
+        .chat-logout {
+            text-align: right;
+            padding: 10px;
+        }
+        .chat-logout a {
+            text-decoration: none;
+            color: #BD002C;
+            font-weight: bold;
+        }
+        .chat-logout a:hover {
+            text-decoration: underline;
+        }
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #181113;
+        }
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            color: #F6F3F4;
+        }
+        .tab button:hover {
+            background-color: #BD002C;
+        }
+        .tab button.active {
+            background-color: #BD002C;
+        }
+        .tab-content {
+            display: none;
+            padding: 6px 12px;
+            border-top: none;
+            background-color: #F6F3F4;
+            color: #181113;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .chat__item__container {
+            background-color: #F1CD9D;
+            padding: 10px;
+            border-radius: 10px;
+            height: 300px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .chat-input-container {
+            display: flex;
+            align-items: center;
+        }
+        #id_message_send_input {
+            flex: 1;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 20px;
+        }
+        #id_message_send_button {
+            padding: 5px 10px;
+            background-color: #BD002C;
+            color: #F6F3F4;
+            border: none;
+            border-radius: 5px;
+            font-size: 20px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .chat-message {
+            background-color: #E4F9F5;
+            border-radius: 10px;
+            margin: 10px 0;
+            padding: 10px;
+            position: relative;
+        }
+        .chat-message.right {
+            background-color: #181113;
+            width: 80%;
+            float: right;
+            clear: both;
+            margin-left: auto;
+            margin-right: 0;
+        }
+        .chat-message.left {
+            background-color: #075e54;
+            width: 80%;
+            float: left;
+            clear: both;
+            margin-left: 0;
+            margin-right: auto;
+        }
+        .chat-message span {
+            font-weight: bold;
+            color: white;
+        }
+        .message-timestamp {
+            font-size: 14px;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+        .message-username {
+            font-size: 14px;
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>Ninhago <i class="fas fa-comment"></i></h1>
+        </div>
+        <div class="chat-logout">
+            {% if request.user.is_authenticated %}
+            <div style="float: left; font-weight: bold; color: #036358;">{{ request.user|title }} </div>
+            <div style="float: right;"><a href="{% url 'logout-user' %}"><i class="fas fa-sign-out-alt"></i></a></div>
+            <div style="clear: both;"></div>
+            {% endif %}
+        </div>
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'ChatRooms')">Chat Rooms</button>
+            <button class="tablinks" onclick="openTab(event, 'Friends')">Friends</button>
+        </div>
+        <div id="ChatRooms" class="tab-content">
+            <form id="room-form">
+                <input type="text" id="room-name-input" placeholder="Enter room name">
+                <button type="submit">Enter Room</button>
+            </form>
+        </div>
+        <div id="Friends" class="tab-content">
+            <h2>Friends</h2>
+            <form method="post" action="{% url 'add_friend' %}">
+                {% csrf_token %}
+                <input type="text" name="friend_username" placeholder="Enter friend's username">
+                <button type="submit">Add Friend</button>
+            </form>
+            <ul>
+                {% for friend in friends %}
+                    <li><a href="{% url 'room' friend.friend.id %}">{{ friend.friend.username }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="chat__item__container" id="id_chat_item_container">
+            <!-- Messages will be displayed here with a scrollbar -->
+        </div>
+        <div class="chat-input-container">
+            <input type="text" id="id_message_send_input" placeholder="Type your message..." />
+            <button type="submit" id="id_message_send_button"><i class="fas fa-paper-plane"></i> Send</button>
+        </div>
+    </div>
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        document.getElementById("room-form").onsubmit = function (e) {
+            e.preventDefault();
+            const roomName = document.getElementById("room-name-input").value;
+            if (roomName) {
+                window.location.href = `/chat/${roomName}/`;
+            }
+        };
+
+        const chatSocket = new WebSocket("ws://" + window.location.host + "/ws/chat/{{ room_name }}/");
+
+        chatSocket.onopen = function (e) {
+            console.log("The connection was set up successfully!");
+        };
+
+        chatSocket.onclose = function (e) {
+            console.log("Something unexpected happened!");
+        };
+
+        document.querySelector("#id_message_send_input").focus();
+        document.querySelector("#id_message_send_input").onkeyup = function (e) {
+            if (e.keyCode == 13) {
+                document.querySelector("#id_message_send_button").click();
+            }
+        };
+
+        document.querySelector("#id_message_send_button").onclick = function (e) {
+            var messageInput = document.querySelector("#id_message_send_input").value;
+            var currentTime = new Date();
+            var time = currentTime.toLocaleTimeString();
+            chatSocket.send(JSON.stringify({
+                message: messageInput,
+                username: "{{ request.user.username }}",
+                time: time
+            }));
+        };
+
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            var messageContainer = document.querySelector("#id_chat_item_container");
+            var div = document.createElement("div");
+            div.className = (data.username === "{{ request.user.username }}") ? "chat-message right" : "chat-message left";
+            div.innerHTML = `<div class="message-content">
+                <span class="message-username">${data.username.charAt(0).toUpperCase() + data.username.slice(1)}</span>
+                <span class="message-text">${data.message}</span>
+                <span class="message-timestamp">${data.time}</span>
+            </div>`;
+            document.querySelector("#id_message_send_input").value = "";
+            messageContainer.appendChild(div);
+            // Scroll to the bottom of the chat container
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+        };
+    </script>
+</body>
+</html>
