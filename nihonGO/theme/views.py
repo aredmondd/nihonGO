@@ -206,6 +206,7 @@ def add_deck(request):
         'flashcard_forms': flashcard_forms,
     })
 
+
 from .models import Card, Deck
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -259,6 +260,8 @@ def study(request, deck_id):
                 usercardprogress__user=request.user,
                 usercardprogress__next_review_date__lte=current_time
             )
+            if not flashcards.exists():
+                flashcards = deck.card_set.all() 
 
         # Update the context with filtered flashcards
         context['flashcards'] = flashcards
