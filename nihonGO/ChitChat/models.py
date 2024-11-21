@@ -23,3 +23,11 @@ class PrivateChat(models.Model):
 
     def __str__(self):
         return f"Chat between {self.user1.username} and {self.user2.username}"
+
+from django import forms
+from .models import ChatRoom
+
+class ChatRoomForm(forms.ModelForm):
+    class Meta:
+        model = ChatRoom
+        fields = ['name', 'members']  # Adjust fields as necessary

@@ -38,8 +38,19 @@ def chat_list(request):
 @login_required
 def chat_room(request, friend_id):
     friend = get_object_or_404(User, id=friend_id)
+    # Create or get an existing chat room
     chat_room, created = ChatRoom.objects.get_or_create(name=f"{request.user.username}_{friend.username}")
-    chat_room.users.add(request.user, friend)
+    
+    # Add the user and friend to the chat room
+    if created:
+        chat_room.users.add(request.user, friend)
+    else:
+        # Ensure both users are part of the chat room if not already added
+        if request.user not in chat_room.users.all():
+            chat_room.users.add(request.user)
+        if friend not in chat_room.users.all():
+            chat_room.users.add(friend)
+
     return redirect('chat_room_detail', room_id=chat_room.id)
 
 @login_required
@@ -146,3 +157,7 @@ def chat_rooms_and_friends(request):
     chat_rooms = request.user.chatrooms.all()
     friends = Friend.objects.filter(user=request.user, is_accepted=True)
     return render(request, 'chat_rooms_and_friends.html', {'chat_rooms': chat_rooms, 'friends': friends})
+
+def private_chat_room(request, friend_id):
+    friend = get_object_or_404(Friend, id=friend_id)  # or any model you're using
+    return render(request, 'chat/private_chat_room.html', {'friend': friend})

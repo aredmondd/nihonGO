@@ -25,13 +25,14 @@ ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
+    'daphne',
     'ChitChat.apps.ChitchatConfig',  # Register your application
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'daphne',  # Daphne must be listed before django.contrib.staticfiles
+     # Daphne must be listed before django.contrib.staticfiles
     'django.contrib.staticfiles',
     'channels',  # Adding channels for WebSocket support
 ]
