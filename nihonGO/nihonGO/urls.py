@@ -20,6 +20,8 @@ from django.urls import path, include
 # These imports are testing to make sure profile customization works
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import path, includes
 
 urlpatterns = [
     path('admin/', admin.site.urls),
