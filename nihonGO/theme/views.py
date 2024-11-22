@@ -57,22 +57,38 @@ def about(request):
 def dashboard (request):
     return render(request, 'dashboard.html')
 
-
+from django.db.models import Sum
+from django.shortcuts import render
 def profile(request):
     user = request.user
-    profile = profile.objects.get(user=user)
+    #profile = profile.objects.get(user=user)
     
     # Fetch user-specific flashcard progress and statistics
     flashcard_progress = UserCardProgress.objects.filter(user=user)
     
+    
     # Fetch user's forum posts
-    forum_posts = Post.objects.filter(user=user)
+    forum_posts = user.posts.all()
+    total_upvotes = user.posts.aggregate(total_upvotes=Sum('upvotes'))['total_upvotes'] or 0
+
+    print("Forum posts:", forum_posts)
     
     return render(request, 'my-profile.html', {
         'profile': profile,
         'flashcard_progress': flashcard_progress,
         'forum_posts': forum_posts,
+        'total_upvotes' : total_upvotes
     })
+
+def edit_profile (request):
+    return render(request, 'myapp/edit_profile.html')
+
+def messages (request):
+    return render(request, 'messages.html')
+
+# Create your views here.
+def home (request):
+    return render(request, 'myapp/base.html')
 
 def edit_profile (request):
     return render(request, 'myapp/edit_profile.html')
@@ -113,9 +129,7 @@ def user_logout(request):
 
     return redirect("index")
 
-@login_required
-def profile(request):
-    return render(request, 'my-profile.html')
+
 
 # Change password view
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
