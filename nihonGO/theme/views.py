@@ -54,28 +54,24 @@ def about(request):
     ]
     return render(request, 'about.html', {'team_members': team_members})
 
-from django.db.models import Sum
-from django.shortcuts import render
+def dashboard (request):
+    return render(request, 'dashboard.html')
+
 
 def profile(request):
     user = request.user
-    #profile = profile.objects.get(user=user)
+    profile = profile.objects.get(user=user)
     
     # Fetch user-specific flashcard progress and statistics
     flashcard_progress = UserCardProgress.objects.filter(user=user)
     
-    
     # Fetch user's forum posts
-    forum_posts = user.posts.all()
-    total_upvotes = user.posts.aggregate(total_upvotes=Sum('upvotes'))['total_upvotes'] or 0
-
-    print("Forum posts:", forum_posts)
+    forum_posts = Post.objects.filter(user=user)
     
     return render(request, 'my-profile.html', {
         'profile': profile,
         'flashcard_progress': flashcard_progress,
         'forum_posts': forum_posts,
-        'total_upvotes' : total_upvotes
     })
 
 def edit_profile (request):
@@ -117,15 +113,15 @@ def user_logout(request):
 
     return redirect("index")
 
-#@login_required
-#def profile(request):
-    #return render(request, 'my-profile.html')
+@login_required
+def profile(request):
+    return render(request, 'my-profile.html')
 
 # Change password view
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
     template_name = 'myapp/change_password.html'
     success_message = "Successfully Changed Your Password"
-    success_url = reverse_lazy('my-profile')
+    success_url = reverse_lazy('profile-page')
 
 # Update profile
 @login_required
@@ -145,7 +141,7 @@ def edit_profile(request):
             if profile_form.has_changed():  # Only save if there are changes
                 profile_form.save()
 
-        return redirect('my-profile')  # Redirect to profile page after update
+        return redirect('profile-page')  # Redirect to profile page after update
 
     else:
         # GET request - initialize forms with existing user data
@@ -173,39 +169,38 @@ from django.utils import timezone
 def add_deck(request):
     if request.method == "POST":
         deck_form = DeckForm(request.POST)
-        flashcard_forms = [FlashcardForm(request.POST) for _ in range(int(request.POST.get('num_cards', 0)))]
+        if deck_form.is_valid():
+            deck = deck_form.save(commit=False)
+            deck.user = request.user
+            deck.is_default = False
+            deck.save()
 
-        if deck_form.is_valid() and all(f.is_valid() for f in flashcard_forms):
-            new_deck = deck_form.save(commit=False)
-            new_deck.user = request.user  # Associate deck with user
-            new_deck.save()
+            # Process the flashcards
+            vocab_words = request.POST.getlist('vocab_word[]')
+            kana = request.POST.getlist('kana[]')
+            translations = request.POST.getlist('english_translation[]')
+            parts_of_speech = request.POST.getlist('part_of_speech[]')
+            example_sentences = request.POST.getlist('example_sentence[]')
+            example_sentences_kana = request.POST.getlist('example_sentence_kana[]')
+            example_sentences_english = request.POST.getlist('example_sentence_english[]')
 
-            for flashcard_form in flashcard_forms:
-                flashcard = flashcard_form.save(commit=False)
-                flashcard.deck = new_deck  # Associate flashcard with the new deck
-                flashcard.save()
-
-                # Create UserCardProgress for each flashcard
-                UserCardProgress.objects.create(
-                    user=request.user,
-                    card=flashcard,
-                    last_reviewed=timezone.now(),
-                    next_review_date=timezone.now(),
-                    ease_factor=2.5,  # Initial values for spaced repetition
-                    interval=1,
-                    repetition_count=0,
-                )
-
-            return redirect('my_decks')
+            for i in range(len(vocab_words)):
+                if vocab_words[i]:  # Only add cards with vocab words
+                    Card.objects.create(
+                        deck=deck,
+                        vocab_word=vocab_words[i],
+                        kana=kana[i],
+                        english_translation=translations[i],
+                        part_of_speech=parts_of_speech[i],
+                        example_sentence=example_sentences[i],
+                        example_sentence_kana=example_sentences_kana[i],
+                        example_sentence_english=example_sentences_english[i]
+                    )
+            return redirect('my_decks')  # Redirect to user's decks page
     else:
         deck_form = DeckForm()
-        flashcard_forms = [FlashcardForm() for _ in range(3)]
 
-    return render(request, 'flashcards/add_deck.html', {
-        'deck_form': deck_form,
-        'flashcard_forms': flashcard_forms,
-    })
-
+    return render(request, 'flashcards/add_deck.html', {'deck_form': deck_form})
 
 from .models import Card, Deck
 from django.shortcuts import get_object_or_404
@@ -231,7 +226,7 @@ def study(request, deck_id):
     # Initialize context with the deck and empty flashcards list
     context = {
         'deck': deck,
-        'flashcards': [],
+        'flashcards': deck.card_set.all(),
         'message': None,
     }
 
@@ -247,11 +242,10 @@ def study(request, deck_id):
     if request.user.is_authenticated:
         # Check if the user owns the deck if it's not default
         if not deck.is_default and deck.user != request.user:
-            return redirect('my_decks')  # Redirect unauthorized access to the user's deck list
+            return redirect('my_decks') 
 
         # Retrieve all flashcards in the deck
         flashcards = deck.card_set.all()
-        print("Cards:", flashcards)
 
         # Apply spaced repetition for authenticated users on non-default decks
         if not deck.is_default:
@@ -262,6 +256,7 @@ def study(request, deck_id):
             )
             if not flashcards.exists():
                 flashcards = deck.card_set.all() 
+
 
         # Update the context with filtered flashcards
         context['flashcards'] = flashcards
@@ -386,8 +381,6 @@ def my_decks(request):
     if not request.user.is_authenticated:
         # For non-authenticated users, only show the default decks
         decks = Deck.objects.filter(id__in=[1, 5, 6])  # Fetch only default decks with fixed IDs (1, 5, 6)
-        for deck in decks:
-            deck.cards = deck.card_set.all()
     else:
         # For authenticated users, show both their decks and the default decks
         decks = Deck.objects.filter(Q(user=request.user) | Q(id__in=[1, 5, 6])).distinct()
@@ -425,7 +418,6 @@ def edit_deck(request, deck_id):
         return redirect('my_decks')  # Redirect to the decks page after saving changes
 
     else:
-        # Prepopulate the form with existing data
         deck_form = DeckForm(instance=deck)
         flashcard_forms = [FlashcardForm(instance=flashcard) for flashcard in flashcards]
 
