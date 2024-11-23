@@ -75,6 +75,7 @@ TEMPLATES = [
         'DIRS': [
             # Testing directory for customizing django default reset password page. Delete if break anything
             BASE_DIR / "theme" / "templates",
+            BASE_DIR / 'ChitChat' / 'templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {

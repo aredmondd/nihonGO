@@ -161,3 +161,6 @@ def chat_rooms_and_friends(request):
 def private_chat_room(request, friend_id):
     friend = get_object_or_404(Friend, id=friend_id)  # or any model you're using
     return render(request, 'chat/private_chat_room.html', {'friend': friend})
+
+def messages(request):
+    return render(request, 'chat/messages.html')
