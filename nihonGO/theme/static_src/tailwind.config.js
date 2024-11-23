@@ -42,7 +42,6 @@ module.exports = {
         // '../../**/*.py'
     ],
     theme: {
-<<<<<<< HEAD
         extend: {
             colors: {
                 'black': '#181113',
@@ -68,9 +67,6 @@ module.exports = {
                 '3xl': '1900px',
             },
         },
-=======
-        extend: {},
->>>>>>> eunice
     },
     plugins: [
         /**
@@ -80,10 +76,7 @@ module.exports = {
          */
         require('@tailwindcss/forms'),
         require('@tailwindcss/typography'),
-<<<<<<< HEAD
         require('@tailwindcss/line-clamp'),
-=======
->>>>>>> eunice
         require('@tailwindcss/aspect-ratio'),
     ],
 }
