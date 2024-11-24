@@ -2,12 +2,46 @@
 
 {% block content %}
 
-<div class="flex justify-between items-start">
-    <h1 class="ml-4 text-heading text-black font-japanese font-bold">勉強しませんか？</h1>
+<div class="flex justify-between items-start relative">
+    <!-- First Heading with hover effect -->
+    <h1 class="ml-4 text-heading text-black font-japanese font-bold hover:text-transparent relative hover-header">
+        勉強しませんか？
+    </h1>
     
     <!-- Add Deck Button -->
-    <a href="{% url 'add_deck' %}"><span class="material-symbols-outlined text-heading mt-2 text-crimson">add</span></a>
+    <a href="{% url 'add_deck' %}">
+        <span class="material-symbols-outlined text-heading mt-2 text-crimson">add</span>
+    </a>
 </div>
+
+<style>
+    /* Scoped CSS for 勉強しませんか？ */
+    .hover-header:hover::after {
+        content: 'Want to Study?'; /* New text on hover */
+        color: black; /* Text color */
+        position: absolute; /* Positioning relative to the parent */
+        left: 0; /* Align with the original text */
+        top: 0; /* Keep at the same vertical position */
+        font-size: inherit; /* Match the original text size */
+    }
+    .hover-header:hover {
+        color: transparent; /* Hide the original text */
+    }
+
+    .hover-japanese:hover::after {
+        content: 'Progress Faster!'; /* New text on hover */
+        color: rgb(197, 17, 53); /* New text color */
+        position: absolute; /* Overlay the new text */
+        left: 50%; /* Center horizontally */
+        top: 50%; /* Center vertically */
+        transform: translate(-50%, -50%); /* Adjust for element size */
+        font-size: inherit; /* Match the original text size */
+        white-space: nowrap; /* Prevent wrapping */
+    }
+    .hover-japanese:hover {
+        color: transparent; /* Hide the original text */
+    }
+</style>
 
 <div class="mx-auto px-4 py-8">
     <!-- Decks Grid -->
@@ -15,7 +49,7 @@
         
         <!-- Loop through decks dynamically -->
         {% for deck in decks %}
-        <div class="border-2 border-black rounded-3xl bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center items-center  transition duration-300">
+        <div class="border-2 border-black rounded-3xl bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center items-center transition duration-300">
             <h2 class="text-xl font-semibold mb-4">{{ deck.name }}</h2>
             <p class="text-gray-500 mb-4">{{ deck.cards.count }} Cards</p>  
             <div class="flex space-x-12 items-center">
@@ -27,11 +61,11 @@
     </div>
 </div>
 
-
 <!-- Spaced Repetition Description -->
-<div class="mx-auto px-4 py-8 mt-10 rounded-lg  text-center max-w-3xl">
+<div class="mx-auto px-4 py-8 mt-10 rounded-lg text-center max-w-3xl">
     <h3 class="text-5xl font-semibold mb-4">
-        <span class="text-black block">早く上達できま!</span> 
+        <!-- Second Heading with hover effect -->
+        <span class="text-crimson block hover-japanese relative">より早く上達!</span> 
         <span class="text-crimson block"> Spaced Repetition</span>
     </h3>
     <p class="text-gray-600 leading-relaxed">
@@ -40,6 +74,5 @@
         This scientifically backed approach helps you learn faster and retain information longer, making it perfect for mastering Japanese faster.
     </p>
 </div>
-
 
 {% endblock %}

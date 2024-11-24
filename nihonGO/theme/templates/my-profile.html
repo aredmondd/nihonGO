@@ -1,33 +1,82 @@
 {% extends 'components/wrapper.html' %}
 
 {% block content %}
-<div class="container mx-auto p-4">
-    <!-- Profile Section -->
+<div class="container mx-auto p-4 relative">
+    <!-- Greeting Section -->
+    <div class="greeting-section mb-6">
+        <h1 class="text-5xl text-crimson font-bold mb-4 hover-effect">
+            こにちは, {{ user.username }}!
+        </h1>
+    </div>
+</div>
+
+<style>
+    .hover-effect {
+        position: relative; /* Establish positioning context */
+        display: inline-block; /* Adjust size to content */
+    }
+
+    .hover-effect:hover::after {
+        content: 'Hello, {{ user.username }}!'; /* New text on hover */
+        position: absolute; /* Position relative to the element */
+        left: 0; /* Align with original text */
+        top: 0; /* Match vertical position */
+        color: rgb(180, 13, 47); /* Hover text color */
+        font-size: inherit; /* Match original font size */
+    }
+
+    .hover-effect:hover {
+        color: transparent; /* Hide original text */
+    }
+</style>
+
+
+    <!-- SVG in the Top Right -->
+    <div class="absolute top-0 right-0 p-4">
+        <svg
+            viewBox="0 0 64 64"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="#000000"
+            style="width: 400px; height: 400px;">
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+            <g id="SVGRepo_iconCarrier">
+                <title>japan</title>
+                <g id="japan">
+                    <circle cx="28.5" cy="29.5" r="22.5" style="fill:#edebdc"></circle>
+                    <polygon points="50.884 60.08 46 60.08 46 27.587 49.256 27.587 50.884 60.08" style="fill:#BD002C;stroke:#4c241d;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px"></polygon>
+                    <polygon points="14.971 60.08 20.101 60.08 20.101 27.587 16.681 27.587 14.971 60.08" style="fill:#BD002C;stroke:#4c241d;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px"></polygon>
+                    <rect x="13" y="33" width="40" height="3" rx="1.5" ry="1.5" style="fill:#BD002C;stroke:#4c241d;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px"></rect>
+                    <rect x="31" y="28" width="4" height="5" style="fill:#b5a19c;stroke:#4c241d;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px"></rect>
+                    <path d="M57,25.974a143.181,143.181,0,0,1-48,0V20.746c15.415,3.212,31.442,3.061,48,0Z" style="fill:#E28140;stroke:#4c241d;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px"></path>
+                    <path d="M62,20.908a137.544,137.544,0,0,1-58,0V15.616c19.14,6.095,38.492,5.935,58,0Z" style="fill:#F1CD9D;stroke:#4c241d;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px"></path>
+                    <line x1="8.13" y1="60.08" x2="56.014" y2="60.08" style="fill:none;stroke:#4c241d;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px"></line>
+                </g>
+            </g>
+        </svg>
+    </div>
+
+    <!-- Personal Information Section -->
     <div class="profile-section mb-6">
-        <h2 class="text-3xl font-bold mb-2">User Profile</h2>
-        
-        <!-- Collapsible Section for Personal Information -->
-        <button class="w-full text-left bg-gray-200 py-2 px-4 rounded-md mb-2 focus:outline-none" data-toggle="collapse" data-target="#personal-info" aria-expanded="false">
-            Personal Information
-        </button>
-        <div id="personal-info" class="collapse">
+        <h2 class="text-3xl font-bold mb-2">Personal Information</h2>
+
+        <div id="personal-info">
             <div class="bg-gray-100 p-4 rounded-md">
-                <img src="{{ user.theme_profile.avatar.url }}" alt="Profile Picture" class="w-24 h-24 rounded-full mb-2">
+                <img src="{{ user.theme_profile.avatar.url }}" alt="Profile Picture" class="w-24 h-24 rounded-full mb-4">
                 <p><strong>Username:</strong> {{ user.username }}</p>
                 <p><strong>Email:</strong> {{ user.email }}</p>
-                <p><strong>Bio:</strong> {{ request.user.theme_profile.bio }}</p>
-                <a href="{% url 'edit-profile' %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit Profile</a>
+                <p><strong>Bio:</strong> {{ user.theme_profile.bio }}</p>
+                <a href="{% url 'edit-profile' %}" class="font-medium text-crimson hover:underline">Edit Profile</a>
             </div>
         </div>
     </div>
-    
+
     <!-- Flashcards Section -->
     <div class="flashcards-section mb-6">
-        <h2 class="text-3xl font-bold mb-2">Flashcard Progress</h2>
-        
-        <!-- Collapsible Section for Flashcards Progress -->
+        <h2 class="text-3xl font-bold mb-2">My Progress</h2>
+
         <button class="w-full text-left bg-gray-200 py-2 px-4 rounded-md mb-2 focus:outline-none" data-toggle="collapse" data-target="#flashcard-progress" aria-expanded="false">
-            Flashcard Statistics
+            View Flashcard Statistics
         </button>
         <div id="flashcard-progress" class="collapse">
             <div class="bg-gray-100 p-4 rounded-md">
@@ -39,19 +88,28 @@
 
     <!-- Forum Posts Section -->
     <div class="posts-section mb-6">
-        <h2 class="text-3xl font-bold mb-2">Forum Posts</h2>
-        
-        <!-- Collapsible Section for Forum Posts -->
-        <button class="w-full text-left bg-gray-200 py-2 px-4 rounded-md mb-2 focus:outline-none" data-toggle="collapse" data-target="#forum-posts" aria-expanded="false">
-            Your Forum Posts
+        <h2 class="text-3xl font-bold mb-2">My Posts</h2>
+
+        <!-- Toggle Button -->
+        <button 
+            class="w-full text-left bg-gray-200 py-2 px-4 rounded-md mb-2 focus:outline-none" 
+            id="toggle-posts-button">
+            View Your Forum Posts
         </button>
-        <div id="forum-posts" class="collapse">
-            <div class="bg-gray-100 p-4 rounded-md">
+
+        <!-- Posts Container -->
+        <div id="forum-posts" 
+             class="bg-gray-100 p-4 rounded-md overflow-y-hidden max-h-0 transition-all duration-300 ease-in-out">
+            <div><p><strong>Total Posts:</strong> {{ forum_posts|length }}</p></div>
+            <div><p><strong>Total Upvotes:</strong> {{ total_upvotes }}</p></div>
+
+            <!-- Posts -->
+            <div class="space-y-4 mt-4 overflow-y-auto max-h-64">
                 {% for post in forum_posts %}
-                    <div class="post mb-4">
-                        <h3 class="font-semibold">{{ post.title }}</h3>
-                        <p>{{ post.content|truncatewords:20 }}</p>
-                        <a href="{% url 'forum_post_detail' post.id %}" class="text-blue-600">Read more</a>
+                    <div class="post bg-white border border-gray-300 rounded-md shadow-md p-4">
+                        <h3 class="font-semibold text-xl mb-2">{{ post.title }}</h3>
+                        <p class="text-gray-600 mb-2">{{ post.content|truncatewords:30 }}</p>
+                        <a href="{% url 'post_detail' post.id %}" class="text-crimson hover:underline">View Full Post</a>
                     </div>
                 {% empty %}
                     <p>You have no forum posts yet.</p>
@@ -61,13 +119,31 @@
     </div>
 </div>
 
-<!-- JavaScript for Collapsing Sections -->
 <script>
-    document.querySelectorAll('[data-toggle="collapse"]').forEach(button => {
-        button.addEventListener('click', function () {
-            const target = document.querySelector(button.getAttribute('data-target'));
-            target.classList.toggle('collapse');
-        });
+    // JavaScript to handle post section toggle
+    const toggleButton = document.getElementById('toggle-posts-button');
+    const forumPosts = document.getElementById('forum-posts');
+
+    toggleButton.addEventListener('click', () => {
+        const isCollapsed = forumPosts.classList.contains('max-h-0');
+        forumPosts.classList.toggle('max-h-0', !isCollapsed); // Collapse
+        forumPosts.classList.toggle('max-h-96', isCollapsed); // Expand to allow scrolling
+        toggleButton.textContent = isCollapsed 
+            ? "Hide Your Forum Posts" 
+            : "View Your Forum Posts";
     });
 </script>
+
+<style>
+    #forum-posts {
+        max-height: 0; /* Collapsed by default */
+        overflow-y: hidden; /* Prevent scrolling when collapsed */
+        transition: max-height 0.3s ease-in-out;
+    }
+
+    #forum-posts.max-h-96 {
+        max-height: 24rem; /* Expanded height with scrolling */
+        overflow-y: auto; /* Enable scrolling in expanded state */
+    }
+</style>
 {% endblock %}
