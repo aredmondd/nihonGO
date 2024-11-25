@@ -1,0 +1,153 @@
+{% extends 'components/wrapper.html' %}
+
+{% block content %}
+<div class="container mx-auto p-4">
+    <!-- Back to My Decks -->
+    <a href="{% url 'my_decks' %}" 
+       class="text-orange hover:text-crimson font-bold text-lg underline mb-4 block">
+        &larr; Back to My Decks
+    </a>
+
+    <!-- Heading -->
+    <h1 class="text-3xl font-bold mb-6">Add Cards to "{{ deck.name }}"</h1>
+
+    <!-- Flashcard Form -->
+    <form method="POST" id="addCardsForm">
+        {% csrf_token %}
+        
+        <!-- Flashcards Container -->
+        <div id="flashcards-container" class="overflow-y-auto max-h-80 p-4 mb-4 border border-gray-300">
+            <!-- Initial Template for Flashcards -->
+            <div class="flashcard-fields mb-4 flex flex-col space-y-4">
+                <div class="flex">
+                    <div class="flex-1">
+                        <label for="vocab_word" class="block text-sm font-medium text-gray-700">Vocab Word</label>
+                        <input type="text" name="vocab_word[]" class="w-full h-8 rounded-md border-gray-300 p-2">
+                    </div>
+                    <div class="flex-1">
+                        <label for="kana" class="block text-sm font-medium text-gray-700">Kana</label>
+                        <input type="text" name="kana[]" class="w-full h-8 rounded-md border-gray-300 p-2">
+                    </div>
+                </div>
+
+                <div class="flex">
+                    <div class="flex-1">
+                        <label for="english_translation" class="block text-sm font-medium text-gray-700">English Translation</label>
+                        <input type="text" name="english_translation[]" class="w-full h-8 rounded-md border-gray-300 p-2">
+                    </div>
+                    <div class="flex-1">
+                        <label for="part_of_speech" class="block text-sm font-medium text-gray-700">Part of Speech</label>
+                        <select name="part_of_speech[]" class="w-full h-8 rounded-md border-gray-300 p-2">
+                            <option value="noun">Noun</option>
+                            <option value="verbal noun">Verbal Noun</option>
+                            <option value="verb">Verb</option>
+                            <option value="い adjective">い Adjective</option>
+                            <option value="な adjective">な Adjective</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="example_sentence" class="block text-sm font-medium text-gray-700">Example Sentence (Japanese)</label>
+                    <input type="text" name="example_sentence[]" class="w-full h-8 rounded-md border-gray-300 p-2">
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="example_sentence_kana" class="block text-sm font-medium text-gray-700">Example Sentence (Kana)</label>
+                    <input type="text" name="example_sentence_kana[]" class="w-full h-8 rounded-md border-gray-300 p-2">
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="example_sentence_english" class="block text-sm font-medium text-gray-700">Example Sentence (English)</label>
+                    <input type="text" name="example_sentence_english[]" class="w-full h-8 rounded-md border-gray-300 p-2">
+                </div>
+
+                <!-- Delete button for each card -->
+                <button type="button" class="delete-card-btn bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Delete</button>
+            </div>
+        </div>
+
+        <!-- Button to Add More Cards -->
+        <div class="mt-4">
+            <button type="button" id="addCardButton" class="bg-orange text-white px-4 py-2 rounded-md hover:bg-crimson">+ Add Card</button>
+        </div>
+
+        <!-- Save Changes Button -->
+        <button type="submit" class="mt-6 border-2 border-black rounded-3xl bg-orange shadow-md p-4 text-center flex justify-center items-center hover:bg-crimson">
+            Save Changes
+        </button>
+    </form>
+</div>
+
+<script>
+    const flashcardsContainer = document.getElementById("flashcards-container");
+
+    // Template for new flashcards
+    const flashcardTemplate = `
+        <div class="flashcard-fields mb-4 flex flex-col space-y-4">
+            <div class="flex">
+                <div class="flex-1">
+                    <label for="vocab_word" class="block text-sm font-medium text-gray-700">Vocab Word</label>
+                    <input type="text" name="vocab_word[]" class="w-full h-8 rounded-md border-gray-300 p-2">
+                </div>
+                <div class="flex-1">
+                    <label for="kana" class="block text-sm font-medium text-gray-700">Kana</label>
+                    <input type="text" name="kana[]" class="w-full h-8 rounded-md border-gray-300 p-2">
+                </div>
+            </div>
+
+            <div class="flex">
+                <div class="flex-1">
+                    <label for="english_translation" class="block text-sm font-medium text-gray-700">English Translation</label>
+                    <input type="text" name="english_translation[]" class="w-full h-8 rounded-md border-gray-300 p-2">
+                </div>
+                <div class="flex-1">
+                    <label for="part_of_speech" class="block text-sm font-medium text-gray-700">Part of Speech</label>
+                    <select name="part_of_speech[]" class="w-full h-8 rounded-md border-gray-300 p-2">
+                        <option value="noun">Noun</option>
+                        <option value="verbal noun">Verbal Noun</option>
+                        <option value="verb">Verb</option>
+                        <option value="い adjective">い Adjective</option>
+                        <option value="な adjective">な Adjective</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex flex-col">
+                <label for="example_sentence" class="block text-sm font-medium text-gray-700">Example Sentence (Japanese)</label>
+                <input type="text" name="example_sentence[]" class="w-full h-8 rounded-md border-gray-300 p-2">
+            </div>
+
+            <div class="flex flex-col">
+                <label for="example_sentence_kana" class="block text-sm font-medium text-gray-700">Example Sentence (Kana)</label>
+                <input type="text" name="example_sentence_kana[]" class="w-full h-8 rounded-md border-gray-300 p-2">
+            </div>
+
+            <div class="flex flex-col">
+                <label for="example_sentence_english" class="block text-sm font-medium text-gray-700">Example Sentence (English)</label>
+                <input type="text" name="example_sentence_english[]" class="w-full h-8 rounded-md border-gray-300 p-2">
+            </div>
+
+            <button type="button" class="delete-card-btn bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Delete</button>
+        </div>`;
+
+    // Add new card functionality
+    document.getElementById("addCardButton").addEventListener("click", () => {
+        const newCard = document.createElement("div");
+        newCard.innerHTML = flashcardTemplate;
+        flashcardsContainer.appendChild(newCard);
+
+        // Add delete functionality to the newly added delete button
+        newCard.querySelector(".delete-card-btn").addEventListener("click", () => {
+            newCard.remove();
+        });
+    });
+
+    // Attach delete functionality to existing cards
+    document.querySelectorAll(".delete-card-btn").forEach(button => {
+        button.addEventListener("click", event => {
+            event.target.closest(".flashcard-fields").remove();
+        });
+    });
+</script>
+{% endblock %}

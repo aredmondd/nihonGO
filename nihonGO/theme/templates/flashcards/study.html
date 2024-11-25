@@ -8,10 +8,10 @@
 {% block content %}
 <!-- Back button in the top-right corner -->
 <div class="back-button-container flex justify-between items-center p-4">
-    <a href="{% url 'my_decks' %}" style="text-decoration: underline; color: orange; font-weight: bold;" 
-       onmouseover="this.style.color='#DC143C'" onmouseout="this.style.color='#FFA500'">
-        <i class="fas fa-arrow-left"></i> Back to My Decks
-    </a>
+    <a href="{% url 'my_decks' %}" 
+    class="text-orange hover:text-crimson font-bold text-lg underline mb-4 block">
+     &larr; Back to My Decks
+ </a>
 </div>
 
 <h1 class="ml-10 text-title text-black font-japanese font-bold">{{ deck.name }}</h1>

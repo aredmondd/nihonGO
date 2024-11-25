@@ -444,6 +444,27 @@ def edit_deck(request, deck_id):
         'is_default': is_default,
     })
 
+@login_required
+def add_cards(request, deck_id):
+    # Get the deck and verify ownership
+    deck = get_object_or_404(Deck, id=deck_id, user=request.user)
+
+    if request.method == "POST":
+        flashcard_form = FlashcardForm(request.POST)
+        if flashcard_form.is_valid():
+            # Save the new card and associate it with the deck
+            new_card = flashcard_form.save(commit=False)
+            new_card.deck = deck
+            new_card.save()
+            return redirect('edit_deck', deck_id=deck.id)  # Redirect to the edit deck page
+    else:
+        flashcard_form = FlashcardForm()
+
+    return render(request, 'flashcards/add_cards.html', {
+        'deck': deck,
+        'flashcard_form': flashcard_form,
+    })
+
 
 def delete_deck(request, deck_id):
     deck = get_object_or_404(Deck, id=deck_id, user=request.user)
