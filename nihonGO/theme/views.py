@@ -135,7 +135,7 @@ def user_logout(request):
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
     template_name = 'myapp/change_password.html'
     success_message = "Successfully Changed Your Password"
-    success_url = reverse_lazy('profile-page')
+    success_url = reverse_lazy('my-profile')
 
 # Update profile
 @login_required
@@ -155,7 +155,7 @@ def edit_profile(request):
             if profile_form.has_changed():  # Only save if there are changes
                 profile_form.save()
 
-        return redirect('profile-page')  # Redirect to profile page after update
+        return redirect('my-profile')  # Redirect to profile page after update
 
     else:
         # GET request - initialize forms with existing user data
