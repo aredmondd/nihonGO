@@ -17,10 +17,8 @@
             Posted by <strong>{{ post.user.username }}</strong> on {{ post.created_at|date:"F j, Y, g:i a" }}
         </p>
         <div class="flex items-center space-x-4">
-            <p class="font-body text-black text-opacity-75">
-                Upvotes: {{ post.upvotes }}
-            </p>
-            <a href="{% url 'upvote_post' post.id %}" class="material-symbols-outlined font-bold hover:text-crimson">arrow_upward</a>
+            <p class="font-body text-black text-opacity-75" id="upvote-count-{{ post.id }}">{{ post.upvotes }}</p>
+            <button onclick="upvotePost({{post.id}})"><span class="material-symbols-outlined font-bold hover:text-crimson">arrow_upward</span></button>
         </div>
     </div>
 
@@ -88,4 +86,24 @@
         box-shadow: 0 0 5px rgba(190, 15, 50, 0.5);
     }
 </style>
+
+<script>
+    function upvotePost(postId) {
+        const csrfToken = "{{ csrf_token }}";
+
+        fetch(`/upvote/${postId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update the upvote count in the UI
+            document.getElementById(`upvote-count-${postId}`).textContent = data.upvotes;
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
 {% endblock %}

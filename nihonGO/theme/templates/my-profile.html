@@ -27,90 +27,42 @@
     </div>
 
     <!-- Personal Information Section -->
-    <div class="profile-section mb-6">
+    <div class="profile-section mb-6 font-DMSans">
         <div id="personal-info">
-            <div class="bg-gray-100 p-4 rounded-md">
-                <img src="{{ user.theme_profile.avatar.url }}" alt="Profile Picture" class="w-24 h-24 rounded-full mb-4">
-                <p><strong>Email:</strong> {{ user.email }}</p>
-                <p><strong>Bio:</strong> {{ user.theme_profile.bio }}</p>
-                <a href="{% url 'edit-profile' %}" class="font-medium text-crimson hover:underline">Edit Profile</a>
+            <div class="bg-gray-100 p-4 rounded-md mt-6">
+                <div class="flex">
+                    <div class="flex flex-col space-y-2 place-items-center mr-6">
+                        <img src="{{ user.theme_profile.avatar.url }}" alt="Profile Picture" class="w-32 h-32 border-black border-2 rounded-full">
+                        <a href="{% url 'edit-profile' %}" class="font-medium text-crimson hover:underline">Edit Profile</a>
+                    </div>
+                    <div>
+                        <p class="text-crimson font-bold font-outfit text-heading">@{{ user.username }}</p>
+                        <p class="text-black">{{ user.email }}</p>
+                        <p class="text-black text-opacity-50">{% if user.theme_profile.bio %}{{ user.theme_profile.bio }}{% else %}user has no bio{% endif %}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Flashcards Section -->
-    <div class="flashcards-section mb-6">
-        <h2 class="text-3xl font-bold mb-2">My Progress</h2>
-
-        <button class="w-full text-left bg-gray-200 py-2 px-4 rounded-md mb-2 focus:outline-none" data-toggle="collapse" data-target="#flashcard-progress" aria-expanded="false">
-            View Flashcard Statistics
-        </button>
-        <div id="flashcard-progress" class="collapse">
-            <div class="bg-gray-100 p-4 rounded-md">
-                <p><strong>Total Cards Studied:</strong> {{ flashcard_progress.count }}</p>
-                <p><strong>Progress:</strong> {{ flashcard_progress.progress_percentage }}%</p>
-            </div>
-        </div>
+    <div class="flex justify-between mx-6 mb-6">
+        <p><strong>Total Cards Studied:</strong> {{ flashcard_progress.count }}</p>
+        <p><strong>Progress:</strong> {{ flashcard_progress.progress_percentage }}%</p>
+        <div><p><strong>Total Posts:</strong> {{ forum_posts|length }}</p></div>
+        <div><p><strong>Total Upvotes:</strong> {{ total_upvotes }}</p></div>
     </div>
 
-    <!-- Forum Posts Section -->
-    <div class="posts-section mb-6">
-        <h2 class="text-3xl font-bold mb-2">My Posts</h2>
-
-        <!-- Toggle Button -->
-        <button 
-            class="w-full text-left bg-gray-200 py-2 px-4 rounded-md mb-2 focus:outline-none" 
-            id="toggle-posts-button">
-            View Your Forum Posts
-        </button>
-
-        <!-- Posts Container -->
-        <div id="forum-posts" 
-             class="bg-gray-100 p-4 rounded-md overflow-y-hidden max-h-0 transition-all duration-300 ease-in-out">
-            <div><p><strong>Total Posts:</strong> {{ forum_posts|length }}</p></div>
-            <div><p><strong>Total Upvotes:</strong> {{ total_upvotes }}</p></div>
-
-            <!-- Posts -->
-            <div class="space-y-4 mt-4 overflow-y-auto max-h-64">
-                {% for post in forum_posts %}
-                    <div class="post bg-white border border-gray-300 rounded-md shadow-md p-4">
-                        <h3 class="font-semibold text-xl mb-2">{{ post.title }}</h3>
-                        <p class="text-gray-600 mb-2">{{ post.content|truncatewords:30 }}</p>
-                        <a href="{% url 'post_detail' post.id %}" class="text-crimson hover:underline">View Full Post</a>
-                    </div>
-                {% empty %}
-                    <p>You have no forum posts yet.</p>
-                {% endfor %}
+    <div class="space-y-4 mt-4 mx-6">
+        {% for post in forum_posts %}
+            <div class="post bg-white border border-gray-300 rounded-md shadow-md p-4">
+                <h3 class="font-semibold text-xl mb-2">{{ post.title }}</h3>
+                <p class="text-gray-600 mb-2">{{ post.content|truncatewords:30 }}</p>
+                <a href="{% url 'post_detail' post.id %}" class="text-crimson hover:underline">View Full Post</a>
             </div>
-        </div>
+        {% empty %}
+            <p>You have no forum posts yet.</p>
+        {% endfor %}
     </div>
 </div>
-
-<script>
-    // JavaScript to handle post section toggle
-    const toggleButton = document.getElementById('toggle-posts-button');
-    const forumPosts = document.getElementById('forum-posts');
-
-    toggleButton.addEventListener('click', () => {
-        const isCollapsed = forumPosts.classList.contains('max-h-0');
-        forumPosts.classList.toggle('max-h-0', !isCollapsed); // Collapse
-        forumPosts.classList.toggle('max-h-96', isCollapsed); // Expand to allow scrolling
-        toggleButton.textContent = isCollapsed 
-            ? "Hide Your Forum Posts" 
-            : "View Your Forum Posts";
-    });
-</script>
-
-<style>
-    #forum-posts {
-        max-height: 0; /* Collapsed by default */
-        overflow-y: hidden; /* Prevent scrolling when collapsed */
-        transition: max-height 0.3s ease-in-out;
-    }
-
-    #forum-posts.max-h-96 {
-        max-height: 24rem; /* Expanded height with scrolling */
-        overflow-y: auto; /* Enable scrolling in expanded state */
-    }
-</style>
 {% endblock %}
