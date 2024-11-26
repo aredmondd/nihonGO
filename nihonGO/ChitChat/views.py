@@ -206,3 +206,6 @@ def private_chat(request, friend_id):
 
 def messages(request): 
     return render(request, 'chat/home.html')
+
+def test_link(request):
+    return render(request, 'components/wrapper.html')

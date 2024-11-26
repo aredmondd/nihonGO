@@ -1,12 +1,7 @@
-{% extends "chat/base_generic.html" %}
+{% extends 'components/wrapper.html' %}
 
 {% block content %}
-  <h1>Welcome, {{ request.user.username }}!</h1>
-  <div class="tab">
-    <button class="tablinks" onclick="openTab(event, 'ChatRooms')">Chat Rooms</button>
-    <button class="tablinks" onclick="openTab(event, 'Friends')">Friends</button>
-    <button class="tablinks" onclick="openTab(event, 'PrivateChats')">Chats</button>
-  </div>
+  <h1 class="text-crimson text-center font-outfit font-bold text-heading">Welcome, {{ request.user.username }}!</h1>
 
   <div id="ChatRooms" class="tab-content">
     <h2>Your Chat Rooms</h2>
@@ -18,7 +13,7 @@
     <a href="{% url 'create_chat_room' %}">Create a New Chat Room</a>
   </div>
 
-  <div id="Friends" class="tab-content" style="display: none;">
+  <div id="Friends" class="tab-content">
     <h2>Your Friends</h2>
     <form method="post" action="{% url 'add_friend' %}">
         {% csrf_token %}
@@ -33,7 +28,7 @@
     <a href="{% url 'pending_friend_requests' %}">View Pending Friend Requests</a>
   </div>
 
-  <div id="PrivateChats" class="tab-content" style="display: none;">
+  <div id="PrivateChats" class="tab-content">
     <h2>Your Chats</h2>
     <ul>
         {% for friend in friends %}
@@ -41,20 +36,4 @@
         {% endfor %}
     </ul>
   </div>
-
-  <script>
-    function openTab(evt, tabName) {
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tab-content");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        document.getElementById(tabName).style.display = "block";
-        evt.currentTarget.className += " active";
-    }
-  </script>
 {% endblock %}

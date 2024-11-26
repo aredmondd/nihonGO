@@ -84,18 +84,12 @@ def profile(request):
 def edit_profile (request):
     return render(request, 'myapp/edit_profile.html')
 
-def messages (request):
-    return render(request, 'messages.html')
-
 # Create your views here.
 def home (request):
     return render(request, 'myapp/base.html')
 
 def edit_profile (request):
     return render(request, 'myapp/edit_profile.html')
-
-def messages (request):
-    return render(request, 'messages.html')
 
 # Create your views here.
 def home (request):

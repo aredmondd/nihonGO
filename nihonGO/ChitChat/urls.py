@@ -28,4 +28,6 @@ urlpatterns = [
     path('create_room/', views.create_chat_room, name='create_chat_room'),
     path('chat_rooms/', views.list_chat_rooms, name='list_chat_rooms'),
     path('chat_rooms_and_friends/', views.chat_rooms_and_friends, name='chat_rooms_and_friends'),
+
+    path("test/", views.test_link, name="test_link"),
 ]

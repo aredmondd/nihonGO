@@ -14,7 +14,6 @@ urlpatterns = [
     path('about/', views.about, name="about"),
     path('my-profile/', views.profile, name="my-profile"),
     path('edit-profile/', views.edit_profile, name="edit-profile"),
-    path('messages/', views.messages, name="messages"),
     path('mydecks/', views.my_decks, name="my_decks"),
     path('add/', views.add_deck, name='add_deck'),
     path('study/<int:deck_id>/', views.study, name='study'),
