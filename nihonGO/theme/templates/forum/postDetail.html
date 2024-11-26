@@ -43,7 +43,7 @@
 
     <!-- Reply Form (only shown if logged in and not the post author) -->
     {% if user.is_authenticated %}
-        {% if user != post.author %}
+        {% if user.username == post.author.username %}
         <div class="reply-form" style="margin-top: 40px;">
             <h3 style="font-size: 1.8rem; color: #333; font-weight: bold; margin-bottom: 20px;">Reply to this post</h3>
             <form method="POST" style="display: flex; flex-direction: column; gap: 20px;">
@@ -56,8 +56,6 @@
                 </button>
             </form>
         </div>
-        {% else %}
-        <p style="color: #777; text-align: center;">You cannot reply to your own post.</p>
         {% endif %}
     {% else %}
         <p style="color: #777; text-align: center;">You must be logged in to reply to this post. <a href="{% url 'login' %}" style="color: orange; text-decoration: underline;">Log in</a></p>
