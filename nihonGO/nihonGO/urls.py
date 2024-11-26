@@ -25,4 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('theme.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
+    path('chat/', include('ChitChat.urls')),  # Include chat application URLs
+    path('accounts/', include('django.contrib.auth.urls')),  # Include authentication URLs
+    path('messages/', include('ChitChat.urls')),  # Add this line to redirect messages to ChitChat
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

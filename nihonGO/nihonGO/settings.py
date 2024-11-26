@@ -38,6 +38,7 @@ INTERNAL_IPS = [
 ]
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,7 +50,11 @@ INSTALLED_APPS = [
     'theme',
     'django_browser_reload',
     'flashcards',
+    'ChitChat.apps.ChitchatConfig',  # Ensure this line is included
+    'channels'  # Adding channels for WebSocket support
+     # Daphne must be listed after channels
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -70,6 +75,7 @@ TEMPLATES = [
         'DIRS': [
             # Testing directory for customizing django default reset password page. Delete if break anything
             BASE_DIR / "theme" / "templates",
+            BASE_DIR / 'ChitChat' / 'templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -84,6 +90,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'nihonGO.wsgi.application'
+ASGI_APPLICATION = 'nihonGO.asgi.application'  # ASGI for Channels
 
 
 # Database
@@ -142,9 +149,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend" # new
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"  # new
 
 # User log in
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = 'my-profile'
 LOGOUT_REDIRECT_URL = '/'
+
+# Channels configuration for WebSocket
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
