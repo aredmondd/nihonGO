@@ -44,13 +44,15 @@
             <p class="text-body text-black">Our community forums offer a place to ask questions, share experiences, and support each other in the quest to master Japanese. Whether you're a beginner or advanced, there's always help available.</p>
         </div>
 
-        <h1 class="text-center font-outfit font-bold text-heading">Start mastering Japanese today.</h1>
-        <div class="flex justify-center mt-3">
-            <div class="flex my-6">
-                <a href="/register"><button class="bg-orange text-white font-semibold py-4 px-6 rounded-full shadow-md hover:bg-crimson transition duration-300">Register</button></a>
-                <div class="mx-4"> </div>
-                <a href="/login"><button class="bg-orange text-white font-semibold py-4 px-6 rounded-full shadow-md hover:bg-crimson transition duration-300">Login</button></a>
+        {% if not user.is_authenticated %}
+            <h1 class="text-center font-outfit font-bold text-heading">Start mastering Japanese today.</h1>
+            <div class="flex justify-center mt-3">
+                <div class="flex my-6">
+                    <a href="/register"><button class="bg-orange text-white font-semibold py-4 px-6 rounded-full shadow-md hover:bg-crimson transition duration-300">Register</button></a>
+                    <div class="mx-4"> </div>
+                    <a href="/login"><button class="bg-orange text-white font-semibold py-4 px-6 rounded-full shadow-md hover:bg-crimson transition duration-300">Login</button></a>
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 {% endblock %}

@@ -50,7 +50,7 @@
         </ul>
 
         <div>
-            <a href="{% url 'my-profile' %}"><img src="{% static 'redmond.jpg' %}" alt="" class="ml-2 w-16 h-16 rounded-full border border-2 border-black"></a>
+            <a href="{% url 'my-profile' %}"><img src="{{ user.theme_profile.avatar.url }}" alt="" class="ml-2 w-16 h-16 rounded-full border border-2 border-black"></a>
             <form action="{% url 'logout' %}" method="post" class="inline">
                 {% csrf_token %}
                 <button type="submit" class="ml-2 font-medium">Log Out</button>

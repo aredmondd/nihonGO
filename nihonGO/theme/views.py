@@ -61,6 +61,7 @@ from django.db.models import Sum
 from django.shortcuts import render
 def profile(request):
     user = request.user
+    # profile = profile.objects.get(user=user)
     #profile = profile.objects.get(user=user)
     
     # Fetch user-specific flashcard progress and statistics
@@ -129,7 +130,10 @@ def user_logout(request):
 
     return redirect("index")
 
-
+# @login_required
+# def profile(request):
+#     print("Profile view is running teehee")
+#     return render(request, 'my-profile.html')
 
 # Change password view
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
