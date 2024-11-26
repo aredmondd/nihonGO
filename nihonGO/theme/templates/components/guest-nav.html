@@ -42,7 +42,7 @@
             </li>
 
             <li>
-                <a href="{% url 'login' %}" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'login' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
+                <a href="/login" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'login' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
                 <span class="ms-3">Log In</span>
                 </a>
             </li>
