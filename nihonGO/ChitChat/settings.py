@@ -120,6 +120,6 @@ CHANNEL_LAYERS = {
 }
 
 # Redirect URLs after login/logout
-LOGIN_REDIRECT_URL = "home"  # Redirect to home view after login
-LOGOUT_REDIRECT_URL = "login-user"
-LOGIN_URL = 'login-user'
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = 'my-profile'
+LOGOUT_REDIRECT_URL = '/'

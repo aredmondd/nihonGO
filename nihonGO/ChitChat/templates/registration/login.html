@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: #F6F3F4;
+            font-family: 'Outfit', 'sans-serif';
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+        }
+        form {
+            max-width: 300px;
+            padding: 20px;
+            background-color: #FFF;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .branding {
+            margin-bottom: 20px;
+            font-size: 50px;
+            font-weight: bold;
+            color: #BD002C;
+        }
+        .btn-container {
+            text-align: center;
+        }
+        button {
+            background-color: #BD002C;
+            color: #FFF;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #E28140;
+        }
+        label {
+            font-weight: bold;
+            text-align: left;
+            width: 85%;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #CCC;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <div class="branding">NihonGO!</div>
+        {{ form.as_p }}
+        <div class="btn-container">
+            <button type="submit">Login</button>
+        </div>
+    </form>
+</body>
+
+</html>

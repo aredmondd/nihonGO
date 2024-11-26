@@ -24,7 +24,7 @@ urlpatterns = [
     path('remove_friend/<int:friend_id>/', views.remove_friend, name='remove_friend'),
 
     # Private chat room routes
-    path('private_chat/<int:friend_id>/', views.private_chat_room, name='private_chat_room'),
+    path('private_chat/<int:friend_id>/', views.chatPage, name='private_chat_room'),
     path('create_room/', views.create_chat_room, name='create_chat_room'),
     path('chat_rooms/', views.list_chat_rooms, name='list_chat_rooms'),
     path('chat_rooms_and_friends/', views.chat_rooms_and_friends, name='chat_rooms_and_friends'),
