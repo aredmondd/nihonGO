@@ -2,15 +2,17 @@
 
 {% block content %}
 <div>
-    <h1 class="text-heading text-center text-black font-outfit font-bold">nihon<span class="text-crimson">GO</span>の Forum へようこそ!</h1>
+    {% if user.is_authenticated %}
+        <div class="flex justify-between items-end mx-6">
+            <h1 class="text-heading text-center text-black font-outfit font-bold">nihon<span class="text-crimson">GO</span>の Forum へようこそ!</h1>
+            <a href="{% url 'create_post' %}" class="border-2 border-black rounded-3xl bg-orange shadow-md p-4 text-center text-white flex justify-center items-center hover:bg-crimson margin-top: 15px ">Create New Post</a>
+        </div>
+    {% endif %}
 
-    <div class="flex items-center justify-center my-2 text-black text-opacity-75 font-outfit">
-        {% if user.is_authenticated %}
-            <a href="{% url 'create_post' %}" class="mt-6 border-2 border-black rounded-3xl bg-orange shadow-md p-4 text-center text-white flex justify-center items-center hover:bg-crimson margin-top: 15px ">Create New Post</a>
-        {% else %}
-            <p><a href="{% url 'login' %}" class="text-crimson underline hover:text-orange">Login</a> or <a href="{% url 'register' %}" class="text-crimson underline hover:text-orange">Sign Up</a> to post & upvote!</p>
-        {% endif %}
-    </div>
+    {% if not user.is_authenticated %}
+        <h1 class="text-heading text-center text-black font-outfit font-bold">nihon<span class="text-crimson">GO</span>の Forum へようこそ!</h1>
+        <a href="/login" class="text-crimson underline hover:text-orange">Login</a> or <a href="{% url 'register' %}" class="text-crimson underline hover:text-orange">Sign Up</a> to post & upvote!
+    {% endif %}
 
     <div class="flex flex-wrap flex-col mx-64 mt-12 font-outfit space-y-4">
         {% for post in posts %}
@@ -32,7 +34,7 @@
                                     <span class="material-symbols-outlined font-bold hover:text-crimson">arrow_upward</span>
                                 </button>
                             {% else %}
-                                <a href="{% url 'login' %}" class="material-symbols-outlined font-bold hover:text-crimson">arrow_upward</a>
+                                <a href="/login" class="material-symbols-outlined font-bold hover:text-crimson">arrow_upward</a>
                             {% endif %}
                         </div>
                         <a href="{% url 'post_detail' post.id %}" class="material-symbols-outlined hover:text-crimson font-bold">reply</a>
