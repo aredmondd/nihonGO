@@ -41,23 +41,28 @@
         {% endfor %}
     </div>
 
-    <!-- Reply Form (only shown if logged in) -->
+    <!-- Reply Form (only shown if logged in and not the post author) -->
     {% if user.is_authenticated %}
-    <div class="reply-form" style="margin-top: 40px;">
-        <h3 style="font-size: 1.8rem; color: #333; font-weight: bold; margin-bottom: 20px;">Reply to this post</h3>
-        <form method="POST" style="display: flex; flex-direction: column; gap: 20px;">
-            {% csrf_token %}
-            <div class="form-field" style="display: flex; flex-direction: column; gap: 10px;">
-                {{ reply_form.as_p }}
-            </div>
-            <button type="submit" class="mt-6 border-2 border-black rounded-3xl bg-orange shadow-md p-4 text-center text-white flex justify-center items-center hover:bg-crimson margin-top: 15px">
-                Submit Reply
-            </button>
-        </form>
-    </div>
+        {% if user != post.author %}
+        <div class="reply-form" style="margin-top: 40px;">
+            <h3 style="font-size: 1.8rem; color: #333; font-weight: bold; margin-bottom: 20px;">Reply to this post</h3>
+            <form method="POST" style="display: flex; flex-direction: column; gap: 20px;">
+                {% csrf_token %}
+                <div class="form-field" style="display: flex; flex-direction: column; gap: 10px;">
+                    {{ reply_form.as_p }}
+                </div>
+                <button type="submit" class="mt-6 border-2 border-black rounded-3xl bg-orange shadow-md p-4 text-center text-white flex justify-center items-center hover:bg-crimson margin-top: 15px">
+                    Submit Reply
+                </button>
+            </form>
+        </div>
+        {% else %}
+        <p style="color: #777; text-align: center;">You cannot reply to your own post.</p>
+        {% endif %}
     {% else %}
-    <p style="color: #777; text-align: center;">You must be logged in to reply to this post. <a href="{% url 'login' %}" style="color: orange; text-decoration: underline;">Log in</a></p>
+        <p style="color: #777; text-align: center;">You must be logged in to reply to this post. <a href="{% url 'login' %}" style="color: orange; text-decoration: underline;">Log in</a></p>
     {% endif %}
+
 
     {% if user == post.user %}
     <form method="POST" action="{% url 'post_detail' post.id %}">
