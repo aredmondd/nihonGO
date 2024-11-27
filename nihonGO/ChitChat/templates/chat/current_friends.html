@@ -1,21 +1,24 @@
 {% extends "components/wrapper.html" %}
 
 {% block content %}
+    <a href="{% url 'messages' %}" class="underline text-crimson font-body">&larr; Back</a>
     <h2 class="text-black font-outfit text-heading font-bold">Friends</h2>
     {% if friends|length == 0 %}
     <p class="font-outfit text-black text-opacity-50">so empty...</p>
     {% else %}
-    <ul>
+    <ul class="flex flex-col space-y-4 mx-96">
         {% for friend in friends %}
-            <li class="flex items-center space-x-6">
-                <img src="{{ friend.friend.theme_profile.avatar.url }}" alt="" class="w-16">
-                <div class="flex flex-col">
-                    <p class="text-body text-black font-DMSans">{{ friend.friend.username }}</p>
-                    {% if friend.friend.theme_profile.bio == '' %}
-                        <p class="text-sm text-opacity-50 text-black font-DMSans">user has no bio</p>
-                    {% else %}
-                        <p class="text-body text-black font-DMSans">{{ friend.friend.theme_profile.bio }}</p>
-                    {% endif %}
+            <li class="flex justify-between items-center">
+                <div class="flex items-center space-x-6">
+                    <img src="{{ friend.friend.theme_profile.avatar.url }}" alt="" class="w-16 rounded-full">
+                    <div class="flex flex-col">
+                        <p class="text-body text-black font-DMSans">@{{ friend.friend.username }}</p>
+                        {% if friend.friend.theme_profile.bio == '' %}
+                            <p class="text-sm text-opacity-50 text-black font-DMSans">user has no bio... that's awkward</p>
+                        {% else %}
+                            <p class="text-sm text-opacity-50 text-black font-DMSans">{{ friend.friend.theme_profile.bio }}</p>
+                        {% endif %}
+                    </div>
                 </div>
                 <form method="post" action="{% url 'remove_friend' friend.id %}">
                     {% csrf_token %}

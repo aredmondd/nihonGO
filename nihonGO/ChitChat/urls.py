@@ -8,7 +8,7 @@ urlpatterns = [
 
     # Authentication routes
     path("messages/", views.messages_view, name="messages"),  # Updated to match the new view name
-    path("auth/login/", LoginView.as_view(template_name="chat/loginPage.html"), name="login-user"),
+    path("auth/login/", LoginView.as_view(template_name="login.html"), name="login-user"),
     path("auth/logout/", LogoutView.as_view(), name="logout-user"),
 
     # Chat page routes
