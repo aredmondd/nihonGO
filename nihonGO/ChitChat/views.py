@@ -153,7 +153,7 @@ def create_chat_room(request):
             return redirect('list_chat_rooms')
     else:
         form = ChatRoomForm()
-    return render(request, 'create_chat_room.html', {'form': form})
+    return render(request, 'chat/create_chat_room.html', {'form': form})
 
 
 @login_required
