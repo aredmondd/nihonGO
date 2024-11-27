@@ -4,9 +4,19 @@
 <!-- Navigation link back to the forum -->
 <a href="{% url 'forum_index' %}" class="underline text-crimson font-body">&larr; Back</a>
 <div class="flex flex-col mx-12 mt-6 font-outfit">
-    <h1 class="text-md text-crimson text-left font-bold mb-3 font-outfit">
-        {{ post.title }}
-    </h1>
+    <div class="flex justify-between">
+        <h1 class="text-md text-crimson text-left font-bold mb-3 font-outfit">
+            {{ post.title }}
+        </h1>
+        {% if user == post.user %}
+        <form method="POST" action="{% url 'post_detail' post.id %}">
+            {% csrf_token %}
+            <button type="submit" class="material-symbols-outlined text-md hover:text-crimson">
+                delete
+            </button>
+        </form>
+        {% endif %}
+    </div>
 
     <p class="text-body text-black text-opacity-75 mb-12">
         {{ post.content }}
@@ -25,19 +35,19 @@
     <hr style="margin: 40px 0; border: 1px solid #ddd;">
 
     <!-- Replies Section -->
-    <h2 style="font-size: 2rem; color: crimson; text-align: center; font-weight: bold; margin-bottom: 20px;">Replies</h2>
+    <h2 style="font-size: 2rem; color: crimson; text-align: left; font-weight: bold; margin-bottom: 20px;">Replies</h2>
     <div class="reply-list" style="display: flex; flex-direction: column; gap: 15px;">
         {% for reply in replies %}
         <div class="reply-card" style="border: 1px solid #ddd; border-radius: 10px; padding: 20px; background-color: #f9f9f9; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);">
             <p style="font-size: 1.1rem; color: #333; margin-bottom: 10px;">
-                <strong>{{ reply.user.username }}:</strong> {{ reply.content }}
+                <strong>@{{ reply.user.username }}:</strong> {{ reply.content }}
             </p>
             <p class="text-muted" style="font-size: 0.9rem; color: #777; margin-top: 10px;">
                 Posted on {{ reply.created_at|date:"F j, Y, g:i a" }}
             </p>
         </div>
         {% empty %}
-        <p style="color: #777; text-align: center;">No replies yet. Be the first to reply!</p>
+        <p style="color: #777;">so empty...</p>
         {% endfor %}
     </div>
 
@@ -59,16 +69,6 @@
     {% else %}
         <p style="color: #777; text-align: center;">You must be logged in to reply to this post. <a href="/login" style="color: orange; text-decoration: underline;">Log in</a></p>
     {% endif %}
-
-
-    {% if user == post.user %}
-    <form method="POST" action="{% url 'post_detail' post.id %}">
-        {% csrf_token %}
-        <button type="submit" class="mt-6 border-2 border-black rounded-3xl bg-orange shadow-md p-4 text-center text-white flex justify-center items-center hover:bg-crimson margin-top: 15px"">
-            Delete Post
-        </button>
-    </form>
-{% endif %}
 </div>
 
 
