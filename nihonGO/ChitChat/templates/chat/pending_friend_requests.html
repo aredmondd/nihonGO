@@ -1,8 +1,7 @@
 {% extends "components/wrapper.html" %}
 
 {% block content %}
-  <div class="container">
-    <h2>Pending Friend Requests</h2>
+    <h1 class="text-black font-outfit text-heading font-bold">Pending Friend Requests</h1>
     <ul>
         {% for request in friend_requests %}
         <li>
@@ -18,54 +17,4 @@
         </li>
         {% endfor %}
     </ul>
-  </div>
-{% endblock %}
-
-<style>
-    body {
-        font-family: 'Arial', sans-serif;
-        background-color: #f4f4f4;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-    .container {
-        background-color: #fff;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-    }
-    h2 {
-        text-align: center;
-    }
-    ul {
-        list-style-type: none;
-        padding: 0;
-    }
-    li {
-        background-color: #f9f9f9;
-        margin: 5px 0;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .accept-btn {
-        background-color: #007bff;
-    }
-    .accept-btn:hover {
-        background-color: #0056b3;
-    }
-    .reject-btn {
-        background-color: #dc3545;
-    }
-    .reject-btn:hover {
-        background-color: #c82333;
-    }
-</style>
 {% endblock %}

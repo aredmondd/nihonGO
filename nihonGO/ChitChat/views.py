@@ -197,3 +197,8 @@ def private_chat(request, friend_id):
 
 def messages_view(request): 
     return render(request, 'chat/home.html')
+
+@login_required
+def current_friends(request):
+    friends = Friend.objects.filter(user=request.user, is_accepted=True)
+    return render(request, 'chat/current_friends.html', {'friends': friends,})

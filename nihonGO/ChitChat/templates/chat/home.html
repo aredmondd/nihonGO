@@ -1,7 +1,13 @@
 {% extends 'components/wrapper.html' %}
 
 {% block content %}
-  <h1 class="text-crimson text-center font-outfit font-bold text-heading">Welcome, {{ request.user.username }}!</h1>
+  <h1 class="text-crimson text-center font-outfit font-bold text-heading">Messages</h1>
+
+  <div class="flex flex-col space-y-6 mb-24">
+      <a href="{% url 'current_friends' %}">My Current Friends</a>
+      <a href="{% url 'pending_friend_requests' %}">Friend Requests</a>
+      <a href="">Add a Friend</a>
+  </div>
 
   <div class="flex flex-col space-y-6">
       <div class="border-black border-2 rounded-lg">
