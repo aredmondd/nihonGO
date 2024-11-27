@@ -1,29 +1,11 @@
 {% extends "components/wrapper.html" %}
 
 {% block content %}
-    <div class="container">
-        <h1>Friends List</h1>
-        <form method="post" action="{% url 'add_friend' %}">
-            {% csrf_token %}
-            <input type="text" name="friend_username" placeholder="Enter friend's username">
-            <button type="submit">Send Friend Request</button>
-        </form>
-
-        <h2>Friend Requests</h2>
-        <ul>
-            {% for friend_request in friend_requests_received %}
-                <li>
-                    {{ friend_request.user.username }}
-                    <form method="post" action="{% url 'accept_friend_request' friend_request.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="accept-btn">Accept</button>
-                    </form>
-                    <form method="post" action="{% url 'reject_friend_request' friend_request.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="reject-btn">Reject</button>
-                    </form>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+<a href="{% url 'messages' %}" class="underline text-crimson font-body">&larr; Back</a>
+<h1 class="text-black font-bold font-outfit text-heading">Add Friends</h1>
+<form method="post" action="{% url 'add_friend' %}">
+    {% csrf_token %}
+    <input type="text" name="friend_username" placeholder="Enter friend's username">
+    <button type="submit">Send Friend Request</button>
+</form>
 {% endblock %}

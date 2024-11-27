@@ -79,7 +79,7 @@ def add_friend(request):
                 messages.error(request, "You cannot add yourself as a friend.")
         except User.DoesNotExist:
             messages.error(request, "User not found.")
-    return redirect('friends_list')
+    return render(request, 'chat/friends_list.html')
 
 @login_required
 def friends_list(request):
@@ -89,15 +89,10 @@ def friends_list(request):
     else:
         friends = Friend.objects.filter(user=request.user, is_accepted=True)
     friend_requests_received = Friend.objects.filter(friend=request.user, is_accepted=False)
-    return render(request, 'chat/friends_list.html', {
+    return render(request, 'chat/friends.html', {
         'friends': friends,
         'friend_requests_received': friend_requests_received
     })
-
-@login_required
-def pending_friend_requests(request):
-    friend_requests = Friend.objects.filter(friend=request.user, is_accepted=False)
-    return render(request, 'chat/pending_friend_requests.html', {'friend_requests': friend_requests})
 
 @login_required
 def accept_friend_request(request, friend_request_id):
@@ -109,7 +104,7 @@ def accept_friend_request(request, friend_request_id):
         messages.success(request, f"You are now friends with {friend_request.user.username}")
     except Friend.DoesNotExist:
         messages.error(request, "Friend request not found.")
-    return redirect('pending_friend_requests')
+    return redirect('friends')
 
 @login_required
 def reject_friend_request(request, friend_request_id):
@@ -119,7 +114,7 @@ def reject_friend_request(request, friend_request_id):
         messages.success(request, f"Friend request from {friend_request.user.username} has been rejected")
     except Friend.DoesNotExist:
         messages.error(request, "Friend request not found.")
-    return redirect('pending_friend_requests')
+    return redirect('friends')
 
 @login_required
 def remove_friend(request, friend_id):
@@ -132,7 +127,7 @@ def remove_friend(request, friend_id):
         messages.success(request, f"Unfriended {friend.friend.username}")
     except Friend.DoesNotExist:
         messages.error(request, "Friend not found.")
-    return redirect('friends_list')
+    return redirect('current_friends')
 
 # Chat room management views
 @login_required
@@ -199,6 +194,6 @@ def messages_view(request):
     return render(request, 'chat/home.html')
 
 @login_required
-def current_friends(request):
+def friends(request):
     friends = Friend.objects.filter(user=request.user, is_accepted=True)
-    return render(request, 'chat/current_friends.html', {'friends': friends,})
+    return render(request, 'chat/friends.html', {'friends': friends,})

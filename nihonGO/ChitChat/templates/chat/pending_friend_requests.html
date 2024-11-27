@@ -1,6 +1,7 @@
 {% extends "components/wrapper.html" %}
 
 {% block content %}
+    <a href="{% url 'messages' %}" class="underline text-crimson font-body">&larr; Back</a>
     <h1 class="text-black font-outfit text-heading font-bold">Pending Friend Requests</h1>
     <ul>
         {% for request in friend_requests %}

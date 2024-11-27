@@ -17,9 +17,7 @@ urlpatterns = [
 
     # Friend-related routes
     path('add_friend/', views.add_friend, name='add_friend'),
-    path('friends_list/', views.friends_list, name='friends_list'),
-    path('current_friends/', views.current_friends, name='current_friends'),
-    path('pending_friend_requests/', views.pending_friend_requests, name='pending_friend_requests'),
+    path('friends/', views.friends, name='current_friends'),
     path('accept_friend_request/<int:friend_request_id>/', views.accept_friend_request, name='accept_friend_request'),
     path('reject_friend_request/<int:friend_request_id>/', views.reject_friend_request, name='reject_friend_request'),
     path('remove_friend/<int:friend_id>/', views.remove_friend, name='remove_friend'),
