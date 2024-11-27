@@ -5,7 +5,7 @@
     {% if user.is_authenticated %}
         <div class="flex justify-between items-end mx-6">
             <h1 class="text-heading text-center text-black font-outfit font-bold">nihon<span class="text-crimson">GO</span>の Forum へようこそ!</h1>
-            <a href="{% url 'create_post' %}" class="border-2 border-black rounded-3xl bg-orange shadow-md p-4 text-center text-white flex justify-center items-center hover:bg-crimson margin-top: 15px ">Create New Post</a>
+            <a href="{% url 'create_post' %}"><span class="material-symbols-outlined text-heading text-crimson">add</span></a>
         </div>
     {% endif %}
 
