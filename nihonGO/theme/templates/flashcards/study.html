@@ -1,20 +1,11 @@
 {% extends 'components/wrapper.html' %}
 
-<head>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMr7a2I5upY5u5V6B1ar1f8tr9IgIVbq7Cg9M" crossorigin="anonymous">
-</head>
-
 {% block content %}
 <!-- Back button in the top-right corner -->
-<div class="back-button-container flex justify-between items-center p-4">
-    <a href="{% url 'my_decks' %}" 
-    class="text-orange hover:text-crimson font-bold text-lg underline mb-4 block">
-     &larr; Back to My Decks
- </a>
-</div>
+<a href="{% url 'my_decks' %}" class="font-DMSans text-crimson text-body underline mb-4">&larr; Back</a>
 
-<h1 class="ml-10 text-title text-black font-japanese font-bold">{{ deck.name }}</h1>
+
+<h1 class="mb-24 text-center text-heading text-black font-japanese font-bold">{{ deck.name }}</h1>
 
 {% if not user.is_authenticated %}
     <p class="text-crimson text-center font-semibold">
@@ -24,7 +15,7 @@
 
 <div id="cardList" class="flashcards-container flex justify-center items-center">
     {% for flashcard in flashcards %}
-    <div class="flashcard border-2 border-black shadow-md cursor-pointer hidden relative" onclick="flipCard(this)">
+    <div class="flashcard border-2 border-black rounded-2xl cursor-pointer" onclick="flipCard(this)">
         <div class="flashcard-front flex items-center justify-center h-full">
             <h3 class="text-7xl text-crimson font-semibold mb-4">{{ flashcard.vocab_word }}</h3>
         </div>
@@ -103,8 +94,12 @@
     }
 
     function flipCard(card) {
-        card.classList.toggle('flipped');
+    if (!card.classList.contains('flipped')) {
+        card.classList.add('flipped');
+    } else {
+        card.classList.remove('flipped');
     }
+}
 
     function markCorrect() {
         showNextCard();
