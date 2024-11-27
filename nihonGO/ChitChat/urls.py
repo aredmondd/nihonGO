@@ -7,7 +7,7 @@ urlpatterns = [
     path("", views.home, name="home"),
 
     # Authentication routes
-    path("messages/", views.messages, name="messages"), # Add this line for the messages view
+    path("messages/", views.messages_view, name="messages"),  # Updated to match the new view name
     path("auth/login/", LoginView.as_view(template_name="chat/loginPage.html"), name="login-user"),
     path("auth/logout/", LogoutView.as_view(), name="logout-user"),
 

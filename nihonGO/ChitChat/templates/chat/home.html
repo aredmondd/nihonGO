@@ -3,37 +3,35 @@
 {% block content %}
   <h1 class="text-crimson text-center font-outfit font-bold text-heading">Welcome, {{ request.user.username }}!</h1>
 
-  <div id="ChatRooms" class="tab-content">
-    <h2>Your Chat Rooms</h2>
-    <ul>
-        {% for room in chat_rooms %}
-        <li><a href="{% url 'room' room.name %}">{{ room.name }}</a></li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'create_chat_room' %}">Create a New Chat Room</a>
-  </div>
-
-  <div id="Friends" class="tab-content">
-    <h2>Your Friends</h2>
-    <form method="post" action="{% url 'add_friend' %}">
-        {% csrf_token %}
-        <input type="text" name="friend_username" placeholder="Enter friend's username">
-        <button type="submit">Add Friend</button>
-    </form>
-    <ul>
-        {% for friend in friends %}
-        <li>{{ friend.friend.username }}</li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'pending_friend_requests' %}">View Pending Friend Requests</a>
-  </div>
-
-  <div id="PrivateChats" class="tab-content">
-    <h2>Your Chats</h2>
-    <ul>
-        {% for friend in friends %}
-        <li><a href="{% url 'chat_room' friend.friend.id %}">{{ friend.friend.username }}</a></li>
-        {% endfor %}
-    </ul>
+  <div class="flex flex-col space-y-6">
+      <div class="border-black border-2 rounded-lg">
+        <ul>
+            {% for room in chat_rooms %}
+            <li><a href="{% url 'room' room.name %}">{{ room.name }}</a></li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'create_chat_room' %}">Create a New Chat Room</a>
+      </div>
+      <div class="border-black border-2 rounded-lg">
+        <form method="post" action="{% url 'add_friend' %}">
+            {% csrf_token %}
+            <input type="text" name="friend_username" placeholder="Username">
+            <button type="submit">Add Friend</button>
+        </form>
+        <ul>
+            {% for friend in friends %}
+            <li>{{ friend.friend.username }}</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'pending_friend_requests' %}">View Pending Friend Requests</a>
+      </div>
+      <div class="border-black border-2 rounded-lg">
+        <h2>Your Chats</h2>
+        <ul>
+            {% for friend in friends %}
+            <li><a href="{% url 'chat_room' friend.friend.id %}">{{ friend.friend.username }}</a></li>
+            {% endfor %}
+        </ul>
+      </div>
   </div>
 {% endblock %}

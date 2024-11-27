@@ -195,5 +195,5 @@ def private_chat(request, friend_id):
     }
     return render(request, 'chat/private_chat.html', context)
 
-def messages(request): 
+def messages_view(request): 
     return render(request, 'chat/home.html')
