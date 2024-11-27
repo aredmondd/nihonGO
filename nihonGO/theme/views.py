@@ -71,8 +71,6 @@ def profile(request):
     # Fetch user's forum posts
     forum_posts = user.posts.all()
     total_upvotes = user.posts.aggregate(total_upvotes=Sum('upvotes'))['total_upvotes'] or 0
-
-    print("Forum posts:", forum_posts)
     
     return render(request, 'my-profile.html', {
         'profile': profile,

@@ -4,16 +4,10 @@
     <div class="h-full flex flex-col justify-between px-3 py-4 overflow-y-auto bg-peach">
         <ul class="space-y-2 font-medium mt-6">
             <li>
-                <a href="{% url 'index' %}" class="relative group">
-                    <h1 class="ml-3 text-md text-black font-japanese font-bold">
-                        <!-- Japanese text with hover effect -->
-                        <span class="transition-all duration-200 group-hover:opacity-0">日本</span>
-                        <span class="absolute top-2 left-3 transition-all duration-200 opacity-0 group-hover:opacity-100 text-2xl">nihon</span>
-                        <!-- GO! text always visible -->
-                        <span class="text-crimson font-outfit">GO!</span>
-                    </h1>
+                <a href="{% url 'index' %}" id="dynamicText">
+                    <h1 id="textContent" class="ml-3 text-md text-black font-japanese font-bold">日本<span class="text-crimson font-outfit">GO!</span></h1>
                 </a>
-            </li>
+            </li>            
             
 
             <li>
@@ -58,3 +52,22 @@
         </div>
     </div>
 </aside>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const link = document.getElementById('dynamicText');
+        const textContent = document.getElementById('textContent');
+    
+        const originalText = '日本';
+        const englishText = 'nihon';
+    
+        link.addEventListener('mouseenter', function () {
+            textContent.firstChild.textContent = englishText;
+        });
+    
+        link.addEventListener('mouseleave', function () {
+            textContent.firstChild.textContent = originalText;
+        });
+    });
+</script>
+

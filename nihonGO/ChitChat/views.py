@@ -7,13 +7,6 @@ from .forms import ChatRoomForm
 from .models import PrivateChat, User
 from django.contrib.auth.views import LoginView
 
-class MyLoginView(LoginView):
-    template_name = 'chat/loginPage.html'  # Update this path to your actual template
-
-# In your views.py
-my_login = MyLoginView.as_view()
-
-
 # Home view
 @login_required
 def home(request):
@@ -22,7 +15,7 @@ def home(request):
     private_chats_user1 = PrivateChat.objects.filter(user1=request.user)
     private_chats_user2 = PrivateChat.objects.filter(user2=request.user)
     private_chats = private_chats_user1 | private_chats_user2
-    return render(request, 'home.html', {
+    return render(request, 'home', {
         'chat_rooms': chat_rooms,
         'friends': friends,
         'private_chats': private_chats
@@ -65,7 +58,7 @@ def chat_room(request, friend_id):
 @login_required
 def chat_room_detail(request, room_id):
     chat_room = get_object_or_404(ChatRoom, id=room_id)
-    return render(request, 'chat_room_detail.html', {'chat_room': chat_room})
+    return render(request, 'chat/chat_room_detail.html', {'chat_room': chat_room})
 
 # Friend management views
 @login_required
@@ -96,7 +89,7 @@ def friends_list(request):
     else:
         friends = Friend.objects.filter(user=request.user, is_accepted=True)
     friend_requests_received = Friend.objects.filter(friend=request.user, is_accepted=False)
-    return render(request, 'friends_list.html', {
+    return render(request, 'chat/friends_list.html', {
         'friends': friends,
         'friend_requests_received': friend_requests_received
     })
@@ -104,7 +97,7 @@ def friends_list(request):
 @login_required
 def pending_friend_requests(request):
     friend_requests = Friend.objects.filter(friend=request.user, is_accepted=False)
-    return render(request, 'pending_friend_requests.html', {'friend_requests': friend_requests})
+    return render(request, 'chat/pending_friend_requests.html', {'friend_requests': friend_requests})
 
 @login_required
 def accept_friend_request(request, friend_request_id):
@@ -155,12 +148,11 @@ def create_chat_room(request):
         form = ChatRoomForm()
     return render(request, 'chat/create_chat_room.html', {'form': form})
 
-
 @login_required
 def list_chat_rooms(request):
     chat_rooms = ChatRoom.objects.all()
     user_chat_rooms = request.user.chatrooms.all()
-    return render(request, 'list_chat_rooms.html', {
+    return render(request, 'chat/list_chat_rooms.html', {
         'chat_rooms': chat_rooms,
         'user_chat_rooms': user_chat_rooms,
     })
@@ -179,13 +171,12 @@ def leave_chat_room(request, room_id):
     messages.success(request, f"You have left the chat room {chat_room.name}.")
     return redirect('list_chat_rooms')
 
-
 # Combined chat rooms and friends view
 @login_required
 def chat_rooms_and_friends(request):
     chat_rooms = request.user.chatrooms.all()
     friends = Friend.objects.filter(user=request.user, is_accepted=True)
-    return render(request, 'chat_rooms_and_friends.html', {'chat_rooms': chat_rooms, 'friends': friends})
+    return render(request, 'chat/chat_rooms_and_friends.html', {'chat_rooms': chat_rooms, 'friends': friends})
 
 @login_required
 def private_chat(request, friend_id):
@@ -206,6 +197,3 @@ def private_chat(request, friend_id):
 
 def messages(request): 
     return render(request, 'chat/home.html')
-
-def test_link(request):
-    return render(request, 'components/wrapper.html')
