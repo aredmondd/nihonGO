@@ -22,7 +22,7 @@
                 </a>
                 <p class="text-black text-opacity-50">{{ post.content|truncatechars:75 }}</p>
                 <div class="flex justify-between items-center mt-8">
-                    <p>By: {{ post.user.username }} on {{ post.created_at|date:"m/d/y @hA" }}</p>
+                    <p>By: {{ post.user.username }} on {{ post.created_at|date:"m/d/y @gA" }}</p>
                     <div class="flex items-center justify-center space-x-8">
                         <div class="flex items-center justify-center gap-1">
                             <span class="text-body text-black text-opacity-75"><span id="upvote-count-{{ post.id }}">{{ post.upvotes }}</span></span>
@@ -45,7 +45,7 @@
         {% endfor %}
     </div>
 
-    <div class="mb-24"></div>
+    <div class="mb-12"></div>
 
 </div>
 

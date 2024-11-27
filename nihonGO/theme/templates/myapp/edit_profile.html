@@ -1,77 +1,65 @@
 {% extends 'components/wrapper.html' %}
 
 {% load static tailwind_tags %}
-{% block title %}Edit Profile Page{% endblock title %}
-
 {% block content %}
-
-<div class="flex justify-start ">
+<a href="{% url 'my-profile' %}" class="underline text-crimson">&larr; Back</a>
+<div class="mx-6">
+    <h1 class="text-heading font-bold text-crimson mb-6">Edit Profile</h1>
     
-    <div class="max-w-xl w-full p-6 bg-white rounded-md">
-        <div class="back-button-container flex justify-between items-center p-4">
-            <a href="{% url 'my-profile' %}" style="text-decoration: underline; color: crimson;" >&larr; Back</a>
+    <form method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+    
+        <div class="flex space-x-12">
+            <img class="rounded-full w-40 h-40 object-cover" src="{{ user.theme_profile.avatar.url }}" alt="Profile Picture" />
+    
+            <div class="flex flex-col space-y-4 w-64">
+                <div>
+                    <label for="id_username" class="block text-sm font-medium text-gray-700">Username:</label>
+                    <input type="text" id="id_username" name="username" value="{{ user_form.username.value }}" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 focus:ring-black focus:border-black" />
+                </div>
+                <div>
+                    <label for="id_email" class="block text-sm font-medium text-gray-700">Email:</label>
+                    <input type="email" id="id_email" name="email" value="{{ user_form.email.value }}" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 focus:ring-black focus:border-black" />
+                </div>
+            </div>
+    
+            <div class="flex flex-col space-y-4 w-64">
+                <div>
+                    <label for="id_bio" class="block text-sm font-medium text-gray-700">Bio:</label>
+                    <textarea id="id_bio" name="bio" rows="3" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 focus:ring-black focus:border-black resize-none">{{ profile_form.bio.value }}</textarea>
+                </div>
+                <div>
+                    <a href="{% url 'change-password' %}" class="text-crimson hover:underline">Change Password</a>
+                </div>
+            </div>
         </div>
-        <!-- Page Title -->
-        <h1 class="text-5xl font-bold text-crimson mb-6">Edit Profile</h1>
-        
-        <div class="flex justify-start mb-6">
-            <img class="rounded-full w-32 h-32 object-cover cursor-pointer" src="{{ user.theme_profile.avatar.url }}" alt="Profile Picture" />
+    
+        <!-- Avatar -->
+        <div>
+            <label for="id_avatar" class="block text-sm font-medium text-gray-700">Change Avatar:</label>
+            <input type="file" id="id_avatar" name="avatar" class="mt-1 block w-full text-sm text-gray-500 rounded-lg p-2" />
         </div>
-
-        {% if user_form.errors or profile_form.errors %}
-            <div class="bg-red-500 text-white p-4 rounded mb-4">
-                <h3 class="font-bold">Please fix the following errors:</h3>
-                <ul>
-                    {% for field, error in user_form.errors.items %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                    {% for field, error in profile_form.errors.items %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-
-        <form method="post" enctype="multipart/form-data" class="space-y-6">
-            {% csrf_token %}
-            
-            <!-- Username -->
-            <div>
-                <label for="id_username" class="block text-sm font-medium text-gray-700">Username:</label>
-                <input type="text" id="id_username" name="username" value="{{ user_form.username.value }}" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 focus:ring-crimson focus:border-crimson" />
-            </div>
-
-            <!-- Email -->
-            <div>
-                <label for="id_email" class="block text-sm font-medium text-gray-700">Email:</label>
-                <input type="email" id="id_email" name="email" value="{{ user_form.email.value }}" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 focus:ring-crimson focus:border-crimson" />
-            </div>
-
-            <!-- Change Password -->
-            <div>
-                <a href="{% url 'change-password' %}" class="text-crimson hover:underline">Change Password</a>
-            </div>
-
-            <hr class="my-4">
-
-            <!-- Avatar -->
-            <div>
-                <label for="id_avatar" class="block text-sm font-medium text-gray-700">Change Avatar:</label>
-                <input type="file" id="id_avatar" name="avatar" class="mt-1 block w-full text-sm text-gray-500 border-gray-300 rounded-lg shadow-sm p-2" />
-            </div>
-
-            <!-- Bio -->
-            <div>
-                <label for="id_bio" class="block text-sm font-medium text-gray-700">Bio:</label>
-                <textarea id="id_bio" name="bio" rows="4" class="mt-1 block w-full border-gray-300 rounded-lg shadow-sm p-2 focus:ring-crimson focus:border-crimson">{{ profile_form.bio.value }}</textarea>
-            </div>
-
-            <!-- Submit and Reset Buttons -->
-            <div class="space-y-2">
-                <button type="submit" class="w-full bg-orange text-white py-2 rounded-lg hover:bg-crimson transition duration-300">Save Changes</button>
-                <button type="reset" class="w-full bg-gray-300 text-gray-800 py-2 rounded-lg hover:bg-crimson transition duration-300">Reset</button>
-            </div>
-        </form>
-    </div>
+    
+        <!-- Submit and Reset Buttons -->
+        <div class="flex">
+            <button type="submit" class="w-full bg-orange text-white py-2 rounded-lg hover:bg-crimson transition duration-300">Save Changes</button>
+            <button type="reset" class="w-full bg-gray-300 text-gray-800 py-2 rounded-lg hover:bg-crimson transition duration-300">Reset</button>
+        </div>
+    </form>
 </div>
+
+{% if user_form.errors or profile_form.errors %}
+    <div class="bg-red-500 text-white p-4 rounded mb-4">
+        <h3 class="font-bold">Please fix the following errors:</h3>
+        <ul>
+            {% for field, error in user_form.errors.items %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            {% for field, error in profile_form.errors.items %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
 {% endblock content %}

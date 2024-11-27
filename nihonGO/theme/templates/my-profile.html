@@ -46,7 +46,7 @@
     </div>
 
     <!-- Flashcards Section -->
-    <div class="flex justify-between mx-6 mb-6">
+    <div class="text-black font-DMSans flex justify-between mx-6 mb-6">
         <p><strong>Total Cards Studied:</strong> {{ flashcard_progress.count }}</p>
         <p><strong>Progress:</strong> {{ flashcard_progress.progress_percentage }}%</p>
         <div><p><strong>Total Posts:</strong> {{ forum_posts|length }}</p></div>
@@ -61,10 +61,8 @@
                 <a href="{% url 'post_detail' post.id %}" class="text-crimson hover:underline">View Full Post</a>
             </div>
         {% empty %}
-            <p>You have no forum posts yet.</p>
+            <p class="text-black font-DMSans">You have no forum posts yet.</p>
         {% endfor %}
     </div>
-</div>
-
 
 {% endblock %}
