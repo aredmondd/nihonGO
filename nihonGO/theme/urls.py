@@ -35,6 +35,7 @@ urlpatterns = [
     path('upvote/<int:post_id>/', views.upvote_post, name='upvote_post'),
     path('post/<int:post_id>/', views.post_detail, name='post_detail'),  # Check that 'post_detail' is correctly defined
     path('deck/<int:deck_id>/add_cards/', views.add_cards, name='add_cards'),
+    path('update-progress/', views.update_progress, name='update_progress'),
 ]
 
 if settings.DEBUG:

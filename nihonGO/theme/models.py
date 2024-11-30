@@ -57,12 +57,14 @@ class UserCardProgress(models.Model):
     ease_factor = models.FloatField(default=2.5)  # Controls the learning interval
     interval = models.IntegerField(default=1)  # Days until the next review
     repetition_count = models.IntegerField(default=0)
+    correctCount = models.IntegerField(default=0)
 
     def update_progress(self, correct):
         if correct:
             self.repetition_count += 1
             self.ease_factor = max(1.3, self.ease_factor + 0.1)  # Increase ease factor slightly for correct answers
             self.interval = self.interval * self.ease_factor  # Increase interval based on ease factor
+            self.correctCount = self.correctCount + 1
         else:
             self.repetition_count = 0
             self.ease_factor = max(1.3, self.ease_factor - 0.2)  # Decrease ease factor for incorrect answers

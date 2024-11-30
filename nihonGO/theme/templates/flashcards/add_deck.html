@@ -1,6 +1,10 @@
 {% extends 'components/wrapper.html' %}
 
 {% block content %}
+<a href="{% url 'my_decks' %}" 
+class="text-orange hover:text-crimson font-bold text-lg underline mb-4 block">
+ &larr; Back to My Decks
+</a>
 <h1 class="text-3xl font-bold mb-6">Add New Deck</h1>
 
 <form method="POST" id="deckForm">
