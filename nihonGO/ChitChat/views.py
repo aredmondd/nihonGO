@@ -83,16 +83,15 @@ def add_friend(request):
 
 @login_required
 def friends_list(request):
-    search_query = request.GET.get('search', '')
-    if search_query:
-        friends = Friend.objects.filter(user=request.user, friend__username__icontains=search_query, is_accepted=True)
-    else:
-        friends = Friend.objects.filter(user=request.user, is_accepted=True)
+    friends = Friend.objects.filter(user=request.user, is_accepted=True)
     friend_requests_received = Friend.objects.filter(friend=request.user, is_accepted=False)
+    num_friend_requests = friend_requests_received.count()
     return render(request, 'chat/friends.html', {
         'friends': friends,
-        'friend_requests_received': friend_requests_received
+        'friend_requests_received': friend_requests_received,
+        'num_friend_requests': num_friend_requests
     })
+
 
 @login_required
 def accept_friend_request(request, friend_request_id):
@@ -127,7 +126,7 @@ def remove_friend(request, friend_id):
         messages.success(request, f"Unfriended {friend.friend.username}")
     except Friend.DoesNotExist:
         messages.error(request, "Friend not found.")
-    return redirect('current_friends')
+    return redirect('friendsends')
 
 # Chat room management views
 @login_required
