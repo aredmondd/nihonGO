@@ -7,20 +7,6 @@ from .forms import ChatRoomForm
 from .models import PrivateChat, User
 from django.contrib.auth.views import LoginView
 
-# Home view
-@login_required
-def home(request):
-    chat_rooms = request.user.chatrooms.all()
-    friends = Friend.objects.filter(user=request.user, is_accepted=True)
-    private_chats_user1 = PrivateChat.objects.filter(user1=request.user)
-    private_chats_user2 = PrivateChat.objects.filter(user2=request.user)
-    private_chats = private_chats_user1 | private_chats_user2
-    return render(request, 'home', {
-        'chat_rooms': chat_rooms,
-        'friends': friends,
-        'private_chats': private_chats
-    })
-
 # Chat views
 @login_required
 def chatPage(request, *args, **kwargs):
@@ -29,13 +15,10 @@ def chatPage(request, *args, **kwargs):
 
 @login_required
 def room(request, room_name):
-    context = {'room_name': room_name}
-    return render(request, "chat/room.html", context)
-
-@login_required
-def chat_list(request):
-    friends = Friend.objects.filter(user=request.user, is_accepted=True)
-    return render(request, 'chat_list.html', {'friends': friends})
+    return render(request, "chat/room.html", {
+        'room_name': room_name,
+        'username': request.user.username
+    })
 
 @login_required
 def chat_room(request, friend_id):
@@ -172,13 +155,6 @@ def leave_chat_room(request, room_id):
     messages.success(request, f"You have left the chat room {chat_room.name}.")
     return redirect('list_chat_rooms')
 
-# Combined chat rooms and friends view
-@login_required
-def chat_rooms_and_friends(request):
-    chat_rooms = request.user.chatrooms.all()
-    friends = Friend.objects.filter(user=request.user, is_accepted=True)
-    return render(request, 'chat/chat_rooms_and_friends.html', {'chat_rooms': chat_rooms, 'friends': friends})
-
 @login_required
 def private_chat(request, friend_id):
     user1 = request.user
@@ -197,7 +173,10 @@ def private_chat(request, friend_id):
     return render(request, 'chat/private_chat.html', context)
 
 def messages_view(request): 
-    return render(request, 'chat/home.html')
+    chat_rooms = ChatRoom.objects.all()
+    return render(request, 'chat/home.html', {
+        'chat_rooms' : chat_rooms,
+    })
 
 @login_required
 def friends(request):

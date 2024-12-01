@@ -1,24 +1,23 @@
 {% extends 'components/wrapper.html' %}
 
 {% block content %}
-  <h1 class="text-crimson text-center font-outfit font-bold text-heading">Messages</h1>
+  <div class="grid grid-cols-3">
+    <h2 class="text-center text-crimson font-outfit text-heading font-bold mb-3">Your Chats</h2>
 
-  <div class="flex flex-col space-y-6">
-      <div class="border-black border-2 rounded-lg">
+    <div>
+        <h2 class="text-center text-crimson font-outfit text-heading font-bold mb-3">Chat Rooms</h2>
         <ul>
             {% for room in chat_rooms %}
-            <li><a href="{% url 'room' room.name %}">{{ room.name }}</a></li>
+                <li><a href="{% url 'room' room.name %}">{{ room.name }}</a></li>
             {% endfor %}
         </ul>
         <a href="{% url 'create_chat_room' %}">Create a New Chat Room</a>
-      </div>
-      <div class="border-black border-2 rounded-lg">
-        <h2>Your Chats</h2>
-        <ul>
-            {% for friend in friends %}
-            <li><a href="{% url 'chat_room' friend.friend.id %}">{{ friend.friend.username }}</a></li>
-            {% endfor %}
-        </ul>
-      </div>
+    </div>
+
+    <ul>
+        {% for friend in friends %}
+        <li><a href="{% url 'chat_room' friend.friend.id %}">{{ friend.friend.username }}</a></li>
+        {% endfor %}
+    </ul>
   </div>
 {% endblock %}

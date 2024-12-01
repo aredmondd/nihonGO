@@ -146,7 +146,7 @@
         <div class="chat-logout">
             {% if request.user.is_authenticated %}
             <div style="float: left; font-weight: bold; color: #036358;">{{ request.user|title }} </div>
-            <div style="float: right;"><a href="{% url 'logout-user' %}"><i class="fas fa-sign-out-alt"></i></a></div>
+            <div style="float: right;"><a href="{% url 'index' %}"><i class="fas fa-sign-out-alt"></i></a></div>
             <div style="clear: both;"></div>
             {% endif %}
         </div>

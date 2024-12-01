@@ -11,52 +11,82 @@
         <button id="chat-message-submit"><i class="fas fa-paper-plane"></i> Send</button>
     </div>
 </div>
+
 <script>
     const roomName = "{{ room_name }}";
+    const loggedInUsername = '{{ username }}';
+    
+    // Establish WebSocket connection
     const chatSocket = new WebSocket(
         'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
     );
-
+    
+    // Handle incoming messages
     chatSocket.onmessage = function(e) {
+        console.log('Message received:', e.data);
         const data = JSON.parse(e.data);
+    
+        // Check if username exists in the incoming data
         const message = data.message;
-        const username = data.username;
-        const time = data.time;
+        const username = data.username || "Unknown"; // Fallback if username is missing
+        const time = data.time || 'NT';
+    
+        // Find the chat log container
         const chatLog = document.querySelector('#chat-log');
+    
+        // Create a new message div
         const div = document.createElement("div");
-        div.className = (username === "{{ request.user.username }}") ? "chat-message right" : "chat-message left";
-        div.innerHTML = `<div class="message-content">
-                            <span class="message-username">${username.charAt(0).toUpperCase() + username.slice(1)}</span>
-                            <span class="message-text">${message}</span>
-                            <span class="message-timestamp">${time}</span>
-                            </div>`;
+        div.className = (username === loggedInUsername) ? "chat-message right" : "chat-message left";
+    
+        // Add the message content
+        div.innerHTML = `
+            <div class="message-content">
+                <span class="message-username">${username.charAt(0).toUpperCase() + username.slice(1)}</span>
+                <span class="message-text">${message}</span>
+                <span class="message-timestamp">${time}</span>
+            </div>
+        `;
+    
+        // Append the message to the chat log and scroll to the bottom
         chatLog.appendChild(div);
         chatLog.scrollTop = chatLog.scrollHeight;
     };
-
+    
+    // Handle WebSocket disconnections
     chatSocket.onclose = function(e) {
         console.error('Chat socket closed unexpectedly');
     };
-
+    
+    // Focus on the message input by default
     document.querySelector('#chat-message-input').focus();
+    
+    // Send a message when Enter key is pressed
     document.querySelector('#chat-message-input').onkeyup = function(e) {
-        if (e.keyCode === 13) {
+        if (e.keyCode === 13) { // Enter key
             document.querySelector('#chat-message-submit').click();
         }
     };
-
+    
+    // Handle the send button click
     document.querySelector('#chat-message-submit').onclick = function(e) {
         const messageInputDom = document.querySelector('#chat-message-input');
         const message = messageInputDom.value;
-        const username = "{{ request.user.username }}";  // Use the actual username
+    
+        if (message.trim() === "") return; // Ignore empty messages
+    
         const time = new Date().toLocaleTimeString();
+    
+        // Send the message through WebSocket
         chatSocket.send(JSON.stringify({
             'message': message,
-            'username': username,
+            'username': loggedInUsername,
             'time': time
         }));
+    
+        // Clear the input field
         messageInputDom.value = '';
     };
 </script>
+
 
 {% endblock %}
