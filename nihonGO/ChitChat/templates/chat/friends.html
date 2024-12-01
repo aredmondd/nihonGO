@@ -2,13 +2,19 @@
 
 {% block content %}
     {% if messages %}
-        <div>
-            {% for message in messages %}
-                <div class="{% if message.tags %}{{ message.tags }}{% endif %}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
+        {% for message in messages %}
+            <div class="fixed top-5 right-10 w-max px-3 py-3 
+                {% if message.tags == 'success' %}
+                    bg-green-500
+                {% elif message.tags == 'error' %}
+                    bg-red-500
+                {% else %}
+                    bg-gray-500
+                {% endif %}
+                text-midnight rounded font-sans text-center animate-slide-in-out">
+                {{ message }}
+            </div>
+        {% endfor %}
     {% endif %}
     <div class="grid grid-cols-2 mb-12 mx-12">
         <div class="flex flex-col">

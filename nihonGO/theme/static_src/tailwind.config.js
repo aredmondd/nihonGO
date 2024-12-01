@@ -66,6 +66,17 @@ module.exports = {
             screens: {
                 '3xl': '1900px',
             },
+            animation: {
+                'slide-in-out': 'slideInOut 4s ease-in-out forwards'
+            },
+            keyframes: {
+                slideInOut: {
+                    '0%': { transform: 'translateX(100%)', opacity: '0' },
+                    '10%': { transform: 'translateX(0)', opacity: '1' },
+                    '90%': { transform: 'translateX(0)', opacity: '1' },
+                    '100%': { transform: 'translateX(100%)', opacity: '0' },
+                },
+            }
         },
     },
     plugins: [
