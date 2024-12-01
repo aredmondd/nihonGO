@@ -160,19 +160,6 @@
                 <button type="submit">Enter Room</button>
             </form>
         </div>
-        <div id="Friends" class="tab-content">
-            <h2>Friends</h2>
-            <form method="post" action="{% url 'add_friend' %}">
-                {% csrf_token %}
-                <input type="text" name="friend_username" placeholder="Enter friend's username">
-                <button type="submit">Add Friend</button>
-            </form>
-            <ul>
-                {% for friend in friends %}
-                    <li><a href="{% url 'room' friend.friend.id %}">{{ friend.friend.username }}</a></li>
-                {% endfor %}
-            </ul>
-        </div>
         <div class="chat__item__container" id="id_chat_item_container">
             <!-- Messages will be displayed here with a scrollbar -->
         </div>

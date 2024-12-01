@@ -79,7 +79,14 @@ def add_friend(request):
                 messages.error(request, "You cannot add yourself as a friend.")
         except User.DoesNotExist:
             messages.error(request, "User not found.")
-    return render(request, 'chat/friends_list.html')
+    friends = Friend.objects.filter(user=request.user, is_accepted=True)
+    friend_requests_received = Friend.objects.filter(friend=request.user, is_accepted=False)
+    num_friend_requests = friend_requests_received.count()
+    return render(request, 'chat/friends.html', {
+        'friends': friends,
+        'friend_requests_received': friend_requests_received,
+        'num_friend_requests': num_friend_requests
+    })
 
 @login_required
 def friends_list(request):

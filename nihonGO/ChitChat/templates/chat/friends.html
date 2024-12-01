@@ -1,51 +1,42 @@
 {% extends "components/wrapper.html" %}
 
 {% block content %}
-    <a href="{% url 'messages' %}" class="underline text-crimson font-body">&larr; Back</a>
-    <div class="flex justify-around mb-12">
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+                <div class="{% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="grid grid-cols-2 mb-12 mx-12">
         <div class="flex flex-col">
-            <h2 class="text-center text-black font-outfit text-heading font-bold mb-6">My Friends</h2>
-            {% if friends|length == 0 %}
-            <p class="text-center font-outfit text-black text-opacity-50">so empty...</p>
-            {% else %}
-            <ul class="flex flex-col space-y-4 mb-12">
-                {% for friend in friends %}
-                    <li class="flex space-x-20 items-center">
-                        <div class="flex items-center space-x-6">
-                            <img src="{{ friend.friend.theme_profile.avatar.url }}" alt="" class="w-16 rounded-full">
-                            <div class="flex flex-col">
-                                <p class="text-body text-black font-DMSans font-semibold">@{{ friend.friend.username }}</p>
-                                {% if friend.friend.theme_profile.bio == '' %}
-                                    <p class="text-sm text-opacity-50 text-black font-DMSans">user has no bio... that's awkward</p>
-                                {% else %}
-                                    <p class="text-sm text-opacity-50 text-black font-DMSans">{{ friend.friend.theme_profile.bio }}</p>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <form method="post" action="{% url 'remove_friend' friend.id %}">
-                            {% csrf_token %}
-                            <button type="submit"><span class="material-symbols-outlined hover:text-crimson">delete</span></button>
-                        </form>
-                    </li>
-                {% endfor %}
-            </ul>
-            {% endif %}
+            <h2 class="text-center text-crimson font-outfit text-heading font-bold mb-3">Add Friends</h2>
+            <hr class="border-black border-opacity-25 mx-20 mb-6">
+
+            <form method="POST" action="{% url 'add_friend' %}" class="mx-auto">
+                {% csrf_token %}
+                <input type="text" name="friend_username" placeholder="Username" class="border border-black border-2 text-black rounded-lg text-sm mr-6">
+                <button type="submit" class="bg-orange text-white px-4 py-2 rounded-full">Add</button>
+            </form>
         </div>
         <div class="flex flex-col">
-            <h2 class="text-center text-black font-outfit text-heading font-bold mb-6">Friend Requests</h2>
+            <h2 class="text-center text-crimson font-outfit text-heading font-bold mb-3">Friend Requests</h2>
+            <hr class="border-black border-opacity-25 mx-20 mb-3">
             {% if friend_requests_received|length == 0 %}
             <p class="text-center font-outfit text-black text-opacity-50">so empty...</p>
             {% else %}
-            <ul class="flex flex-col space-y-4">
+            <ul class="flex flex-col space-y-4 mx-24">
                 {% for request in friend_requests_received %}
                 <li>
                     <div class="flex justify-between">
-                        <div class="flex items-center space-x-6">
-                            <img src="{{ request.user.theme_profile.avatar.url }}" alt="" class="w-16 rounded-full">
+                        <div class="flex items-center space-x-3">
+                            <img src="{{ request.user.theme_profile.avatar.url }}" alt="" class="w-12 rounded-full">
                             <div class="flex flex-col">
                                 <p class="text-body text-black font-DMSans font-semibold">@{{ request.user.username }}</p>
                                 {% if request.user.theme_profile.bio == '' %}
-                                    <p class="text-sm text-opacity-50 text-black font-DMSans">user has no bio... that's awkward</p>
+                                    <p class="text-sm text-opacity-50 text-black font-DMSans">so empty...</p>
                                 {% else %}
                                     <p class="text-sm text-opacity-50 text-black font-DMSans">{{ request.user.theme_profile.bio }}</p>
                                 {% endif %}
@@ -63,6 +54,7 @@
                         </div>
                     </div>
                 </li>
+                <hr class="border-black border-opacity-25">
                 {% endfor %}
             </ul>
             {% endif %}

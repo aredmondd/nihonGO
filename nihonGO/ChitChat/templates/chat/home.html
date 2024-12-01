@@ -13,18 +13,6 @@
         <a href="{% url 'create_chat_room' %}">Create a New Chat Room</a>
       </div>
       <div class="border-black border-2 rounded-lg">
-        <form method="post" action="{% url 'add_friend' %}">
-            {% csrf_token %}
-            <input type="text" name="friend_username" placeholder="Username">
-            <button type="submit">Add Friend</button>
-        </form>
-        <ul>
-            {% for friend in friends %}
-            <li>{{ friend.friend.username }}</li>
-            {% endfor %}
-        </ul>
-      </div>
-      <div class="border-black border-2 rounded-lg">
         <h2>Your Chats</h2>
         <ul>
             {% for friend in friends %}

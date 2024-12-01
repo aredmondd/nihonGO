@@ -30,18 +30,20 @@
             </li>
 
             <li>
-                <a href="/chat/friends" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'friends' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
-                    <span class="flex-1 ms-3 whitespace-nowrap">Friends</span>
+                <a href="/chat/messages" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'messages' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
+                    <span class="flex-1 ms-3 whitespace-nowrap">Messages</span>
                     {% if num_friend_requests > 0 %}
-                    <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-white bg-crimson rounded-full">{{ num_friend_requests }}</span>
+                        <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-white bg-crimson rounded-full">{{ num_friend_requests }}</span>
                     {% endif %}
                 </a>
             </li>
 
             <li>
-                <a href="/chat/messages" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'messages' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
-                <span class="flex-1 ms-3 whitespace-nowrap">Chats</span>
-                <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-white bg-crimson rounded-full">3</span>
+                <a href="/chat/friends" class="flex items-center p-2 text-black rounded-lg group {% if request.resolver_match.url_name == 'friends' %}underline{% endif %} hover:underline underline-offset-2 decoration-crimson">
+                    <span class="flex-1 ms-3 whitespace-nowrap">Friends</span>
+                    {% if num_friend_requests > 0 %}
+                    <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-white bg-crimson rounded-full">{{ num_friend_requests }}</span>
+                    {% endif %}
                 </a>
             </li>
 

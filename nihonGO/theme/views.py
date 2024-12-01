@@ -113,7 +113,7 @@ def my_login(request):
     
     context = {'loginform':form}
 
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'registration/login.html', {'form': form})
 
 
 def user_logout(request):
