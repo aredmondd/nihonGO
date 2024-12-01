@@ -126,7 +126,7 @@ def remove_friend(request, friend_id):
         messages.success(request, f"Unfriended {friend.friend.username}")
     except Friend.DoesNotExist:
         messages.error(request, "Friend not found.")
-    return redirect('friendsends')
+    return redirect('friends')
 
 # Chat room management views
 @login_required
