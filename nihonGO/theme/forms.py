@@ -17,33 +17,29 @@ class FlashcardForm(forms.ModelForm):
 # - Create/Register a user (Model Form)
 class CreateUserForm(UserCreationForm):
     username = forms.CharField(
-        label='',
         widget=forms.TextInput(attrs={
-            'class': 'border border-black border-2 text-black rounded-lg text-sm',
+            'class': 'border border-black border-2 text-black rounded-lg text-sm w-full px-12',
             'placeholder': 'Username',
             'required': True
         })
     )
     email = forms.EmailField(
-        label='',
         widget=forms.EmailInput(attrs={
-            'class': 'border border-black border-2 text-black rounded-lg text-sm',
+            'class': 'border border-black border-2 text-black rounded-lg text-sm w-full px-12',
             'placeholder': 'Email',
             'required': True
         })
     )
     password1 = forms.CharField(
-        label='',
         widget=forms.PasswordInput(attrs={
-            'class': 'border border-black border-2 text-black rounded-lg text-sm',
+            'class': 'border border-black border-2 text-black rounded-lg text-sm w-full px-12',
             'placeholder': 'Password',
             'required': True
         })
     )
     password2 = forms.CharField(
-        label='',
         widget=forms.PasswordInput(attrs={
-            'class': 'border border-black border-2 text-black rounded-lg text-sm',
+            'class': 'border border-black border-2 text-black rounded-lg text-sm w-full px-12',
             'placeholder': 'Confirm Password',
             'required': True
         })

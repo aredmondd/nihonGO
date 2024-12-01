@@ -8,10 +8,20 @@
             </span>
             ようこそ!
         </h1>        
-        <form method="POST" class="space-y-4 md:space-y-6">
+        <form method="POST" class="space-y-4">
             {% csrf_token %}
-        
-            <div class="flex flex-col space-y-4 items-center">{{ registerform.as_p }}</div>
+            <div class="flex flex-col space-y-4 mx-[450px]">
+                {% for field in registerform %}
+                    <div>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {{ field.errors|striptags }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
             <div class="flex flex-col justify-center items-center">
                 <button type="submit" class="bg-orange text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-crimson transition duration-300 mb-4">Register</button>
                 <p class="text-sm font-light text-black text-opacity-50 mt-3">
