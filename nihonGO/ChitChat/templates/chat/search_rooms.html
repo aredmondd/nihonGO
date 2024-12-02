@@ -1,0 +1,22 @@
+<!-- ChitChat/templates/chat/search_rooms.html -->
+<form method="get" action="{% url 'search_rooms' %}">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search rooms...">
+    <button type="submit">Search</button>
+</form>
+<ul>
+    {% for room in rooms %}
+        <li>
+            {{ room.name }} - {{ room.description }}
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'join_room' room.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit">Join</button>
+                </form>
+                <form method="post" action="{% url 'leave_room' room.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit">Leave</button>
+                </form>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

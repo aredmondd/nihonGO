@@ -4,15 +4,10 @@ from django.contrib.auth.decorators import login_required
 from .models import Friend, ChatRoom, PrivateChat
 from django.contrib import messages
 from .forms import ChatRoomForm
-from .models import PrivateChat, User
-from django.contrib.auth.views import LoginView
+from django.db.models import Q
 
-class MyLoginView(LoginView):
-    template_name = 'chat/loginPage.html'  # Update this path to your actual template
-
-# In your views.py
-my_login = MyLoginView.as_view()
-
+def login_view(request): 
+    return render(request, 'chat/loginPage.html')
 
 # Home view
 @login_required
@@ -47,19 +42,8 @@ def chat_list(request):
 @login_required
 def chat_room(request, friend_id):
     friend = get_object_or_404(User, id=friend_id)
-    # Create or get an existing chat room
     chat_room, created = ChatRoom.objects.get_or_create(name=f"{request.user.username}_{friend.username}")
-    
-    # Add the user and friend to the chat room
-    if created:
-        chat_room.users.add(request.user, friend)
-    else:
-        # Ensure both users are part of the chat room if not already added
-        if request.user not in chat_room.users.all():
-            chat_room.users.add(request.user)
-        if friend not in chat_room.users.all():
-            chat_room.users.add(friend)
-
+    chat_room.users.add(request.user, friend)
     return redirect('chat_room_detail', room_id=chat_room.id)
 
 @login_required
@@ -143,7 +127,7 @@ def remove_friend(request, friend_id):
 
 # Chat room management views
 @login_required
-def create_room(request):
+def create_chat_room(request):
     if request.method == 'POST':
         form = ChatRoomForm(request.POST)
         if form.is_valid():
@@ -153,33 +137,20 @@ def create_room(request):
             return redirect('list_chat_rooms')
     else:
         form = ChatRoomForm()
-    return render(request, 'chat/create_room.html', {'form': form})
-
-
+    return render(request, 'create_chat_room.html', {'form': form})
 
 @login_required
 def list_chat_rooms(request):
     chat_rooms = ChatRoom.objects.all()
     user_chat_rooms = request.user.chatrooms.all()
-    return render(request, 'list_chat_rooms.html', {
+    query = request.GET.get('q', '')
+    search_results = ChatRoom.objects.filter(name__icontains=query) if query else []
+    
+    return render(request, 'list_chat_room.html', {
         'chat_rooms': chat_rooms,
         'user_chat_rooms': user_chat_rooms,
+        'search_results': search_results
     })
-
-@login_required
-def join_chat_room(request, room_id):
-    chat_room = get_object_or_404(ChatRoom, id=room_id)
-    chat_room.members.add(request.user)
-    messages.success(request, f"You have joined the chat room {chat_room.name}.")
-    return redirect('list_chat_rooms')
-
-@login_required
-def leave_chat_room(request, room_id):
-    chat_room = get_object_or_404(ChatRoom, id=room_id)
-    chat_room.members.remove(request.user)
-    messages.success(request, f"You have left the chat room {chat_room.name}.")
-    return redirect('list_chat_rooms')
-
 
 # Combined chat rooms and friends view
 @login_required
@@ -192,18 +163,60 @@ def chat_rooms_and_friends(request):
 def private_chat(request, friend_id):
     user1 = request.user
     user2 = get_object_or_404(User, id=friend_id)
-    private_chat, created = PrivateChat.objects.get_or_create(user1=user1, user2=user2)
-    
-    if not created:
-        private_chat = PrivateChat.objects.filter(user1=user1, user2=user2).first()
-        if not private_chat:
-            private_chat = PrivateChat.objects.get(user1=user2, user2=user1)
+
+    # Check if a PrivateChat already exists between the two users
+    private_chat = PrivateChat.objects.filter(
+        Q(user1=user1, user2=user2) | Q(user1=user2, user2=user1)
+    ).first()
+
+    if not private_chat:
+        private_chat = PrivateChat.objects.create(user1=user1, user2=user2)
 
     context = {
         'private_chat': private_chat,
         'friend': user2,
     }
     return render(request, 'chat/private_chat.html', context)
+@login_required
+def search_rooms(request):
+    query = request.GET.get('q', '')
+    rooms = ChatRoom.objects.filter(name__icontains=query)
+    return render(request, 'chat/search_rooms.html', {'rooms': rooms, 'query': query})
 
-def messages(request): 
-    return render(request, 'chat/home.html')
+@login_required
+def join_room(request, room_id):
+    if request.method == 'POST':    
+        room = get_object_or_404(ChatRoom, id=room_id)
+        room.members.add(request.user)
+        messages.success(request, f"You have joined the room: {room.name}")
+        return redirect('home')
+    return redirect('search_rooms')
+
+@login_required
+def leave_room(request, room_id):
+    if request.method == 'POST':
+        room = get_object_or_404(ChatRoom, id=room_id)
+        room.members.remove(request.user)
+        messages.success(request, f"You have left the room: {room.name}")
+        return redirect('home')  # Redirect to the desired page
+    return redirect('room', room_name=room_id)  # Redirect back to the room if the request method is not POST
+
+@login_required
+def chat_list(request):
+    chat_rooms = ChatRoom.objects.all()
+    user_chat_rooms = request.user.chatrooms.all()
+    friends = Friend.objects.filter(user=request.user, is_accepted=True)
+    private_chats_user1 = PrivateChat.objects.filter(user1=request.user)
+    private_chats_user2 = PrivateChat.objects.filter(user2=request.user)
+    private_chats = private_chats_user1 | private_chats_user2
+    query = request.GET.get('q', '')
+    search_results = ChatRoom.objects.filter(name__icontains=query) if query else []
+    
+    return render(request, 'chat_list.html', {
+        'chat_rooms': chat_rooms,
+        'user_chat_rooms': user_chat_rooms,
+        'friends': friends,
+        'private_chats': private_chats,
+        'search_results': search_results,
+        'query': query
+    })
