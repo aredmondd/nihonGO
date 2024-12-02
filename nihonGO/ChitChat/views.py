@@ -143,7 +143,7 @@ def remove_friend(request, friend_id):
 
 # Chat room management views
 @login_required
-def create_chat_room(request):
+def create_room(request):
     if request.method == 'POST':
         form = ChatRoomForm(request.POST)
         if form.is_valid():
@@ -153,7 +153,8 @@ def create_chat_room(request):
             return redirect('list_chat_rooms')
     else:
         form = ChatRoomForm()
-    return render(request, 'create_chat_room.html', {'form': form})
+    return render(request, 'chat/create_room.html', {'form': form})
+
 
 
 @login_required

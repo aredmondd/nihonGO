@@ -16,8 +16,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
-# These imports are testing to make sure profile customization works
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -25,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('theme.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
-    path('chat/', include('ChitChat.urls')),  # Include chat application URLs
     path('accounts/', include('django.contrib.auth.urls')),  # Include authentication URLs
-    path('messages/', include('ChitChat.urls')),  # Add this line to redirect messages to ChitChat
+    path('messages/', include('ChitChat.urls')),  # Include chat application URLs under 'messages/'
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
