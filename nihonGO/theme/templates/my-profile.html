@@ -47,8 +47,8 @@
 
     <!-- Flashcards Section -->
     <div class="flex justify-between mx-6 mb-6">
-        <p><strong>Cards Studied Today:</strong> {{ flashcard_progress.count }}</p>
-        <p><strong>Progress:</strong> {{ flashcard_progress.progress_percentage }}%</p>
+        <p><strong>Cards Studied Today:</strong> {{ flashcard_progress_today.count }}</p>
+        <p><strong>Percent Correct:</strong> {{ percent_correct|floatformat:2 }}%</p>
         <div><p><strong>Total Posts:</strong> {{ forum_posts|length }}</p></div>
         <div><p><strong>Total Upvotes:</strong> {{ total_upvotes }}</p></div>
     </div>

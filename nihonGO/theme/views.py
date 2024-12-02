@@ -59,27 +59,38 @@ def dashboard (request):
 
 from django.db.models import Sum
 from django.shortcuts import render
+from django.utils.timezone import now
 def profile(request):
     user = request.user
-    # profile = profile.objects.get(user=user)
-    #profile = profile.objects.get(user=user)
-    
-    # Fetch user-specific flashcard progress and statistics
-    flashcard_progress = UserCardProgress.objects.filter(user=user)
-    
-    
+    today = now().date()
+
+    # Get all UserCardProgress entries for the user
+    user_progress = UserCardProgress.objects.filter(user=user)
+
+    # Reset logic: Check if any `last_reset` is not today
+    if not user_progress.filter(last_reset=today).exists():
+        # Reset today's progress
+        user_progress.update(studied_on=today, last_reset=today)
+
+    # Fetch progress for today
+    flashcard_progress_today = UserCardProgress.objects.filter(user=user, studied_on=today)
+
+    # Calculate percentage correct
+    total_attempts = flashcard_progress_today.count()
+    correct_answers = sum(progress.correctCount for progress in flashcard_progress_today)
+    percent_correct = (correct_answers / total_attempts * 100) if total_attempts > 0 else 0
+
     # Fetch user's forum posts
     forum_posts = user.posts.all()
-    total_upvotes = user.posts.aggregate(total_upvotes=Sum('upvotes'))['total_upvotes'] or 0
+    total_upvotes = forum_posts.aggregate(total_upvotes=Sum('upvotes'))['total_upvotes'] or 0
 
-    print("Forum posts:", forum_posts)
-    
     return render(request, 'my-profile.html', {
-        'profile': profile,
-        'flashcard_progress': flashcard_progress,
+        'flashcard_progress_today': flashcard_progress_today,
+        'percent_correct': percent_correct,
         'forum_posts': forum_posts,
-        'total_upvotes' : total_upvotes
+        'total_upvotes': total_upvotes,
     })
+
 
 def edit_profile (request):
     return render(request, 'myapp/edit_profile.html')
@@ -424,6 +435,8 @@ def my_decks(request):
     if not request.user.is_authenticated:
         # For non-authenticated users, only show the default decks
         decks = Deck.objects.filter(id__in=[1, 5, 6])  # Fetch only default decks with fixed IDs (1, 5, 6)
+        for deck in decks:
+            deck.cards = deck.card_set.all()
     else:
         # For authenticated users, show both their decks and the default decks
         decks = Deck.objects.filter(Q(user=request.user) | Q(id__in=[1, 5, 6])).distinct()
@@ -502,18 +515,38 @@ def edit_deck(request, deck_id):
 
 
 @login_required
+@login_required
 def add_cards(request, deck_id):
     # Get the deck and verify ownership
     deck = get_object_or_404(Deck, id=deck_id, user=request.user)
 
     if request.method == "POST":
-        flashcard_form = FlashcardForm(request.POST)
-        if flashcard_form.is_valid():
-            # Save the new card and associate it with the deck
-            new_card = flashcard_form.save(commit=False)
-            new_card.deck = deck
-            new_card.save()
-            return redirect('edit_deck', deck_id=deck.id)  # Redirect to the edit deck page
+        # Extract data from the form submission
+        vocab_words = request.POST.getlist('vocab_word[]')
+        kana = request.POST.getlist('kana[]')
+        english_translations = request.POST.getlist('english_translation[]')
+        parts_of_speech = request.POST.getlist('part_of_speech[]')
+        example_sentences = request.POST.getlist('example_sentence[]')
+        example_sentences_kana = request.POST.getlist('example_sentence_kana[]')
+        example_sentences_english = request.POST.getlist('example_sentence_english[]')
+
+        # Ensure that all the fields have the same number of entries
+        num_cards = len(vocab_words)
+        
+        # Loop through the submitted data and create new cards
+        for i in range(num_cards):
+            Card.objects.create(
+                deck=deck,
+                vocab_word=vocab_words[i],
+                kana=kana[i],
+                english_translation=english_translations[i],
+                part_of_speech=parts_of_speech[i],
+                example_sentence=example_sentences[i],
+                example_sentence_kana=example_sentences_kana[i],
+                example_sentence_english=example_sentences_english[i]
+            )
+
+        return redirect('edit_deck', deck_id=deck.id)  # Redirect to the edit deck page
     else:
         flashcard_form = FlashcardForm()
 
@@ -521,6 +554,7 @@ def add_cards(request, deck_id):
         'deck': deck,
         'flashcard_form': flashcard_form,
     })
+
 
 
 def delete_deck(request, deck_id):
