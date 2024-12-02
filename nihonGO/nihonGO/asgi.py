@@ -11,8 +11,8 @@ application = ProtocolTypeRouter({
     "http": get_asgi_application(),  # This will handle regular HTTP requests
     "websocket": AuthMiddlewareStack(
         URLRouter([
-            # This should match the URL pattern defined in your routing.py
-            re_path(r'ws/chat/(?P<room_name>\w+)/$', ChatConsumer.as_asgi()),
+            # Updated regex to allow URL-encoded room names
+            re_path(r'ws/chat/(?P<room_name>[^/]+)/$', ChatConsumer.as_asgi()),
         ])
     ),
 })

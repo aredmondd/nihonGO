@@ -6,6 +6,7 @@ from django.contrib import messages
 from .forms import ChatRoomForm
 from .models import PrivateChat, User
 from django.contrib.auth.views import LoginView
+import urllib.parse
 
 # Chat views
 @login_required
@@ -15,28 +16,28 @@ def chatPage(request, *args, **kwargs):
 
 @login_required
 def room(request, room_name):
+    decoded_room_name = urllib.parse.unquote(room_name)
     return render(request, "chat/room.html", {
-        'room_name': room_name,
+        'room_name': decoded_room_name,
         'username': request.user.username
     })
 
 @login_required
 def chat_room(request, friend_id):
     friend = get_object_or_404(User, id=friend_id)
-    # Create or get an existing chat room
     chat_room, created = ChatRoom.objects.get_or_create(name=f"{request.user.username}_{friend.username}")
-    
-    # Add the user and friend to the chat room
+
     if created:
         chat_room.users.add(request.user, friend)
     else:
-        # Ensure both users are part of the chat room if not already added
         if request.user not in chat_room.users.all():
             chat_room.users.add(request.user)
         if friend not in chat_room.users.all():
             chat_room.users.add(friend)
 
-    return redirect('chat_room_detail', room_id=chat_room.id)
+    encoded_room_name = urllib.parse.quote(chat_room.name)
+    return redirect('room', room_name=encoded_room_name)
+
 
 @login_required
 def chat_room_detail(request, room_id):
@@ -118,7 +119,6 @@ def remove_friend(request, friend_id):
         messages.error(request, "Friend not found.")
     return redirect('friends')
 
-# Chat room management views
 @login_required
 def create_chat_room(request):
     if request.method == 'POST':
@@ -127,33 +127,26 @@ def create_chat_room(request):
             chat_room = form.save(commit=False)
             chat_room.save()
             chat_room.members.add(request.user)
-            return redirect('list_chat_rooms')
+            # Encode the room name to handle special characters
+            encoded_room_name = urllib.parse.quote(chat_room.name)
+            return redirect('room', room_name=encoded_room_name)
     else:
         form = ChatRoomForm()
     return render(request, 'chat/create_chat_room.html', {'form': form})
-
-@login_required
-def list_chat_rooms(request):
-    chat_rooms = ChatRoom.objects.all()
-    user_chat_rooms = request.user.chatrooms.all()
-    return render(request, 'chat/list_chat_rooms.html', {
-        'chat_rooms': chat_rooms,
-        'user_chat_rooms': user_chat_rooms,
-    })
 
 @login_required
 def join_chat_room(request, room_id):
     chat_room = get_object_or_404(ChatRoom, id=room_id)
     chat_room.members.add(request.user)
     messages.success(request, f"You have joined the chat room {chat_room.name}.")
-    return redirect('list_chat_rooms')
+    return redirect('messages')
 
 @login_required
 def leave_chat_room(request, room_id):
     chat_room = get_object_or_404(ChatRoom, id=room_id)
     chat_room.members.remove(request.user)
     messages.success(request, f"You have left the chat room {chat_room.name}.")
-    return redirect('list_chat_rooms')
+    return redirect('messages')
 
 @login_required
 def private_chat(request, friend_id):

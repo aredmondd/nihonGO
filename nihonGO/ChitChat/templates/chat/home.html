@@ -4,20 +4,14 @@
   <div class="grid grid-cols-2">
     <h2 class="text-center text-crimson font-outfit text-heading font-bold mb-3">Your Chats</h2>
 
-    <div>
+    <div class="flex flex-col items-center">
         <h2 class="text-center text-crimson font-outfit text-heading font-bold mb-3">Chat Rooms</h2>
-        <ul>
+        <ul class="flex flex-col items-center space-y-2 font-DMSans max-h-96 overflow-y-scroll custom-scroll pr-6 pl-6">
             {% for room in chat_rooms %}
                 <li><a href="{% url 'room' room.name %}">{{ room.name }}</a></li>
             {% endfor %}
         </ul>
-        <a href="{% url 'create_chat_room' %}">Create a New Chat Room</a>
+        <a href="{% url 'create_chat_room' %}" class="text-center mt-12 underline decoration-crimson text-crimson">Create a New Chat Room</a>
     </div>
-
-    <ul>
-        {% for friend in friends %}
-            <li><a href="{% url 'chat_room' friend.friend.id %}">{{ friend.friend.username }}</a></li>
-        {% endfor %}
-    </ul>
   </div>
 {% endblock %}
