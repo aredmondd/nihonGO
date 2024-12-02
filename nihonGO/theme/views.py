@@ -111,10 +111,17 @@ def my_login(request):
         if form.is_valid():
             username = request.POST.get('username')
             password = request.POST.get('password')
+            remember_me = request.POST.get("remember_me")
             user = authenticate(request, username=username, password=password)
+            
 
             if user is not None:
                 auth.login(request, user)
+
+                if remember_me:
+                    request.session.set_expiry(1209600) 
+                else:
+                    request.session.set_expiry(0)
 
                 return redirect("my-profile")
             
