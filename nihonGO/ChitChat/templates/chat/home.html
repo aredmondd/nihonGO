@@ -1,7 +1,7 @@
 {% extends 'components/wrapper.html' %}
 
 {% block content %}
-  <div class="grid grid-cols-3">
+  <div class="grid grid-cols-2">
     <h2 class="text-center text-crimson font-outfit text-heading font-bold mb-3">Your Chats</h2>
 
     <div>
@@ -16,7 +16,7 @@
 
     <ul>
         {% for friend in friends %}
-        <li><a href="{% url 'chat_room' friend.friend.id %}">{{ friend.friend.username }}</a></li>
+            <li><a href="{% url 'chat_room' friend.friend.id %}">{{ friend.friend.username }}</a></li>
         {% endfor %}
     </ul>
   </div>
