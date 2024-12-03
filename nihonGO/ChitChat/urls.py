@@ -1,6 +1,7 @@
 from django.urls import path
 from django.urls import re_path
 from . import views
+from . import consumers
 from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
@@ -23,9 +24,6 @@ urlpatterns = [
     path('private_chat/<int:friend_id>/', views.chatPage, name='private_chat_room'),
     path('create_room/', views.create_chat_room, name='create_chat_room'),
 ]
-
-from django.urls import path
-from . import consumers
 
 websocket_urlpatterns = [
     path("ws/chat/<str:room_name>/", consumers.ChatConsumer.as_asgi()),
