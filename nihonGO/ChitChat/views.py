@@ -176,7 +176,7 @@ def private_chat(request, friend_id):
         'private_chat': private_chat,
         'friend': user2,
     }
-    return render(request, 'chat/private_chat.html', context)
+    return render(request, 'chat/room.html', context)
 @login_required
 def search_rooms(request):
     query = request.GET.get('q', '')
