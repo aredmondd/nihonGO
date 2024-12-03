@@ -152,12 +152,14 @@ def leave_chat_room(request, room_id):
 def private_chat(request, friend_id):
     user1 = request.user
     user2 = get_object_or_404(User, id=friend_id)
-    private_chat, created = PrivateChat.objects.get_or_create(user1=user1, user2=user2)
-    
-    if not created:
-        private_chat = PrivateChat.objects.filter(user1=user1, user2=user2).first()
-        if not private_chat:
-            private_chat = PrivateChat.objects.get(user1=user2, user2=user1)
+
+    # Check if a PrivateChat already exists between the two users
+    private_chat = PrivateChat.objects.filter(
+        Q(user1=user1, user2=user2) | Q(user1=user2, user2=user1)
+    ).first()
+
+    if not private_chat:
+        private_chat = PrivateChat.objects.create(user1=user1, user2=user2)
 
     context = {
         'private_chat': private_chat,

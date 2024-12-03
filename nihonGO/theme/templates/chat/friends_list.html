@@ -1,0 +1,119 @@
+{% extends "chat/base_generic.html" %}
+
+{% block content %}
+    <div class="container">
+        <h1>Friends List</h1>
+        <form method="post" action="{% url 'add_friend' %}">
+            {% csrf_token %}
+            <input type="text" name="friend_username" placeholder="Enter friend's username">
+            <button type="submit">Send Friend Request</button>
+        </form>
+
+        <h2>Friend Requests</h2>
+        <ul>
+            {% for friend_request in friend_requests_received %}
+                <li>
+                    {{ friend_request.user.username }}
+                    <form method="post" action="{% url 'accept_friend_request' friend_request.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="accept-btn">Accept</button>
+                    </form>
+                    <form method="post" action="{% url 'reject_friend_request' friend_request.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="reject-btn">Reject</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <h2>Friends</h2>
+        <ul>
+            {% for friend in friends %}
+                <li>
+                    {{ friend.friend.username }}
+                    <form method="post" action="{% url 'remove_friend' friend.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="unfriend-btn">Unfriend</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .container {
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+    h1, h2 {
+        text-align: center;
+    }
+    form {
+        margin-bottom: 20px;
+    }
+    input[type="text"] {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    button {
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #218838;
+    }
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    li {
+        background-color: #f9f9f9;
+        margin: 5px 0;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .accept-btn {
+        background-color: #007bff;
+    }
+    .accept-btn:hover {
+        background-color: #0056b3;
+    }
+    .reject-btn {
+        background-color: #dc3545;
+    }
+    .reject-btn:hover {
+        background-color: #c82333;
+    }
+    .unfriend-btn {
+        background-color: #ffc107;
+    }
+    .unfriend-btn:hover {
+        background-color: #e0a800;
+    }
+</style>
+{% endblock %}
