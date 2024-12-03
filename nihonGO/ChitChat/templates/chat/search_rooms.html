@@ -12,10 +12,6 @@
                     {% csrf_token %}
                     <button type="submit">Join</button>
                 </form>
-                <form method="post" action="{% url 'leave_room' room.id %}" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit">Leave</button>
-                </form>
             {% endif %}
         </li>
     {% endfor %}
