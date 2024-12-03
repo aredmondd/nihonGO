@@ -1,80 +1,108 @@
 {% extends 'components/wrapper.html' %}
 
 {% block content %}
-<div class="back-button-container flex justify-between items-center p-4"></div>
 <a href="{% url 'my_decks' %}" 
-class="text-orange hover:text-crimson font-bold text-lg underline mb-4 block">
- &larr; Back to My Decks
+   class="text-orange hover:text-crimson font-bold text-lg underline mb-4 block">
+   &larr; Back to My Decks
 </a>
-    <div style="padding: 20px; margin: 10px; border: 2px solid #b5b5b5; border-radius: 8px; background-color: #fdfdfd;">
-        <h1 style="font-size: 2.5em; font-weight: bold; color: crimson;">{{ deck.name }}</h1>
-        
-    </div>
-    <p>
-        {% if is_default %}
-            This is a prebuilt deck. Create your own deck to customize features!
-        {% endif %}
-        
-        {% if is_owner %}
-            You can edit this deck's name, settings, or cards below.
+   
+<h1 class="text-5xl font-bold mb-6">{{ deck.name }}</h1>
+<p>
+    {% if is_default %}
+        This is a prebuilt deck. Create your own deck to customize features!
+    {% endif %}
     
-    
-        {% elif not is_owner and not is_default%}
-            You are viewing this deck in read-only mode. Log in to make changes.
-        {% endif %}
-    
-        
-    </p>
-    
-        {% if is_owner %}
-            <form method="post" id="deckForm">
-                {% csrf_token %}
-                <input type="text" name="deck_name" value="{{ deck.name }}" placeholder="Deck Name" style="margin-top: 10px; padding: 8px; font-size: 16px; border: 1px solid #b5b5b5; border-radius: 5px;" />
-                <button type="submit" style="margin-top: 10px; padding: 8px; font-size: 16px; border: 1px solid #b5b5b5; border-radius: 5px; background-color: #f0f0f0; cursor: pointer;">Save Changes</button>
-                <a href="{% url 'delete_deck' deck.id %}" style="color: red; margin-left: 10px;">Delete Deck</a>
-            </form>
-        {% endif %}
-    
-        <!-- Toggle Button for showing/hiding cards -->
-        <button id="toggleButton" onclick="toggleCardList()" style="margin-top: 10px; padding: 8px; font-size: 16px; border: 1px solid #b5b5b5; border-radius: 5px; background-color: #f0f0f0; cursor: pointer;">Show All Cards</button>
-    
-        <!-- Card list (initially hidden) -->
-        <!-- Card list (initially hidden) -->
-    <ul id="cardList" style="display: none; list-style-type: none; padding: 0; margin-top: 15px;">
-        {% for flashcard in flashcards %}
-            <li style="padding: 8px; border-bottom: 1px solid #ddd; margin-bottom: 4px;">
-                {{ flashcard.vocab_word }} - {{ flashcard.kana }} 
-                {% if flashcard.english_translation %}
-                    - {{ flashcard.english_translation }}
-                {% endif %}
-                
-            </li>
-        {% endfor %}
-    </ul>
     {% if is_owner %}
-    <a href="{% url 'add_cards' deck.id %}" class="text-orange hover:text-crimson">Add Cards</a>
+        You can edit this deck's name, add new cards, and view your progress below!
+    {% elif not is_owner and not is_default %}
+        You are viewing this deck in read-only mode. Log in to make changes.
+    {% endif %}
+</p>
+    
+{% if is_owner %}
+<form method="post" id="editDeckNameForm" style="margin-bottom: 20px;">
+    {% csrf_token %}
+    <label for="deckName" style="font-weight: bold;">Deck Name:</label>
+    <input 
+        type="text" 
+        id="deckName" 
+        name="deck_name" 
+        value="{{ deck.name }}" 
+        placeholder="Enter new deck name" 
+        style="margin-left: 10px; padding: 8px; font-size: 16px; border: 1px solid #000000; border-radius: 5px;" 
+        onfocus="this.style.borderColor='red'; this.style.boxShadow='0 0 1px red';" 
+        onblur="this.style.borderColor='#b5b5b5'; this.style.boxShadow='none';"
+        required />
+    <button 
+        type="submit" 
+        style="margin-left: 10px; padding: 8px; font-size: 16px; border: 1px solid #000000; border-radius: 5px; background-color: #E28140; color: white; cursor: pointer; transition: background-color 0.3s ease, color 0.3s ease;"
+        onmouseover="this.style.backgroundColor='crimson'; this.style.color='white';"
+        onmouseout="this.style.backgroundColor='#E28140'; this.style.color='white';">
+        Save Name
+    </button>
+</form>
+{% endif %}
+    
+<!-- Toggle Button for showing/hiding cards -->
+<button 
+    id="toggleButton" 
+    onclick="toggleCardList()" 
+    style="margin-top: 10px; padding: 8px; font-size: 16px; border: 1px solid #000000; border-radius: 5px; background-color: #E28140; color: white; cursor: pointer; transition: background-color 0.3s ease, color 0.3s ease;"
+    onmouseover="this.style.backgroundColor='crimson'; this.style.color='white';"
+    onmouseout="this.style.backgroundColor='#E28140'; this.style.color='white';">
+    Show All Cards
+</button>
+
+<ul id="cardList" style="list-style-type: none; padding: 0; margin-top: 15px; display: none;">
+    {% for stat in flashcard_stats %}
+        <li style="padding: 8px; border-bottom: 1px solid #ddd; margin-bottom: 4px;">
+            <strong>{{ stat.flashcard.vocab_word }}</strong>
+            {% if stat.flashcard.kana %}
+                - {{ stat.flashcard.kana }}
+            {% endif %}
+            {% if stat.flashcard.english_translation %}
+                - {{ stat.flashcard.english_translation }}
+            {% endif %}
+            <div style="margin-top: 5px; font-size: 0.9em; color: #555;">
+                {% if user.is_authenticated %}
+                    <span style="color:#32663c;">Correct: {{ stat.correct_count }}</span> | 
+                    <span style="color: #BD002C;">Incorrect: {{ stat.incorrect_count }}</span>
+                {% else %}
+                    <span style="color: gray;">Login to track progress.</span>
+                {% endif %}
+            </div>
+        </li>
+    {% endfor %}
+</ul>
+
+{% if is_owner %}
+<a href="{% url 'add_cards' deck.id %}" class="text-orange hover:text-crimson">Add Cards</a>
 {% endif %}
 
-    
-    </div>
-    
-</div>
-
-
-
 <script>
+    // Toggle function for showing and hiding the card list
     function toggleCardList() {
         const cardList = document.getElementById("cardList");
         const toggleButton = document.getElementById("toggleButton");
 
-        // Toggle visibility of the card list
+        // If the card list is hidden, show it and change the button text
         if (cardList.style.display === "none") {
-            cardList.style.display = "block";
-            toggleButton.innerText = "Hide Cards";
+            cardList.style.display = "block"; // Show the cards
+            toggleButton.innerText = "Hide All Cards"; // Change the button text
         } else {
-            cardList.style.display = "none";
-            toggleButton.innerText = "Show Cards";
+            cardList.style.display = "none"; // Hide the cards
+            toggleButton.innerText = "Show All Cards"; // Change the button text
         }
     }
+
+    // Initialize the state when the page loads
+    document.addEventListener("DOMContentLoaded", () => {
+        const cardList = document.getElementById("cardList");
+        const toggleButton = document.getElementById("toggleButton");
+
+        cardList.style.display = "none";  // Ensure the card list is hidden initially
+        toggleButton.innerText = "Show All Cards"; // Set the initial button text
+    });
 </script>
+
 {% endblock %}

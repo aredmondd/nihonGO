@@ -59,25 +59,38 @@ def dashboard (request):
 
 from django.db.models import Sum
 from django.shortcuts import render
+from django.utils.timezone import now
 def profile(request):
     user = request.user
-    # profile = profile.objects.get(user=user)
-    #profile = profile.objects.get(user=user)
-    
-    # Fetch user-specific flashcard progress and statistics
-    flashcard_progress = UserCardProgress.objects.filter(user=user)
-    
-    
+    today = now().date()
+
+    # Get all UserCardProgress entries for the user
+    user_progress = UserCardProgress.objects.filter(user=user)
+
+    # Reset logic: Check if any `last_reset` is not today
+    if not user_progress.filter(last_reset=today).exists():
+        # Reset today's progress
+        user_progress.update(studied_on=today, last_reset=today)
+
+    # Fetch progress for today
+    flashcard_progress_today = UserCardProgress.objects.filter(user=user, studied_on=today)
+
+    # Calculate percentage correct
+    total_attempts = flashcard_progress_today.count()
+    correct_answers = sum(progress.correctCount for progress in flashcard_progress_today)
+    percent_correct = (correct_answers / total_attempts * 100) if total_attempts > 0 else 0
+
     # Fetch user's forum posts
     forum_posts = user.posts.all()
-    total_upvotes = user.posts.aggregate(total_upvotes=Sum('upvotes'))['total_upvotes'] or 0
-    
+    total_upvotes = forum_posts.aggregate(total_upvotes=Sum('upvotes'))['total_upvotes'] or 0
+
     return render(request, 'my-profile.html', {
-        'profile': profile,
-        'flashcard_progress': flashcard_progress,
+        'flashcard_progress_today': flashcard_progress_today,
+        'percent_correct': percent_correct,
         'forum_posts': forum_posts,
-        'total_upvotes' : total_upvotes
+        'total_upvotes': total_upvotes,
     })
+
 
 def edit_profile (request):
     return render(request, 'myapp/edit_profile.html')
@@ -235,51 +248,76 @@ from datetime import timedelta
 from django.utils import timezone
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Deck, UserCardProgress
+from django.utils.timezone import now
+from datetime import date
 
 def study(request, deck_id):
     # Get the deck object
     deck = get_object_or_404(Deck, id=deck_id)
 
-    # Initialize context with the deck and empty flashcards list
+    # Initialize context
     context = {
         'deck': deck,
-        'flashcards': deck.card_set.all(),
+        'flashcards': [],
         'message': None,
+        'daily_study_count': 0,
     }
 
     # For default decks, show all flashcards for logged-out users
-    if deck.is_default:
-        if not request.user.is_authenticated:
-            # Show all flashcards in the deck for logged-out users
-            context['flashcards'] = deck.card_set.all()
-            context['message'] = "Log in to enable spaced repetition and save your progress."
-            return render(request, 'flashcards/study.html', context)
-
-    # For authenticated users or non-default decks
-    if request.user.is_authenticated:
-        # Check if the user owns the deck if it's not default
-        if not deck.is_default and deck.user != request.user:
-            return redirect('my_decks') 
-
-        # Retrieve all flashcards in the deck
-        flashcards = deck.card_set.all()
-
-        # Apply spaced repetition for authenticated users on non-default decks
-        if not deck.is_default:
-            current_time = timezone.now()
-            flashcards = flashcards.filter(
-                usercardprogress__user=request.user,
-                usercardprogress__next_review_date__lte=current_time
-            )
-            if not flashcards.exists():
-                flashcards = deck.card_set.all() 
-
-
-        # Update the context with filtered flashcards
-        context['flashcards'] = flashcards
+    if deck.is_default and not request.user.is_authenticated:
+        context['flashcards'] = deck.card_set.all()
+        context['message'] = "Log in to enable spaced repetition and save your progress."
+        
         return render(request, 'flashcards/study.html', context)
 
-    # If an unauthenticated user tries to access a non-default deck
+    # For authenticated users
+    if request.user.is_authenticated:
+        # Check if the user owns the deck (if it's not default)
+        if not deck.is_default and deck.user != request.user:
+            return redirect('my_decks')
+
+        # Retrieve all cards in the deck
+        flashcards = deck.card_set.all()
+
+        # Ensure a `UserCardProgress` entry exists for each card in the deck
+        for card in flashcards:
+            UserCardProgress.objects.get_or_create(
+                user=request.user,
+                card=card,
+                defaults={
+                    'last_reviewed': now(),
+                    'next_review_date': now(),
+                    'ease_factor': 2.5,
+                    'interval': 1,
+                    'repetition_count': 0,
+                    'correctCount': 0,
+                }
+            )
+
+        # Filter cards due for review
+        current_time = now()
+        due_flashcards = flashcards.filter(
+            usercardprogress__user=request.user,
+            usercardprogress__next_review_date__lte=current_time
+        )
+
+        # If no due flashcards, show all cards (optional fallback)
+        if not due_flashcards.exists():
+            due_flashcards = flashcards
+
+        # Calculate daily study count
+        today = date.today()
+        daily_study_count = UserCardProgress.objects.filter(
+            user=request.user,
+            last_reviewed__date=today
+        ).count()
+
+        # Update context
+        context['flashcards'] = due_flashcards
+        context['daily_study_count'] = daily_study_count
+        return render(request, 'flashcards/study.html', context)
+
+    # If unauthenticated and the deck is not default
     context['message'] = "Please log in to access this deck."
     return render(request, 'flashcards/study.html', context)
 
@@ -398,6 +436,8 @@ def my_decks(request):
     if not request.user.is_authenticated:
         # For non-authenticated users, only show the default decks
         decks = Deck.objects.filter(id__in=[1, 5, 6])  # Fetch only default decks with fixed IDs (1, 5, 6)
+        for deck in decks:
+            deck.cards = deck.card_set.all()
     else:
         # For authenticated users, show both their decks and the default decks
         decks = Deck.objects.filter(Q(user=request.user) | Q(id__in=[1, 5, 6])).distinct()
@@ -405,6 +445,10 @@ def my_decks(request):
             deck.cards = deck.card_set.all()
 
     return render(request, 'flashcards/mydecks.html', {'decks': decks})
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Deck, Card, UserCardProgress
+from .forms import DeckForm, FlashcardForm
 
 def edit_deck(request, deck_id):
     # Get the deck without filtering by user, allowing access for logged-out users
@@ -414,14 +458,36 @@ def edit_deck(request, deck_id):
     # Check if the user is authenticated and is the owner of the deck
     is_owner = request.user.is_authenticated and deck.user == request.user
     is_default = deck.is_default
+    flashcard_stats = []
 
-    if request.method == "POST" and is_owner and is_default:
-        # Handle updates only if the user is the owner
-        deck_form = DeckForm(request.POST, instance=deck)
-        if deck_form.is_valid():
-            deck_form.save()  # Save the updated deck information
+    # Fetch progress for each card
+    if request.user.is_authenticated:
+        progress_data = UserCardProgress.objects.filter(user=request.user, card__in=flashcards)
+        progress_dict = {progress.card_id: progress for progress in progress_data}
+    else:
+        progress_dict = {}
 
-        # Handle card deletion if specified
+    # Attach progress stats to each flashcard
+    for card in flashcards:
+        progress = progress_dict.get(card.id)
+        flashcard_stats.append({
+            'flashcard': card,
+            'correct_count': progress.correctCount if progress else 0,
+            'incorrect_count': (progress.repetition_count - progress.correctCount) if progress else 0,
+        })
+
+    if request.method == "POST" and is_owner:
+        # Handle deck updates
+        new_deck_name = request.POST.get("deck_name")
+        if new_deck_name:
+            deck.name = new_deck_name.strip()
+            deck.save()
+           
+        else:
+            messages.error(request, "Deck name cannot be empty.")
+        
+
+        # Handle card deletion
         if 'delete_cards' in request.POST:
             card_ids_to_delete = request.POST.getlist('delete_cards')  # List of card IDs to delete
             Card.objects.filter(id__in=card_ids_to_delete).delete()
@@ -443,23 +509,45 @@ def edit_deck(request, deck_id):
         'flashcard_forms': flashcard_forms,
         'deck': deck,
         'flashcards': flashcards,
-        'is_owner': is_owner,  # Pass ownership status to the template
+        'is_owner': is_owner,
         'is_default': is_default,
+        'flashcard_stats': flashcard_stats,  # Include flashcard stats in the context
     })
 
+
+@login_required
 @login_required
 def add_cards(request, deck_id):
     # Get the deck and verify ownership
     deck = get_object_or_404(Deck, id=deck_id, user=request.user)
 
     if request.method == "POST":
-        flashcard_form = FlashcardForm(request.POST)
-        if flashcard_form.is_valid():
-            # Save the new card and associate it with the deck
-            new_card = flashcard_form.save(commit=False)
-            new_card.deck = deck
-            new_card.save()
-            return redirect('edit_deck', deck_id=deck.id)  # Redirect to the edit deck page
+        # Extract data from the form submission
+        vocab_words = request.POST.getlist('vocab_word[]')
+        kana = request.POST.getlist('kana[]')
+        english_translations = request.POST.getlist('english_translation[]')
+        parts_of_speech = request.POST.getlist('part_of_speech[]')
+        example_sentences = request.POST.getlist('example_sentence[]')
+        example_sentences_kana = request.POST.getlist('example_sentence_kana[]')
+        example_sentences_english = request.POST.getlist('example_sentence_english[]')
+
+        # Ensure that all the fields have the same number of entries
+        num_cards = len(vocab_words)
+        
+        # Loop through the submitted data and create new cards
+        for i in range(num_cards):
+            Card.objects.create(
+                deck=deck,
+                vocab_word=vocab_words[i],
+                kana=kana[i],
+                english_translation=english_translations[i],
+                part_of_speech=parts_of_speech[i],
+                example_sentence=example_sentences[i],
+                example_sentence_kana=example_sentences_kana[i],
+                example_sentence_english=example_sentences_english[i]
+            )
+
+        return redirect('edit_deck', deck_id=deck.id)  # Redirect to the edit deck page
     else:
         flashcard_form = FlashcardForm()
 
@@ -469,10 +557,44 @@ def add_cards(request, deck_id):
     })
 
 
+
 def delete_deck(request, deck_id):
     deck = get_object_or_404(Deck, id=deck_id, user=request.user)
     deck.delete()  # Delete the deck along with its associated flashcards
-    return redirect('my_decks')  # Redirect to the decks page after deletion
+    return redirect('my_decks')  # Redirect to the decks page after deletion 
+
+def update_progress(request):
+    if request.method == 'POST' and request.user.is_authenticated:
+        try:
+            data = json.loads(request.body)
+            card_id = data.get('card_id')
+            correct = data.get('correct')
+
+            # Get the UserCardProgress for the given card and user
+            progress, created = UserCardProgress.objects.get_or_create(
+                user=request.user,
+                card_id=card_id,
+                defaults={
+                    'ease_factor': 2.5,
+                    'interval': 1,
+                    'repetition_count': 0,
+                    'correctCount': 0,
+                },
+            )
+
+        
+
+            # Update the progress
+            progress.update_progress(correct)
+
+            # Increment the daily studied card count (can be tracked in a session or DB)
+            request.session['cards_studied_today'] = request.session.get('cards_studied_today', 0) + 1
+
+            return JsonResponse({'status': 'success', 'message': 'Progress updated successfully'})
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'})
 
 
 #FORUM VIEWS

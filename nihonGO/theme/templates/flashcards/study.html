@@ -13,19 +13,18 @@
     </p>
 {% endif %}
 
+<!-- Debugging: Display total cards available -->
+
 <div id="cardList" class="flashcards-container flex justify-center items-center">
     {% for flashcard in flashcards %}
-    <div class="flashcard border-2 border-black rounded-2xl cursor-pointer" onclick="flipCard(this)">
+    <div class="flashcard border-2 border-black rounded-2xl cursor-pointer" 
+         data-card-id="{{ flashcard.id }}" onclick="flipCard(this)">
         <div class="flashcard-front flex items-center justify-center h-full">
             <h3 class="text-7xl text-crimson font-semibold mb-4">{{ flashcard.vocab_word }}</h3>
         </div>
         <div class="flashcard-back flex flex-col items-center justify-center">
             {% if flashcard.kana %}
-                {% if not flashcard.english_translation and not flashcard.part_of_speech and not flashcard.example_sentence and not flashcard.example_sentence_kana and not flashcard.example_sentence_english %}
-                    <p class="text-5xl text-crimson font-semibold mb-4 text-center">'{{ flashcard.kana }}'</p>
-                {% else %}
-                    <p class="text-5xl text-crimson font-semibold mb-4 text-center">{{ flashcard.kana }}</p>
-                {% endif %}
+                <p class="text-5xl text-crimson font-semibold mb-4 text-center">{{ flashcard.kana }}</p>
             {% endif %}
             {% if flashcard.english_translation %}
                 <p class="text-2xl text-black mb-4 font-semibold text-center">{{ flashcard.english_translation }}</p>
@@ -45,7 +44,7 @@
         </div> 
     </div>
     {% empty %}
-    <p>No flashcards available in this deck.</p>
+    <p class="text-gray-500 text-center">No flashcards available in this deck.</p>
     {% endfor %}
 </div>
 
@@ -72,6 +71,11 @@
         });
     }
 
+    function showNextCard() {
+        currentCardIndex = (currentCardIndex + 1) % flashcards.length;
+        showCurrentCard();
+    }
+
     function shuffleFlashcards() {
         for (let i = flashcards.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -86,13 +90,6 @@
         showCurrentCard();
     }
 
-    document.getElementById('shuffleButton')?.addEventListener('click', shuffleFlashcards);
-
-    function showNextCard() {
-        currentCardIndex = (currentCardIndex + 1) % flashcards.length;
-        showCurrentCard();
-    }
-
     function flipCard(card) {
     if (!card.classList.contains('flipped')) {
         card.classList.add('flipped');
@@ -101,13 +98,53 @@
     }
 }
 
-    function markCorrect() {
+    async function updateProgress(cardId, correct) {
+    if (!userIsAuthenticated) {
+        // If user is not authenticated, simply show the next card
         showNextCard();
+        return;
     }
 
-    function markIncorrect() {
+    // For logged-in users, send the progress update to the backend
+    try {
+        const response = await fetch('/update-progress/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ card_id: cardId, correct: correct })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update progress');
+        }
+
+        // Proceed to the next card after successful backend response
+        showNextCard();
+    } catch (error) {
+        console.error('Error updating progress:', error);
+
+        // Optionally alert the user and still proceed to the next card
+        alert("An error occurred while updating progress. Proceeding to the next card.");
         showNextCard();
     }
+}
+
+function markCorrect() {
+    const currentCard = flashcards[currentCardIndex];
+    const cardId = currentCard.getAttribute("data-card-id");
+    updateProgress(cardId, true); // Pass `true` for correct answers
+}
+
+function markIncorrect() {
+    const currentCard = flashcards[currentCardIndex];
+    const cardId = currentCard.getAttribute("data-card-id");
+    updateProgress(cardId, false); // Pass `false` for incorrect answers
+}
+
+
+    document.getElementById('shuffleButton')?.addEventListener('click', shuffleFlashcards);
 
     // Show the first card on page load
     showCurrentCard();
@@ -120,6 +157,9 @@
             flipCard(currentCard);
         }
     });
+
+    // Check if the user is authenticated
+    const userIsAuthenticated = {{ user.is_authenticated|yesno:"true,false" }};
 </script>
 
 {% endblock %}

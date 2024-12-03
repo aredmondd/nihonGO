@@ -42,6 +42,7 @@ def create_default_deck(sender, instance, created, **kwargs):
 #-Profile class
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="theme_profile")
+    last_reset = models.DateField(null=True, blank=True)
 
     avatar = models.ImageField(default='profile_images/default.jpg', upload_to='profile_images')
     bio = models.TextField()
@@ -49,20 +50,25 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
+from django.utils.timezone import now
 class UserCardProgress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     card = models.ForeignKey(Card, on_delete=models.CASCADE)
+    studied_on = models.DateField(default=now) 
     last_reviewed = models.DateTimeField(default=timezone.now)
     next_review_date = models.DateTimeField(default=timezone.now)
     ease_factor = models.FloatField(default=2.5)  # Controls the learning interval
     interval = models.IntegerField(default=1)  # Days until the next review
     repetition_count = models.IntegerField(default=0)
+    correctCount = models.IntegerField(default=0)
+    last_reset = models.DateField(null=True, blank=True) 
 
     def update_progress(self, correct):
         if correct:
             self.repetition_count += 1
             self.ease_factor = max(1.3, self.ease_factor + 0.1)  # Increase ease factor slightly for correct answers
             self.interval = self.interval * self.ease_factor  # Increase interval based on ease factor
+            self.correctCount = self.correctCount + 1
         else:
             self.repetition_count = 0
             self.ease_factor = max(1.3, self.ease_factor - 0.2)  # Decrease ease factor for incorrect answers
