@@ -26,5 +26,8 @@
     "postcss-simple-vars": "^7.0.1",
     "rimraf": "^5.0.1",
     "tailwindcss": "^3.4.15"
+  },
+  "dependencies": {
+    "yaml": "^2.6.1"
   }
 }

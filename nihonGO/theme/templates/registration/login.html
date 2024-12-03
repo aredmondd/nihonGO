@@ -33,6 +33,7 @@
                 </div>
                 <input type="hidden" name="next" value="{% url 'my-profile' %}">
                 <div class="flex flex-col justify-center items-center">
+                    <label><input type="checkbox" name="remember_me" id="remember_me"> Remember Me </label>
                     <button type='submit' class="bg-orange text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-crimson transition duration-300">Login</button><br>
                     <a href="{% url 'password_reset' %}" class="text-sm font-medium text-black text-opacity-75 hover:underline mb-3">Forgot password?</a>
                     <p class="text-sm font-light text-black text-opacity-50">
@@ -42,4 +43,36 @@
             </form>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let rememberMeCheckbox = document.getElementById("remember_me");
+            let usernameInput = document.getElementById("username"); // Matches corrected username field ID
+            let passwordInput = document.getElementById("password"); // Matches corrected password field ID
+    
+            // Check if username and password are stored
+            if (localStorage.getItem("rememberMe") === "true") {
+                usernameInput.value = localStorage.getItem("username");
+                passwordInput.value = localStorage.getItem("password");
+                rememberMeCheckbox.checked = true;
+            }
+    
+            // Save username and password when "Remember Me" is checked
+            document.querySelector("form").addEventListener("submit", () => {
+                if (rememberMeCheckbox.checked) {
+                    localStorage.setItem("rememberMe", "true");
+                    localStorage.setItem("username", usernameInput.value);
+                    localStorage.setItem("password", passwordInput.value);
+                } else {
+                    localStorage.setItem("rememberMe", "false");
+                    localStorage.removeItem("username");
+                    localStorage.removeItem("password");
+                }
+            });
+        });
+    </script>
 {% endblock %}
+
+
+
+
+
