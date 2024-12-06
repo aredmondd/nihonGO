@@ -12,7 +12,6 @@
     </p>
 {% endif %}
 
-<!-- Debugging: Display total cards available -->
 <div id="cardList" class="flashcards-container flex justify-center items-center">
     {% for flashcard in flashcards %}
     <div class="flashcard border-2 border-black rounded-2xl cursor-pointer" 
@@ -33,12 +32,6 @@
             {% if flashcard.example_sentence %}
                 <p class="text-xl text-gray-600 mb-4 text-center">{{ flashcard.example_sentence|striptags }}</p>
             {% endif %}
-            {% if flashcard.example_sentence_kana %}
-                <p class="text-xl text-gray-600 mb-4 text-center">{{ flashcard.example_sentence_kana|striptags }}</p>
-            {% endif %}
-            {% if flashcard.example_sentence_english %}
-                <p class="text-xl text-gray-600 mb-4 text-center">{{ flashcard.example_sentence_english }}</p>
-            {% endif %}
         </div> 
     </div>
     {% empty %}
@@ -50,14 +43,6 @@
     <div id="progressBar" class="progress-bar" style="width: 0%;"></div>
 </div>
 <p id="progressText" class="text-center text-black mt-2">0 / 50</p>
-
-{% if not user.is_authenticated %}
-    <div class="flex justify-center mt-6">
-        <button id="shuffleButton" class="bg-crimson text-white px-4 py-2 rounded-md hover:bg-crimson">
-            Shuffle Cards
-        </button>
-    </div>
-{% endif %}
 
 <div class="flex justify-center space-x-4 mt-10">
     <button class="bg-orange text-white px-4 py-2 rounded-md hover:bg-crimson" onclick="markIncorrect()">Incorrect</button>
@@ -83,20 +68,6 @@
 
     function showNextCard() {
         currentCardIndex = (currentCardIndex + 1) % flashcards.length;
-        showCurrentCard();
-    }
-
-    function shuffleFlashcards() {
-        for (let i = flashcards.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [flashcards[i], flashcards[j]] = [flashcards[j], flashcards[i]];
-        }
-
-        const container = document.querySelector('.flashcards-container');
-        container.innerHTML = '';
-        flashcards.forEach(card => container.appendChild(card));
-
-        currentCardIndex = 0;
         showCurrentCard();
     }
 
@@ -139,17 +110,13 @@
         const percentage = (progress / goal) * 100;
         progressBar.style.width = `${Math.min(percentage, 100)}%`;
         progressText.textContent = `${progress} / ${goal}`;
-
-        if (progress >= goal) {
-            alert("Congratulations! You've reached your goal!");
-        }
     }
 
     function markCorrect() {
         const currentCard = flashcards[currentCardIndex];
         const cardId = currentCard.getAttribute("data-card-id");
 
-        progress++;
+        if (progress < goal) progress++;
         updateProgressBar();
         updateProgress(cardId, true);
     }
@@ -158,6 +125,8 @@
         const currentCard = flashcards[currentCardIndex];
         const cardId = currentCard.getAttribute("data-card-id");
 
+        if (progress > 0) progress--;
+        updateProgressBar();
         updateProgress(cardId, false);
     }
 
@@ -167,8 +136,6 @@
         updateProgressBar();
     });
 
-    document.getElementById('shuffleButton')?.addEventListener('click', shuffleFlashcards);
-
     showCurrentCard();
 
     const userIsAuthenticated = {{ user.is_authenticated|yesno:"true,false" }};
@@ -176,21 +143,20 @@
 
 <style>
 .progress-bar-container {
-    width: 90%; /* Make the bar wider (90% of the parent container) */
-    max-width: 600px; /* Optional: Set a maximum width to avoid it being too wide */
+    width: 90%;
+    max-width: 600px;
     background-color: #e0e0e0;
     border-radius: 10px;
     overflow: hidden;
-    height: 25px; /* Increase height for a thicker bar */
-    margin: 20px auto; /* Move it down and center horizontally */
+    height: 25px;
+    margin: 20px auto;
 }
 
 .progress-bar {
     height: 100%;
-    background-color: #BD002C; /* Orange color for the bar */
+    background-color: #BD002C;
     width: 0%;
-    transition: width 0.3s ease; /* Smooth animation */
+    transition: width 0.3s ease;
 }
-
 </style>
 {% endblock %}
