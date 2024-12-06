@@ -35,4 +35,22 @@
         box-shadow: 0 0 5px rgba(190, 15, 50, 0.5);
     }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const link = document.getElementById('dynamicText');
+        const textContent = document.getElementById('textContent');
+    
+        const originalText = '日本';
+        const englishText = 'nihon';
+    
+        link.addEventListener('mouseenter', function () {
+            textContent.firstChild.textContent = englishText;
+        });
+    
+        link.addEventListener('mouseleave', function () {
+            textContent.firstChild.textContent = originalText;
+        });
+    });
+</script>
 {% endblock %}

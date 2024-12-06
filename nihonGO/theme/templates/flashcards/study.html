@@ -4,7 +4,6 @@
 <!-- Back button in the top-right corner -->
 <a href="{% url 'my_decks' %}" class="font-DMSans text-crimson text-body underline mb-4">&larr; Back</a>
 
-
 <h1 class="mb-24 text-center text-heading text-black font-japanese font-bold">{{ deck.name }}</h1>
 
 {% if not user.is_authenticated %}
@@ -14,7 +13,6 @@
 {% endif %}
 
 <!-- Debugging: Display total cards available -->
-
 <div id="cardList" class="flashcards-container flex justify-center items-center">
     {% for flashcard in flashcards %}
     <div class="flashcard border-2 border-black rounded-2xl cursor-pointer" 
@@ -48,6 +46,11 @@
     {% endfor %}
 </div>
 
+<div class="progress-bar-container mt-10">
+    <div id="progressBar" class="progress-bar" style="width: 0%;"></div>
+</div>
+<p id="progressText" class="text-center text-black mt-2">0 / 50</p>
+
 {% if not user.is_authenticated %}
     <div class="flex justify-center mt-6">
         <button id="shuffleButton" class="bg-crimson text-white px-4 py-2 rounded-md hover:bg-crimson">
@@ -61,9 +64,16 @@
     <button class="bg-orange text-white px-4 py-2 rounded-md hover:bg-crimson" onclick="markCorrect()">Correct</button>
 </div>
 
+<div class="flex justify-center mt-8">
+    <label for="goal" class="text-black font-semibold mr-4">Set Today's Goal:</label>
+    <input type="number" id="goal" name="goal" class="border-2 border-black rounded-md p-2" value="50" min="1">
+</div>
+
 <script>
     let currentCardIndex = 0;
     let flashcards = Array.from(document.querySelectorAll('.flashcard'));
+    let progress = 0;
+    let goal = 50; // Default goal
 
     function showCurrentCard() {
         flashcards.forEach((card, index) => {
@@ -91,75 +101,96 @@
     }
 
     function flipCard(card) {
-    if (!card.classList.contains('flipped')) {
-        card.classList.add('flipped');
-    } else {
-        card.classList.remove('flipped');
+        card.classList.toggle('flipped');
     }
-}
 
     async function updateProgress(cardId, correct) {
-    if (!userIsAuthenticated) {
-        // If user is not authenticated, simply show the next card
-        showNextCard();
-        return;
-    }
-
-    // For logged-in users, send the progress update to the backend
-    try {
-        const response = await fetch('/update-progress/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify({ card_id: cardId, correct: correct })
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to update progress');
+        if (!userIsAuthenticated) {
+            showNextCard();
+            return;
         }
 
-        // Proceed to the next card after successful backend response
-        showNextCard();
-    } catch (error) {
-        console.error('Error updating progress:', error);
+        try {
+            const response = await fetch('/update-progress/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ card_id: cardId, correct: correct })
+            });
 
-        // Optionally alert the user and still proceed to the next card
-        alert("An error occurred while updating progress. Proceeding to the next card.");
-        showNextCard();
+            if (!response.ok) {
+                throw new Error('Failed to update progress');
+            }
+
+            showNextCard();
+        } catch (error) {
+            console.error('Error updating progress:', error);
+            alert("An error occurred while updating progress. Proceeding to the next card.");
+            showNextCard();
+        }
     }
-}
 
-function markCorrect() {
-    const currentCard = flashcards[currentCardIndex];
-    const cardId = currentCard.getAttribute("data-card-id");
-    updateProgress(cardId, true); // Pass `true` for correct answers
-}
+    function updateProgressBar() {
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
 
-function markIncorrect() {
-    const currentCard = flashcards[currentCardIndex];
-    const cardId = currentCard.getAttribute("data-card-id");
-    updateProgress(cardId, false); // Pass `false` for incorrect answers
-}
+        const percentage = (progress / goal) * 100;
+        progressBar.style.width = `${Math.min(percentage, 100)}%`;
+        progressText.textContent = `${progress} / ${goal}`;
 
+        if (progress >= goal) {
+            alert("Congratulations! You've reached your goal!");
+        }
+    }
+
+    function markCorrect() {
+        const currentCard = flashcards[currentCardIndex];
+        const cardId = currentCard.getAttribute("data-card-id");
+
+        progress++;
+        updateProgressBar();
+        updateProgress(cardId, true);
+    }
+
+    function markIncorrect() {
+        const currentCard = flashcards[currentCardIndex];
+        const cardId = currentCard.getAttribute("data-card-id");
+
+        updateProgress(cardId, false);
+    }
+
+    document.getElementById('goal')?.addEventListener('change', function(event) {
+        goal = parseInt(event.target.value, 10) || 50;
+        progress = 0;
+        updateProgressBar();
+    });
 
     document.getElementById('shuffleButton')?.addEventListener('click', shuffleFlashcards);
 
-    // Show the first card on page load
     showCurrentCard();
 
-    // Add event listener for space bar to flip card
-    document.addEventListener('keydown', function(event) {
-        if (event.code === 'Space') {
-            event.preventDefault(); // Prevent default spacebar scroll behavior
-            const currentCard = flashcards[currentCardIndex];
-            flipCard(currentCard);
-        }
-    });
-
-    // Check if the user is authenticated
     const userIsAuthenticated = {{ user.is_authenticated|yesno:"true,false" }};
 </script>
 
+<style>
+.progress-bar-container {
+    width: 90%; /* Make the bar wider (90% of the parent container) */
+    max-width: 600px; /* Optional: Set a maximum width to avoid it being too wide */
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 25px; /* Increase height for a thicker bar */
+    margin: 20px auto; /* Move it down and center horizontally */
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #BD002C; /* Orange color for the bar */
+    width: 0%;
+    transition: width 0.3s ease; /* Smooth animation */
+}
+
+</style>
 {% endblock %}
