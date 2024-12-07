@@ -4,7 +4,7 @@
 <!-- Back button in the top-right corner -->
 <a href="{% url 'my_decks' %}" class="font-DMSans text-crimson text-body underline mb-4">&larr; Back</a>
 
-<h1 class="mb-24 text-center text-heading text-black font-japanese font-bold">{{ deck.name }}</h1>
+<h1 class="mb-6 text-center text-heading text-black font-japanese font-bold">{{ deck.name }}</h1>
 
 {% if not user.is_authenticated %}
     <p class="text-crimson text-center font-semibold">
