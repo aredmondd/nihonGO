@@ -7,14 +7,15 @@
 <h1 class="mb-24 text-center text-heading text-black font-japanese font-bold">{{ deck.name }}</h1>
 
 {% if not user.is_authenticated %}
-    <p class="text-crimson text-center font-semibold">
+    <p class="text-crimson text-center font-semibold mb-4">
         You are in shuffle mode. Log in or create an account to access spaced repetition.
     </p>
+  
 {% endif %}
 
 <div id="cardList" class="flashcards-container flex justify-center items-center">
     {% for flashcard in flashcards %}
-    <div class="flashcard border-2 border-black rounded-2xl cursor-pointer" 
+    <div class="flashcard border-2 border-black rounded-2xl cursor-pointer hidden" 
          data-card-id="{{ flashcard.id }}" onclick="flipCard(this)">
         <div class="flashcard-front flex items-center justify-center h-full">
             <h3 class="text-7xl text-crimson font-semibold mb-4">{{ flashcard.vocab_word }}</h3>
@@ -39,26 +40,43 @@
     {% endfor %}
 </div>
 
-<div class="progress-bar-container mt-10">
-    <div id="progressBar" class="progress-bar" style="width: 0%;"></div>
-</div>
-<p id="progressText" class="text-center text-black mt-2">0 / 50</p>
-
 <div class="flex justify-center space-x-4 mt-10">
     <button class="bg-orange text-white px-4 py-2 rounded-md hover:bg-crimson" onclick="markIncorrect()">Incorrect</button>
     <button class="bg-orange text-white px-4 py-2 rounded-md hover:bg-crimson" onclick="markCorrect()">Correct</button>
 </div>
 
-<div class="flex justify-center mt-8">
-    <label for="goal" class="text-black font-semibold mr-4">Set Today's Goal:</label>
-    <input type="number" id="goal" name="goal" class="border-2 border-black rounded-md p-2" value="50" min="1">
-</div>
+{% if not user.is_authenticated %}
+    <div class="flex justify-center mt-8">
+        <button class="bg-orange text-white px-4 py-2 rounded-md hover:bg-crimson" onclick="shuffleFlashcards()">Shuffle</button>
+    </div>
+{% endif %}
+
+{% if user.is_authenticated %}
+    <div class="progress-bar-container mt-10">
+        <div id="progressBar" class="progress-bar" style="width: 0%;"></div>
+    </div>
+    <p id="progressText" class="text-center text-black mt-2">0 / 50</p>
+
+    <div class="flex justify-center mt-8">
+        <label for="goal" class="text-black font-semibold mr-4">Set Today's Goal:</label>
+        <input type="number" id="goal" name="goal" class="border-2 border-black rounded-md p-2" value="50" min="1">
+    </div>
+{% endif %}
 
 <script>
     let currentCardIndex = 0;
     let flashcards = Array.from(document.querySelectorAll('.flashcard'));
     let progress = 0;
     let goal = 50; // Default goal
+
+    function shuffleFlashcards() {
+        for (let i = flashcards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [flashcards[i], flashcards[j]] = [flashcards[j], flashcards[i]];
+        }
+        currentCardIndex = 0; // Reset to the first card after shuffling
+        showCurrentCard();
+    }
 
     function showCurrentCard() {
         flashcards.forEach((card, index) => {
@@ -116,18 +134,26 @@
         const currentCard = flashcards[currentCardIndex];
         const cardId = currentCard.getAttribute("data-card-id");
 
-        if (progress < goal) progress++;
-        updateProgressBar();
-        updateProgress(cardId, true);
+        if (userIsAuthenticated) {
+            if (progress < goal) progress++;
+            updateProgressBar();
+            updateProgress(cardId, true);
+        } else {
+            showNextCard(); // Just show the next card for logged-out users
+        }
     }
 
     function markIncorrect() {
         const currentCard = flashcards[currentCardIndex];
         const cardId = currentCard.getAttribute("data-card-id");
 
-        if (progress > 0) progress--;
-        updateProgressBar();
-        updateProgress(cardId, false);
+        if (userIsAuthenticated) {
+            if (progress > 0) progress--;
+            updateProgressBar();
+            updateProgress(cardId, false);
+        } else {
+            showNextCard(); // Just show the next card for logged-out users
+        }
     }
 
     document.getElementById('goal')?.addEventListener('change', function(event) {
@@ -139,6 +165,9 @@
     showCurrentCard();
 
     const userIsAuthenticated = {{ user.is_authenticated|yesno:"true,false" }};
+    if (!userIsAuthenticated) {
+        shuffleFlashcards();
+    }
 </script>
 
 <style>
