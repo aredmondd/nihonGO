@@ -47,9 +47,9 @@
     <!-- Decks Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         
-        <!-- Loop through decks -->
+        <!-- Loop through decks dynamically -->
         {% for deck in decks %}
-        <div class="border-2 border-black rounded-3xl bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center items-center transition duration-300">
+        <div class="border-2 border-black rounded-3xl bg-white shadow-md rounded-lg p-6 text-center flex flex-col justify-center items-center  transition duration-300">
             <h2 class="text-xl font-semibold mb-4">{{ deck.name }}</h2>
             <p class="text-gray-500 mb-4">{{ deck.cards.count }} Cards</p>  
             <div class="flex space-x-12 items-center">

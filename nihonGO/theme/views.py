@@ -434,17 +434,21 @@ def my_decks(request):
     create_katakana_deck()
 
     if not request.user.is_authenticated:
-        # For non-authenticated users, only show the default decks
-        decks = Deck.objects.filter(id__in=[1, 5, 6])  # Fetch only default decks with fixed IDs (1, 5, 6)
-        for deck in decks:
-            deck.cards = deck.card_set.all()
+      
+        decks = Deck.objects.filter(id__in=[1, 5, 6])
     else:
-        # For authenticated users, show both their decks and the default decks
+        
         decks = Deck.objects.filter(Q(user=request.user) | Q(id__in=[1, 5, 6])).distinct()
-        for deck in decks:
-            deck.cards = deck.card_set.all()
+
+  
+    decks = [deck for deck in decks if not (deck.name == "Japanese Basics" and deck.id != 1)]
+
+   
+    for deck in decks:
+        deck.cards = deck.card_set.all()
 
     return render(request, 'flashcards/mydecks.html', {'decks': decks})
+
 
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Deck, Card, UserCardProgress
