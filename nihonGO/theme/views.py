@@ -78,14 +78,17 @@ def profile(request):
     # Calculate percentage correct
     total_attempts = flashcard_progress_today.count()
     correct_answers = sum(progress.correctCount for progress in flashcard_progress_today)
-    percent_correct = (correct_answers / total_attempts * 100) if total_attempts > 0 else 0
+    incorrect_answers = sum(progress.incorrectCount for progress in flashcard_progress_today)
+    total_cards = incorrect_answers + correct_answers
+    percent_correct = (correct_answers / total_cards * 100) if total_attempts > 0 else 0
 
     # Fetch user's forum posts
     forum_posts = user.posts.all()
     total_upvotes = forum_posts.aggregate(total_upvotes=Sum('upvotes'))['total_upvotes'] or 0
+    
 
     return render(request, 'my-profile.html', {
-        'flashcard_progress_today': flashcard_progress_today,
+        'total_cards': total_cards,
         'percent_correct': percent_correct,
         'forum_posts': forum_posts,
         'total_upvotes': total_upvotes,
