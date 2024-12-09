@@ -121,6 +121,6 @@ CHANNEL_LAYERS = {
 }
 
 # Redirect URLs after login/logout
-LOGIN_URL = '/login/'
+LOGIN_URL = 'login/'
 LOGIN_REDIRECT_URL = 'my-profile'
 LOGOUT_REDIRECT_URL = '/'

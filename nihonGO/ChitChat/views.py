@@ -5,7 +5,6 @@ from .models import Friend, ChatRoom, PrivateChat
 from django.contrib import messages
 from .forms import ChatRoomForm
 from .models import PrivateChat, User
-from django.contrib.auth.views import LoginView
 import urllib.parse
 
 # Chat views

@@ -95,21 +95,6 @@ def profile(request):
     })
 
 
-def edit_profile (request):
-    return render(request, 'myapp/edit_profile.html')
-
-# Create your views here.
-def home (request):
-    return render(request, 'myapp/base.html')
-
-def edit_profile (request):
-    return render(request, 'myapp/edit_profile.html')
-
-# Create your views here.
-def home (request):
-    return render(request, 'myapp/base.html')
-
-
 def my_login(request):
     form = LoginForm()
 
@@ -132,7 +117,6 @@ def my_login(request):
                     request.session.set_expiry(0)
 
                 return redirect("my-profile")
-            
     
     context = {'loginform':form}
 
