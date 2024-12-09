@@ -24,7 +24,7 @@
     <form class="space-y-4 md:space-y-6 font-outfit" action="{% url 'login' %}" method="POST">
                 {% csrf_token %}
         
-                <div class="flex flex-col space-y-4 justify-center mx-96">
+                <div class="flex flex-col space-y-4 justify-center mx-96 3xl:mx-[600px]">
                     {{ form.username }}
                     {{ form.password }}
                 </div>

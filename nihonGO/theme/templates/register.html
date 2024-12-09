@@ -7,7 +7,7 @@
         </h1>        
         <form method="POST" class="space-y-4">
             {% csrf_token %}
-            <div class="flex flex-col space-y-4 mx-[450px]">
+            <div class="flex flex-col space-y-4 mx-[450px] 3xl:mx-[600px]">
                 {% for field in registerform %}
                     <div>
                         {{ field }}
